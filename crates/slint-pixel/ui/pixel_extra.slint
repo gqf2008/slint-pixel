@@ -162,19 +162,8 @@ export component PixelTooltip inherits Rectangle {
     in property <color> text-color: #ffffff;
     in property <color> arrow: PixelTheme.shadow;
 
-    // 悬停轮询：悬停/外部 open 则显示，离开则关闭
+    // 悬停/外部 open 则显示，离开则关闭（普通 Rectangle 气泡，绕开 PopupWindow 限制）
     property <bool> hovered: ta.has-hover;
-    Timer {
-        interval: root.delay;
-        running: root.hovered || root.open || popup.is-open;
-        triggered => {
-            if root.hovered || root.open {
-                popup.show();
-            } else {
-                popup.close();
-            }
-        }
-    }
 
     // 悬停热区（内容在上层，不挡点击）
     ta := TouchArea {
@@ -182,28 +171,26 @@ export component PixelTooltip inherits Rectangle {
     }
     @children
 
-    popup := PopupWindow {
+    // 气泡：父窗口内浮动，visible 控制
+    Rectangle {
+        visible: root.hovered || root.open;
         x: 0px;
         y: root.height + 4px;
         width: 200px;
-        close-policy: no-auto-close;
+        background: root.bubble-border;
         Rectangle {
-            width: 200px;
-            background: root.bubble-border;
-            Rectangle {
-                x: 2px; y: 2px;
-                width: parent.width - 4px;
-                background: root.bubble-bg;
-                border-width: 2px;
-                border-color: root.bubble-border;
-                Text {
-                    x: 8px; y: 6px;
-                    width: parent.width - 16px;
-                    text: root.text;
-                    color: root.text-color;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
+            x: 2px; y: 2px;
+            width: parent.width - 4px;
+            background: root.bubble-bg;
+            border-width: 2px;
+            border-color: root.bubble-border;
+            Text {
+                x: 8px; y: 6px;
+                width: parent.width - 16px;
+                text: root.text;
+                color: root.text-color;
+                font-size: 12px;
+                wrap: word-wrap;
             }
         }
     }
@@ -227,20 +214,6 @@ export component PixelBubble inherits Rectangle {
     width: 34px;
     height: 34px;
 
-    init => {
-        if root.open {
-            popup.show();
-        }
-    }
-    // open 变化时自动显示/关闭（init 时 open 绑定尚未求值，需此回调兜底）
-    changed open => {
-        if root.open {
-            popup.show();
-        } else {
-            popup.close();
-        }
-    }
-
     // 触发按钮（图标）
     Rectangle {
         width: root.width; height: root.height;
@@ -263,43 +236,36 @@ export component PixelBubble inherits Rectangle {
             ta := TouchArea {
                 clicked => {
                     root.open = !root.open;
-                    if root.open {
-                        popup.show();
-                    } else {
-                        popup.close();
-                    }
                 }
                 mouse-cursor: pointer;
             }
         }
     }
 
-    popup := PopupWindow {
+    // 气泡：父窗口内浮动，visible 控制（绕开 PopupWindow 限制）
+    Rectangle {
+        visible: root.open;
         x: 0px;
         y: root.height + 4px;
         width: 280px;
-        close-policy: close-on-click-outside;
+        background: root.bubble-shadow;
         Rectangle {
-            width: 280px;
-            background: root.bubble-shadow;
-            Rectangle {
-                x: 3px; y: 3px;
-                width: parent.width - 6px;
-                background: root.bubble-bg;
-                border-width: 2px;
-                border-color: root.bubble-edge;
-                VerticalLayout {
-                    padding: 12px;
-                    spacing: 8px;
-                    Text {
-                        text: root.title;
-                        color: root.title-color;
-                        font-weight: 800;
-                        font-size: 13px;
-                    }
-                    Rectangle { height: 2px; background: root.bubble-edge; }
-                    @children
+            x: 3px; y: 3px;
+            width: parent.width - 6px;
+            background: root.bubble-bg;
+            border-width: 2px;
+            border-color: root.bubble-edge;
+            VerticalLayout {
+                padding: 12px;
+                spacing: 8px;
+                Text {
+                    text: root.title;
+                    color: root.title-color;
+                    font-weight: 800;
+                    font-size: 13px;
                 }
+                Rectangle { height: 2px; background: root.bubble-edge; }
+                @children
             }
         }
     }

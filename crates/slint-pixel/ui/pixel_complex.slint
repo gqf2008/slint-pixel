@@ -560,7 +560,6 @@ export component PixelCollapsible inherits Rectangle {
         body-content := VerticalLayout {
             x: 0px;
             width: 100%;
-            height: self.preferred-height;
             @children
         }
     }
@@ -630,7 +629,6 @@ export component PixelAccordion inherits Rectangle {
                 acc-body := VerticalLayout {
                     x: 0px;
                     width: 100%;
-                    height: self.preferred-height;
                     Text {
                         x: 10px;
                         width: parent.width - 20px;
