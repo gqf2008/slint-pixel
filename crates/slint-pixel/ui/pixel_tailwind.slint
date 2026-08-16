@@ -1,3 +1,4 @@
+import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
 // slint-pixel · 对齐 Tailwind 常见 UI 组件补齐（黑白主题，纯 Slint 自绘）
 //
@@ -24,10 +25,10 @@ export component PixelAlert inherits Rectangle {
     in property <string> kind: "info"; // info | success | warning | error
     in property <string> text: "";
     in property <bool> closable: true;
-    in property <color> bg: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> text-color: #000000;
-    in property <color> icon-color: #000000;
+    in property <color> bg: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> icon-color: PixelTheme.text;
     callback closed;
 
     property <string> icon: root.kind == "success" ? "✓"
@@ -90,9 +91,9 @@ export component PixelToast inherits Rectangle {
     in property <string> kind: "info";
     in property <duration> duration: 2500ms;
     in-out property <bool> shown: true;
-    in property <color> bg: #000000;
+    in property <color> bg: PixelTheme.shadow;
     in property <color> text-color: #ffffff;
-    in property <color> close-color: #1a1a1a;
+    in property <color> close-color: PixelTheme.text;
     callback dismissed;
     visible: root.shown;
     height: 40px;
@@ -147,7 +148,7 @@ export component PixelToast inherits Rectangle {
 // ===== 加载动画（像素方块循环） =====
 export component PixelSpinner inherits Rectangle {
     in property <length> size: 26px;
-    in property <color> spinner-color: #000000;
+    in property <color> spinner-color: PixelTheme.accent;
     width: root.size;
     height: root.size;
 
@@ -180,7 +181,7 @@ export component PixelSpinner inherits Rectangle {
 export component PixelSkeleton inherits Rectangle {
     in property <length> frame-height: 16px;
     in property <bool> pulse: true;
-    in property <color> face: #f2f2f2;
+    in property <color> face: PixelTheme.hover;
     height: root.frame-height;
 
     Rectangle {
@@ -195,11 +196,11 @@ export component PixelSkeleton inherits Rectangle {
 export component PixelTabs inherits Rectangle {
     in property <[string]> tabs: [];
     in-out property <int> active: 0;
-    in property <color> face: #ffffff;
-    in property <color> text-color: #525252;
-    in property <color> text-active: #000000;
-    in property <color> active-bar: #000000;
-    in property <color> edge: #1a1a1a;
+    in property <color> face: PixelTheme.bg;
+    in property <color> text-color: PixelTheme.dim;
+    in property <color> text-active: PixelTheme.text;
+    in property <color> active-bar: PixelTheme.accent;
+    in property <color> edge: PixelTheme.edge;
     callback changed(index: int);
 
     Rectangle {
@@ -249,9 +250,9 @@ export component PixelTabs inherits Rectangle {
 export component PixelBreadcrumb inherits Rectangle {
     in property <[string]> items: [];
     in-out property <int> active: Math.max(root.items.length - 1, 0);
-    in property <color> text-color: #525252;
-    in property <color> text-active: #000000;
-    in property <color> sep-color: #1a1a1a;
+    in property <color> text-color: PixelTheme.dim;
+    in property <color> text-active: PixelTheme.text;
+    in property <color> sep-color: PixelTheme.edge;
     callback navigate(index: int);
 
     HorizontalLayout {
@@ -288,13 +289,13 @@ export component PixelPagination inherits Rectangle {
     in-out property <int> page: 1;
     in property <int> total: 1;
     in property <int> siblings: 2;
-    in property <color> face: #ffffff;
-    in property <color> face-hover: #f2f2f2;
-    in property <color> face-active: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> text-color: #000000;
+    in property <color> face: PixelTheme.bg;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> face-active: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> text-color: PixelTheme.text;
     in property <color> text-active: #ffffff;
-    in property <color> text-disabled: #1a1a1a;
+    in property <color> text-disabled: PixelTheme.dim;
     callback changed(page: int);
 
     HorizontalLayout {
@@ -378,10 +379,10 @@ export component PixelDrawer inherits Rectangle {
     in property <string> title: "";
     in property <length> drawer-width: 280px;
     in property <color> overlay: #00000080;
-    in property <color> panel: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> title-color: #000000;
-    in property <color> text-color: #000000;
+    in property <color> panel: PixelTheme.panel;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> title-color: PixelTheme.text;
+    in property <color> text-color: PixelTheme.text;
     callback close;
     visible: root.open;
 
@@ -428,9 +429,9 @@ export component PixelDrawer inherits Rectangle {
 export component PixelAvatar inherits Rectangle {
     in property <string> text: "?";
     in property <length> size: 36px;
-    in property <color> face: #f2f2f2;
-    in property <color> border: #1a1a1a;
-    in property <color> text-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> border: PixelTheme.edge;
+    in property <color> text-color: PixelTheme.text;
     width: root.size;
     height: root.size;
 
@@ -454,9 +455,9 @@ export component PixelAvatar inherits Rectangle {
 export component PixelTag inherits Rectangle {
     in property <string> text: "";
     in property <bool> closable: false;
-    in property <color> face: #f2f2f2;
-    in property <color> border: #1a1a1a;
-    in property <color> text-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> border: PixelTheme.edge;
+    in property <color> text-color: PixelTheme.text;
     callback closed;
     height: 24px;
 
@@ -498,10 +499,10 @@ export component PixelTag inherits Rectangle {
 export component PixelCard inherits Rectangle {
     in property <string> title: "";
     in property <bool> bordered: true;
-    in property <color> bg: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> title-color: #000000;
+    in property <color> bg: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> title-color: PixelTheme.text;
     background: root.bg;
 
     Rectangle {
@@ -534,11 +535,11 @@ export component PixelNavbar inherits Rectangle {
     in property <string> brand: "";
     in property <[string]> items: [];
     in-out property <int> active: 0;
-    in property <color> bg: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> brand-color: #000000;
-    in property <color> text-color: #525252;
-    in property <color> text-active: #000000;
+    in property <color> bg: PixelTheme.bg;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> brand-color: PixelTheme.text;
+    in property <color> text-color: PixelTheme.dim;
+    in property <color> text-active: PixelTheme.text;
     callback selected(index: int);
     height: 48px;
 
@@ -596,9 +597,9 @@ export component PixelEmpty inherits Rectangle {
     in property <string> icon: "□";
     in property <string> title: "暂无数据";
     in property <string> description: "";
-    in property <color> icon-color: #1a1a1a;
-    in property <color> title-color: #000000;
-    in property <color> desc-color: #525252;
+    in property <color> icon-color: PixelTheme.text;
+    in property <color> title-color: PixelTheme.text;
+    in property <color> desc-color: PixelTheme.dim;
     height: 180px;
 
     VerticalLayout {
@@ -631,8 +632,8 @@ export component PixelEmpty inherits Rectangle {
 // ===== 分隔线 =====
 export component PixelDivider inherits Rectangle {
     in property <string> text: "";
-    in property <color> edge: #1a1a1a;
-    in property <color> text-color: #525252;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> text-color: PixelTheme.dim;
     height: 20px;
 
     HorizontalLayout {
@@ -671,11 +672,11 @@ export component PixelStat inherits Rectangle {
     in property <string> value: "0";
     in property <string> delta: "";
     in property <bool> delta-up: true;
-    in property <color> bg: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> label-color: #525252;
-    in property <color> value-color: #000000;
-    in property <color> delta-color: #000000;
+    in property <color> bg: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> label-color: PixelTheme.dim;
+    in property <color> value-color: PixelTheme.text;
+    in property <color> delta-color: PixelTheme.text;
     in property <length> frame-height: 90px;
     height: root.frame-height;
 

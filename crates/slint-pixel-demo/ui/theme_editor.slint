@@ -1,0 +1,187 @@
+// slint-pixel · 主题编辑器（独立窗口）：实时换肤 + 一键生成样式代码
+import { PixelTitleBar, PixelButton, PixelText, PixelWindowResize, PixelTheme } from "@slint_pixel";
+
+// ===== 主题色行（标签 + 当前色 + 候选色） =====
+component ThemeColorRow inherits Rectangle {
+    in property <string> label: "";
+    in property <color> value;
+    in property <[color]> options: [];
+    callback select(color);
+    height: 28px;
+
+    HorizontalLayout {
+        spacing: 8px;
+        Text {
+            width: 110px;
+            text: root.label;
+            color: PixelTheme.text;
+            font-size: 12px;
+            vertical-alignment: center;
+        }
+        Rectangle {
+            width: 26px; height: 26px;
+            background: root.value;
+            border-width: 2px;
+            border-color: PixelTheme.edge;
+        }
+        for opt in root.options : Rectangle {
+            width: 20px; height: 20px;
+            background: opt;
+            border-width: 1px;
+            border-color: PixelTheme.edge;
+            opt-ta := TouchArea {
+                width: 100%; height: 100%;
+                clicked => { root.select(opt); }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+export component ThemeEditorWindow inherits Window {
+    title: "slint-pixel 主题编辑器";
+    no-frame: true;
+    preferred-width: 620px;
+    preferred-height: 780px;
+    min-width: 600px;
+    min-height: 760px;
+    background: PixelTheme.bg;
+
+    callback drag-start();
+    callback minimize();
+    callback toggle-maximize();
+    callback close-window();
+    callback begin-resize(string);
+    callback generate-theme();
+    in-out property <string> generated-theme: "";
+    // 主题当前值（跟随 PixelTheme，供 Rust 生成样式代码）
+    in-out property <color> t-bg: PixelTheme.bg;
+    in-out property <color> t-panel: PixelTheme.panel;
+    in-out property <color> t-hover: PixelTheme.hover;
+    in-out property <color> t-edge: PixelTheme.edge;
+    in-out property <color> t-shadow: PixelTheme.shadow;
+    in-out property <color> t-text: PixelTheme.text;
+    in-out property <color> t-dim: PixelTheme.dim;
+    in-out property <color> t-accent: PixelTheme.accent;
+    in-out property <color> t-danger: PixelTheme.danger;
+
+    // ---------- 主题预设 ----------
+    function preset-white() {
+        PixelTheme.bg = #ffffff; PixelTheme.panel = #ffffff; PixelTheme.hover = #f2f2f2;
+        PixelTheme.edge = #1a1a1a; PixelTheme.shadow = #000000; PixelTheme.text = #000000;
+        PixelTheme.dim = #525252; PixelTheme.accent = #000000; PixelTheme.danger = #ff004d;
+    }
+    function preset-gray() {
+        PixelTheme.bg = #f7f7f7; PixelTheme.panel = #f0f0f0; PixelTheme.hover = #e5e5e5;
+        PixelTheme.edge = #1a1a1a; PixelTheme.shadow = #000000; PixelTheme.text = #000000;
+        PixelTheme.dim = #6b6b6b; PixelTheme.accent = #000000; PixelTheme.danger = #dc2626;
+    }
+    function preset-dark() {
+        PixelTheme.bg = #141414; PixelTheme.panel = #1c1c1c; PixelTheme.hover = #2a2a2a;
+        PixelTheme.edge = #3d3d3d; PixelTheme.shadow = #000000; PixelTheme.text = #f5f5f5;
+        PixelTheme.dim = #9a9a9a; PixelTheme.accent = #f5b301; PixelTheme.danger = #ff004d;
+    }
+    function preset-blue() {
+        PixelTheme.bg = #ffffff; PixelTheme.panel = #eef4ff; PixelTheme.hover = #dfeaff;
+        PixelTheme.edge = #2563eb; PixelTheme.shadow = #1e3a8a; PixelTheme.text = #0f172a;
+        PixelTheme.dim = #64748b; PixelTheme.accent = #2563eb; PixelTheme.danger = #dc2626;
+    }
+
+    VerticalLayout {
+        padding: 12px;
+        spacing: 10px;
+
+        PixelTitleBar {
+            title: "THEME EDITOR · 主题编辑器";
+            bg: PixelTheme.bg;
+            text-color: PixelTheme.dim;
+            accent: PixelTheme.accent;
+            btn-face: PixelTheme.hover;
+            btn-hover: PixelTheme.hover;
+            btn-icon: PixelTheme.text;
+            close-hover: PixelTheme.danger;
+            divider: PixelTheme.shadow;
+            drag-start => { root.drag-start(); }
+            minimize => { root.minimize(); }
+            toggle-maximize => { root.toggle-maximize(); }
+            close-window => { root.close-window(); }
+        }
+
+        // 预设
+        Rectangle {
+            background: PixelTheme.panel;
+            border-width: 2px;
+            border-color: PixelTheme.edge;
+            VerticalLayout {
+                padding: 12px;
+                spacing: 10px;
+                Text { text: "预设主题"; color: PixelTheme.text; font-weight: 800; font-size: 13px; }
+                HorizontalLayout {
+                    spacing: 8px;
+                    PixelButton { text: "纯白"; width: 70px; clicked => { root.preset-white(); } }
+                    PixelButton { text: "浅灰"; width: 70px; clicked => { root.preset-gray(); } }
+                    PixelButton { text: "黑金"; width: 70px; clicked => { root.preset-dark(); } }
+                    PixelButton { text: "蓝白"; width: 70px; clicked => { root.preset-blue(); } }
+                }
+            }
+        }
+
+        // 语义色
+        Rectangle {
+            background: PixelTheme.panel;
+            border-width: 2px;
+            border-color: PixelTheme.edge;
+            VerticalLayout {
+                padding: 12px;
+                spacing: 8px;
+                Text { text: "语义色（点候选色实时生效，主界面同步变化）"; color: PixelTheme.text; font-weight: 800; font-size: 13px; }
+                ThemeColorRow { label: "背景 bg"; value: PixelTheme.bg; options: [#ffffff, #f7f7f7, #141414, #eef4ff]; select(c) => { PixelTheme.bg = c; } }
+                ThemeColorRow { label: "面板 panel"; value: PixelTheme.panel; options: [#ffffff, #f0f0f0, #1c1c1c, #eef4ff]; select(c) => { PixelTheme.panel = c; } }
+                ThemeColorRow { label: "悬停 hover"; value: PixelTheme.hover; options: [#f2f2f2, #e5e5e5, #2a2a2a, #dfeaff]; select(c) => { PixelTheme.hover = c; } }
+                ThemeColorRow { label: "边框 edge"; value: PixelTheme.edge; options: [#1a1a1a, #3d3d3d, #2563eb, #000000]; select(c) => { PixelTheme.edge = c; } }
+                ThemeColorRow { label: "阴影 shadow"; value: PixelTheme.shadow; options: [#000000, #1e3a8a, #333333]; select(c) => { PixelTheme.shadow = c; } }
+                ThemeColorRow { label: "文字 text"; value: PixelTheme.text; options: [#000000, #0f172a, #f5f5f5]; select(c) => { PixelTheme.text = c; } }
+                ThemeColorRow { label: "次要 dim"; value: PixelTheme.dim; options: [#525252, #6b6b6b, #64748b, #9a9a9a]; select(c) => { PixelTheme.dim = c; } }
+                ThemeColorRow { label: "强调 accent"; value: PixelTheme.accent; options: [#000000, #2563eb, #16a34a, #7c3aed, #f5b301]; select(c) => { PixelTheme.accent = c; } }
+                ThemeColorRow { label: "危险 danger"; value: PixelTheme.danger; options: [#ff004d, #dc2626, #e11d48]; select(c) => { PixelTheme.danger = c; } }
+            }
+        }
+
+        // 一键生成
+        Rectangle {
+            background: PixelTheme.panel;
+            border-width: 2px;
+            border-color: PixelTheme.edge;
+            VerticalLayout {
+                padding: 12px;
+                spacing: 10px;
+                HorizontalLayout {
+                    spacing: 10px;
+                    PixelButton { text: "一键生成样式"; width: 130px; variant: "primary"; clicked => { root.generate-theme(); } }
+                    PixelText { text: "生成 PixelTheme 覆盖代码"; color: PixelTheme.dim; vertical-alignment: center; }
+                }
+                Rectangle {
+                    height: 150px;
+                    background: PixelTheme.bg;
+                    border-width: 2px;
+                    border-color: PixelTheme.edge;
+                    Text {
+                        x: 6px; y: 4px;
+                        width: parent.width - 12px; height: parent.height - 8px;
+                        text: root.generated-theme;
+                        color: PixelTheme.text;
+                        font-size: 11px;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+        }
+
+        PixelText { text: "改完主题后，主界面（画廊/画板）实时同步；点“一键生成样式”复制代码到你的项目。"; color: PixelTheme.dim; font-size: 12px; wrap: word-wrap; }
+    }
+
+    // 无边框窗口缩放热区
+    PixelWindowResize {
+        begin-resize(dir) => { root.begin-resize(dir); }
+    }
+}

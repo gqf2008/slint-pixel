@@ -1,3 +1,4 @@
+import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
 // slint-pixel · 可复用像素风组件库（Slint 1.17）
 //
@@ -19,9 +20,9 @@
 // ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
 component TitleButton inherits Rectangle {
     in property <string> kind: "min"; // min | max | close
-    in property <color> face: #ffffff;
-    in property <color> hover-face: #f2f2f2;
-    in property <color> icon: #000000;
+    in property <color> face: PixelTheme.bg;
+    in property <color> hover-face: PixelTheme.hover;
+    in property <color> icon: PixelTheme.text;
     callback clicked;
     width: 30px; height: 26px;
     background: ta.has-hover ? root.hover-face : root.face;
@@ -61,14 +62,14 @@ component TitleButton inherits Rectangle {
 // ===== 像素标题栏（可复用：暴露 drag-start / minimize / toggle-maximize / close-window） =====
 export component PixelTitleBar inherits Rectangle {
     in property <string> title: "";
-    in property <color> bg: #ffffff;
-    in property <color> text-color: #525252;
-    in property <color> accent: #000000;
-    in property <color> btn-face: #ffffff;
-    in property <color> btn-hover: #f2f2f2;
-    in property <color> btn-icon: #000000;
-    in property <color> close-hover: #ff004d;
-    in property <color> divider: #000000;
+    in property <color> bg: PixelTheme.bg;
+    in property <color> text-color: PixelTheme.dim;
+    in property <color> accent: PixelTheme.accent;
+    in property <color> btn-face: PixelTheme.hover;
+    in property <color> btn-hover: PixelTheme.hover;
+    in property <color> btn-icon: PixelTheme.text;
+    in property <color> close-hover: PixelTheme.danger;
+    in property <color> divider: PixelTheme.shadow;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -129,8 +130,8 @@ export component PixelTitleBar inherits Rectangle {
 export component Swatch inherits Rectangle {
     in property <color> fill;
     in property <bool> selected: false;
-    in property <color> select-color: #000000;
-    in property <color> shade: #000000;
+    in property <color> select-color: PixelTheme.accent;
+    in property <color> shade: PixelTheme.shadow;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -155,18 +156,18 @@ export component PixelButton inherits Rectangle {
     in property <string> variant: "default";
     // size: small | medium | large
     in property <string> size: "medium";
-    in property <color> face: #f2f2f2;
-    in property <color> face-active: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> border-active: #000000;
-    in property <color> text-color: #000000;
-    in property <color> shadow: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-active: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-active: PixelTheme.accent;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> shadow: PixelTheme.shadow;
     // variant 专用色（默认值随黑白主题）
-    in property <color> primary-face: #000000;
+    in property <color> primary-face: PixelTheme.accent;
     in property <color> primary-text: #ffffff;
-    in property <color> danger-face: #dc2626;
+    in property <color> danger-face: PixelTheme.danger;
     in property <color> danger-text: #ffffff;
-    in property <color> ghost-text: #000000;
+    in property <color> ghost-text: PixelTheme.text;
     callback clicked;
 
     property <color> eff-face: root.active ? root.face-active
@@ -181,7 +182,14 @@ export component PixelButton inherits Rectangle {
         : (root.size == "large" ? 42px : 30px);
 
     height: root.eff-height;
-    background: root.shadow;
+    background: transparent;
+    // 阴影层（ghost 不显示，避免黑底透出）
+    Rectangle {
+        visible: root.variant != "ghost";
+        x: 2px; y: 2px;
+        width: root.width; height: root.height;
+        background: root.shadow;
+    }
     Rectangle {
         x: ta.pressed ? 2px : 0px;
         y: ta.pressed ? 2px : 0px;
@@ -208,15 +216,15 @@ export component PixelButton inherits Rectangle {
 // ==================== 画板 widget（可嵌入任意宿主布局） ====================
 export component PixelPainter inherits Rectangle {
     // ---------- 主题（宿主可覆盖） ----------
-    in property <color> page: #ffffff;          // 画布底色
-    in property <color> panel: #ffffff;         // 面板底色
-    in property <color> panel-light: #f2f2f2;   // 按钮/高亮面
-    in property <color> edge: #1a1a1a;          // 边框/分隔线
-    in property <color> shadow: #000000;        // 阴影/描边
-    in property <color> text-color: #000000;    // 主文字
-    in property <color> dim: #525252;           // 次要文字
-    in property <color> highlight: #000000;     // 强调色
-    in property <color> danger: #ff004d;        // 危险操作
+    in property <color> page: PixelTheme.bg;          // 画布底色
+    in property <color> panel: PixelTheme.panel;         // 面板底色
+    in property <color> panel-light: PixelTheme.hover;   // 按钮/高亮面
+    in property <color> edge: PixelTheme.edge;          // 边框/分隔线
+    in property <color> shadow: PixelTheme.shadow;        // 阴影/描边
+    in property <color> text-color: PixelTheme.text;    // 主文字
+    in property <color> dim: PixelTheme.dim;           // 次要文字
+    in property <color> highlight: PixelTheme.accent;     // 强调色
+    in property <color> danger: PixelTheme.danger;        // 危险操作
 
     // ---------- PICO-8 色板（宿主可覆盖） ----------
     in property <[color]> palette: [

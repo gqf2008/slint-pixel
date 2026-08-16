@@ -1,3 +1,4 @@
+import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
 // slint-pixel · 进阶像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
 //
@@ -20,12 +21,12 @@ component PixelPopupList inherits Rectangle {
     in property <[string]> items: [];
     in property <int> current: -1;
     in property <length> item-height: 28px;
-    in property <color> face: #ffffff;
-    in property <color> face-hover: #f2f2f2;
-    in property <color> face-current: #000000;
-    in property <color> edge: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
+    in property <color> face: PixelTheme.bg;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> face-current: PixelTheme.accent;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
     callback selected(index: int);
 
     Rectangle {
@@ -78,12 +79,12 @@ export component PixelRadioButton inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> face-checked: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dot-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-checked: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dot-color: PixelTheme.text;
     callback toggled;
     height: 24px;
     opacity: root.enabled ? 1.0 : 0.5;
@@ -129,12 +130,12 @@ export component PixelRadioGroup inherits Rectangle {
     in property <[string]> options: [];
     in-out property <int> index: 0;
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> face-checked: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dot-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-checked: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dot-color: PixelTheme.text;
     callback selected(index: int);
 
     VerticalLayout {
@@ -188,16 +189,16 @@ export component PixelComboBox inherits Rectangle {
     in-out property <bool> open: false;
     in property <string> placeholder: "请选择";
     in property <bool> enabled: true;
-    in property <color> face: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> border-focus: #000000;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dim: #525252;
-    in property <color> item-face: #ffffff;
-    in property <color> item-hover: #f2f2f2;
-    in property <color> item-current: #000000;
-    in property <color> item-border: #1a1a1a;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    in property <color> item-face: PixelTheme.bg;
+    in property <color> item-hover: PixelTheme.hover;
+    in property <color> item-current: PixelTheme.accent;
+    in property <color> item-border: PixelTheme.edge;
     callback selected(index: int);
     height: 32px;
     opacity: root.enabled ? 1.0 : 0.5;
@@ -283,15 +284,15 @@ export component PixelMenu inherits Rectangle {
     in-out property <bool> open: false;
     in property <string> button-text: "菜单";
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dim: #525252;
-    in property <color> item-face: #ffffff;
-    in property <color> item-hover: #f2f2f2;
-    in property <color> item-current: #000000;
-    in property <color> item-border: #1a1a1a;
+    in property <color> face: PixelTheme.hover;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    in property <color> item-face: PixelTheme.bg;
+    in property <color> item-hover: PixelTheme.hover;
+    in property <color> item-current: PixelTheme.accent;
+    in property <color> item-border: PixelTheme.edge;
     callback selected(index: int);
     width: 120px;
     height: 32px;
@@ -378,15 +379,15 @@ export component PixelTableView inherits Rectangle {
     in property <bool> enabled: true;
     in property <length> header-height: 28px;
     in property <length> row-height: 26px;
-    in property <color> face: #ffffff;
-    in property <color> header-face: #ffffff;
-    in property <color> row-even: #ffffff;
-    in property <color> row-odd: #ffffff;
-    in property <color> row-selected: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dim: #525252;
+    in property <color> face: PixelTheme.bg;
+    in property <color> header-face: PixelTheme.panel;
+    in property <color> row-even: PixelTheme.bg;
+    in property <color> row-odd: PixelTheme.bg;
+    in property <color> row-selected: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
     callback row-clicked(row: int);
     opacity: root.enabled ? 1.0 : 0.5;
 
@@ -467,8 +468,8 @@ export component PixelTableView inherits Rectangle {
 import { ScrollView } from "std-widgets.slint";
 
 export component PixelScrollPanel inherits Rectangle {
-    in property <color> panel-bg: #ffffff;
-    in property <color> edge: #1a1a1a;
+    in property <color> panel-bg: PixelTheme.bg;
+    in property <color> edge: PixelTheme.edge;
     in property <length> initial-scroll-y: 0px;
     background: root.panel-bg;
     border-width: 2px;
@@ -490,13 +491,13 @@ export component PixelCollapsible inherits Rectangle {
     in property <string> title: "";
     in-out property <bool> expanded: false;
     in property <bool> enabled: true;
-    in property <color> header-face: #ffffff;
-    in property <color> header-hover: #f2f2f2;
-    in property <color> body: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> highlight: #000000;
+    in property <color> header-face: PixelTheme.panel;
+    in property <color> header-hover: PixelTheme.hover;
+    in property <color> body: PixelTheme.bg;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> highlight: PixelTheme.accent;
     callback toggled(expanded: bool);
     opacity: root.enabled ? 1.0 : 0.5;
 
@@ -566,13 +567,13 @@ export component PixelAccordion inherits Rectangle {
     in property <[string]> contents: [];
     in-out property <int> active: -1;
     in property <bool> enabled: true;
-    in property <color> header-face: #ffffff;
-    in property <color> header-hover: #f2f2f2;
-    in property <color> body: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> highlight: #000000;
+    in property <color> header-face: PixelTheme.panel;
+    in property <color> header-hover: PixelTheme.hover;
+    in property <color> body: PixelTheme.bg;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> highlight: PixelTheme.accent;
     callback toggled(index: int);
     opacity: root.enabled ? 1.0 : 0.5;
 
@@ -655,15 +656,15 @@ export component PixelSidebar inherits Rectangle {
     in property <string> title: "";
     in property <bool> enabled: true;
     in property <length> sidebar-width: 170px;
-    in property <color> sidebar-bg: #ffffff;
-    in property <color> item-hover: #f2f2f2;
-    in property <color> item-active: #000000;
-    in property <color> content-bg: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> dim: #525252;
-    in property <color> highlight: #000000;
+    in property <color> sidebar-bg: PixelTheme.bg;
+    in property <color> item-hover: PixelTheme.hover;
+    in property <color> item-active: PixelTheme.accent;
+    in property <color> content-bg: PixelTheme.bg;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    in property <color> highlight: PixelTheme.accent;
     callback selected(index: int);
     opacity: root.enabled ? 1.0 : 0.5;
 

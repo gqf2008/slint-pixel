@@ -9,8 +9,9 @@ import {
     PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm,
     PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
     PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
-    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize,
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme,
 } from "@slint_pixel";
+
 
 export component GalleryWindow inherits Window {
     title: "Slint 像素组件库";
@@ -56,9 +57,23 @@ export component GalleryWindow inherits Window {
     callback toggle-maximize();
     callback close-window();
     callback open-painter();
+    callback open-theme-editor();
     callback begin-resize(string);
+    callback generate-theme();
+    in-out property <string> generated-theme: "";
+    // 主题当前值（跟随 PixelTheme，供 Rust 生成样式代码）
+    in-out property <color> t-bg: PixelTheme.bg;
+    in-out property <color> t-panel: PixelTheme.panel;
+    in-out property <color> t-hover: PixelTheme.hover;
+    in-out property <color> t-edge: PixelTheme.edge;
+    in-out property <color> t-shadow: PixelTheme.shadow;
+    in-out property <color> t-text: PixelTheme.text;
+    in-out property <color> t-dim: PixelTheme.dim;
+    in-out property <color> t-accent: PixelTheme.accent;
+    in-out property <color> t-danger: PixelTheme.danger;
     callback dialog-accept();
     callback dialog-cancel();
+
 
     VerticalLayout {
         padding: 12px;

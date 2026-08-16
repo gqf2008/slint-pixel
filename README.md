@@ -61,11 +61,14 @@
 | `PixelNavbar` | 顶栏导航（品牌 + 菜单项 + 右侧插槽） |
 | `PixelEmpty` | 空状态（图标 + 标题 + 描述 + 操作插槽） |
 | `PixelDivider` | 分隔线（可带文字） |
-| PixelStat | 统计卡片（大数字 + 标签 + 变化） |
-| PixelWindowResize | 无边框窗口缩放热区（四边/四角，配合 install_window_resize） |
+| `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
+| `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
+| `PixelTheme` | 全局主题（bg/panel/hover/edge/shadow/text/dim/accent/danger 九色，改一处全部组件实时换肤） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
 > 主题：默认是 **纯白**（纯白底 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
+> **一键换肤**：所有组件默认色引用全局 `PixelTheme`（九色语义），改一处全部生效；
+> 画廊里点 **主题编辑器** 可调色/切预设，点 **一键生成样式** 直接产出 `.slint` 覆盖代码。
 > `PixelButton` 支持 `variant`（default/primary/danger/ghost）与 `size`（small/medium/large），对齐 Tailwind 按钮语义。
 > 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 
@@ -93,6 +96,7 @@ cargo run
 crates/
 ├── slint-pixel/                  # 组件库（lib）
 │   ├── ui/lib.slint               # @slint_pixel 汇总入口（re-export 全部组件）
+│   ├── ui/pixel_theme.slint         # 全局主题 PixelTheme（九色语义）
 │   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
 │   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
 │   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
@@ -104,6 +108,7 @@ crates/
 │       └── canvas.rs              # 画布数据、放大渲染、PNG 导出（含单元测试）
 └── slint-pixel-demo/             # 演示程序（bin，作为下游消费者组装窗口）
     ├── ui/gallery.slint           # 组件画廊窗口
+    ├── ui/theme_editor.slint        # 主题编辑器（一键换肤 + 生成样式代码）
     ├── ui/main.slint              # 画板窗口（通过 @slint_pixel 组装）
     └── src/main.rs                # 接线：install_painter / install_title_bar_controls / 打开画板
 ```

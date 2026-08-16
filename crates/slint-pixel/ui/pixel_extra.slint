@@ -1,3 +1,4 @@
+import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
 // slint-pixel · 表单/反馈/文本类像素风组件（纯 Slint 自绘，跨平台）
 //
@@ -33,7 +34,7 @@ export component PixelTitle inherits Text {
 export component PixelFormItem inherits Rectangle {
     in property <string> label: "";
     in property <length> label-width: 90px;
-    in property <color> label-color: #000000;
+    in property <color> label-color: PixelTheme.text;
     HorizontalLayout {
         spacing: 10px;
         Text {
@@ -62,12 +63,12 @@ export component PixelTextArea inherits Rectangle {
     in property <string> placeholder: "";
     in property <bool> enabled: true;
     in property <length> frame-height: 96px;
-    in property <color> face: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> border-focus: #000000;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> placeholder-color: #525252;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> placeholder-color: PixelTheme.dim;
     callback accepted;
     callback edited;
     height: root.frame-height;
@@ -111,12 +112,12 @@ export component PixelIconButton inherits Rectangle {
     in property <string> icon: "?";
     in property <bool> active: false;
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> face-hover: #f2f2f2;
-    in property <color> face-active: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> icon-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> face-active: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> icon-color: PixelTheme.text;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -154,10 +155,10 @@ export component PixelTooltip inherits Rectangle {
     in property <string> text: "";
     in property <duration> delay: 400ms;
     in-out property <bool> open: false;
-    in property <color> bubble-bg: #000000;
-    in property <color> bubble-border: #000000;
+    in property <color> bubble-bg: PixelTheme.shadow;
+    in property <color> bubble-border: PixelTheme.shadow;
     in property <color> text-color: #ffffff;
-    in property <color> arrow: #000000;
+    in property <color> arrow: PixelTheme.shadow;
 
     // 悬停轮询：悬停/外部 open 则显示，离开则关闭
     property <bool> hovered: ta.has-hover;
@@ -214,15 +215,15 @@ export component PixelBubble inherits Rectangle {
     in property <string> icon: "?";
     in-out property <bool> open: false;
     in property <string> title: "";
-    in property <color> face: #f2f2f2;
-    in property <color> face-hover: #f2f2f2;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> icon-color: #000000;
-    in property <color> bubble-bg: #ffffff;
-    in property <color> bubble-edge: #1a1a1a;
-    in property <color> bubble-shadow: #000000;
-    in property <color> title-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> icon-color: PixelTheme.text;
+    in property <color> bubble-bg: PixelTheme.bg;
+    in property <color> bubble-edge: PixelTheme.edge;
+    in property <color> bubble-shadow: PixelTheme.shadow;
+    in property <color> title-color: PixelTheme.text;
     callback closed;
     width: 34px;
     height: 34px;
@@ -313,15 +314,15 @@ export component PixelPopconfirm inherits Rectangle {
     in property <string> cancel-text: "取消";
     in-out property <bool> open: false;
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> face-hover: #f2f2f2;
-    in property <color> danger: #ff004d;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> bubble-bg: #ffffff;
-    in property <color> bubble-edge: #1a1a1a;
-    in property <color> bubble-shadow: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> danger: PixelTheme.danger;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> bubble-bg: PixelTheme.bg;
+    in property <color> bubble-edge: PixelTheme.edge;
+    in property <color> bubble-shadow: PixelTheme.shadow;
     callback confirm;
     callback cancel;
     width: 96px;

@@ -1,6 +1,7 @@
 fn main() {
     println!("cargo:rerun-if-changed=ui/main.slint");
     println!("cargo:rerun-if-changed=ui/gallery.slint");
+    println!("cargo:rerun-if-changed=ui/theme_editor.slint");
     println!("cargo:rerun-if-changed=../slint-pixel/ui/pixel_complex.slint");
     println!("cargo:rerun-if-changed=../slint-pixel/ui/pixel_extra.slint");
     println!("cargo:rerun-if-changed=../slint-pixel/ui/pixel_tailwind.slint");
@@ -11,5 +12,7 @@ fn main() {
     }
     let config = slint_build::CompilerConfiguration::new().with_library_paths(library_paths);
     slint_build::compile_with_config("ui/main.slint", config.clone()).expect("编译 Slint UI 失败");
-    slint_build::compile_with_config("ui/gallery.slint", config).expect("编译 Slint UI 失败");
+    slint_build::compile_with_config("ui/gallery.slint", config.clone())
+        .expect("编译 Slint UI 失败");
+    slint_build::compile_with_config("ui/theme_editor.slint", config).expect("编译 Slint UI 失败");
 }

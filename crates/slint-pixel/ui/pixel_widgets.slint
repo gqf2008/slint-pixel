@@ -1,3 +1,4 @@
+import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
 // slint-pixel · 常用像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
 //
@@ -22,12 +23,12 @@ export component PixelCheckBox inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #f2f2f2;
-    in property <color> face-checked: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> check-color: #000000;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-checked: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: #ffffff;
+    in property <color> check-color: PixelTheme.text;
     callback toggled;
     height: 24px;
     opacity: root.enabled ? 1.0 : 0.5;
@@ -76,11 +77,11 @@ export component PixelCheckBox inherits Rectangle {
 export component PixelSwitch inherits Rectangle {
     in-out property <bool> checked: false;
     in property <bool> enabled: true;
-    in property <color> track-off: #ffffff;
-    in property <color> track-on: #000000;
-    in property <color> thumb: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
+    in property <color> track-off: PixelTheme.panel;
+    in property <color> track-on: PixelTheme.accent;
+    in property <color> thumb: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
     callback toggled;
     width: 46px;
     height: 24px;
@@ -120,11 +121,11 @@ export component PixelSlider inherits Rectangle {
     in property <float> min: 0.0;
     in property <float> max: 100.0;
     in property <bool> enabled: true;
-    in property <color> track: #ffffff;
-    in property <color> fill: #000000;
-    in property <color> thumb: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
+    in property <color> track: PixelTheme.panel;
+    in property <color> fill: PixelTheme.accent;
+    in property <color> thumb: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
     callback changed(value: float);
     height: 28px;
 
@@ -196,12 +197,12 @@ export component PixelTextInput inherits Rectangle {
     in-out property <string> text: "";
     in property <string> placeholder: "";
     in property <bool> enabled: true;
-    in property <color> face: #ffffff;
-    in property <color> border: #1a1a1a;
-    in property <color> border-focus: #000000;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
-    in property <color> placeholder-color: #525252;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: #ffffff;
+    in property <color> placeholder-color: PixelTheme.dim;
     callback accepted;
     callback edited;
     height: 32px;
@@ -244,11 +245,11 @@ export component PixelTextInput inherits Rectangle {
 export component PixelProgressBar inherits Rectangle {
     in property <float> progress: 0.0; // 0..1
     in property <bool> show-text: false;
-    in property <color> track: #ffffff;
-    in property <color> fill: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
+    in property <color> track: PixelTheme.panel;
+    in property <color> fill: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: #ffffff;
     height: 24px;
 
     property <float> clamped: Math.max(0.0, Math.min(1.0, root.progress));
@@ -288,10 +289,10 @@ export component PixelProgressBar inherits Rectangle {
 export component PixelBadge inherits Rectangle {
     in property <string> text: "";
     in property <length> font-size: 12px;
-    in property <color> face: #000000;
-    in property <color> border: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> text-color: #000000;
+    in property <color> face: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: #ffffff;
     height: 22px;
 
     Rectangle {
@@ -320,9 +321,9 @@ export component PixelBadge inherits Rectangle {
 // （否则在 ScrollView 等容器里面板高度会塌缩成只有标题行）。
 export component PixelPanel inherits Rectangle {
     in property <string> title: "";
-    in property <color> panel: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> title-color: #000000;
+    in property <color> panel: PixelTheme.panel;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> title-color: PixelTheme.text;
 
     background: root.panel;
     border-width: 2px;
@@ -348,13 +349,13 @@ export component PixelDialog inherits Rectangle {
     in-out property <bool> open: false;
     in property <string> title: "对话框";
     in property <color> overlay: #00000080;
-    in property <color> panel: #ffffff;
-    in property <color> edge: #1a1a1a;
-    in property <color> shadow: #000000;
-    in property <color> title-color: #000000;
-    in property <color> text-color: #000000;
-    in property <color> close-color: #000000;
-    in property <color> close-hover: #f2f2f2;
+    in property <color> panel: PixelTheme.panel;
+    in property <color> edge: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> title-color: PixelTheme.text;
+    in property <color> text-color: #ffffff;
+    in property <color> close-color: PixelTheme.text;
+    in property <color> close-hover: PixelTheme.hover;
     callback accept;
     callback cancel;
     visible: root.open;
