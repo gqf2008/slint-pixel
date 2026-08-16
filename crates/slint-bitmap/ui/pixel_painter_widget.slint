@@ -19,9 +19,9 @@
 // ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
 component TitleButton inherits Rectangle {
     in property <string> kind: "min"; // min | max | close
-    in property <color> face: #29366f;
-    in property <color> hover-face: #3d4b94;
-    in property <color> icon: #fff1e8;
+    in property <color> face: #f5f3ef;
+    in property <color> hover-face: #ece9e2;
+    in property <color> icon: #262626;
     callback clicked;
     width: 30px; height: 26px;
     background: ta.has-hover ? root.hover-face : root.face;
@@ -61,14 +61,14 @@ component TitleButton inherits Rectangle {
 // ===== 像素标题栏（可复用：暴露 drag-start / minimize / toggle-maximize / close-window） =====
 export component PixelTitleBar inherits Rectangle {
     in property <string> title: "";
-    in property <color> bg: #1d2b53;
-    in property <color> text-color: #aab3d8;
+    in property <color> bg: #ffffff;
+    in property <color> text-color: #8b8780;
     in property <color> accent: #ffec27;
-    in property <color> btn-face: #29366f;
-    in property <color> btn-hover: #3d4b94;
-    in property <color> btn-icon: #fff1e8;
+    in property <color> btn-face: #f5f3ef;
+    in property <color> btn-hover: #ece9e2;
+    in property <color> btn-icon: #262626;
     in property <color> close-hover: #ff004d;
-    in property <color> divider: #0d0b1e;
+    in property <color> divider: #48453f;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -130,7 +130,7 @@ export component Swatch inherits Rectangle {
     in property <color> fill;
     in property <bool> selected: false;
     in property <color> select-color: #ffec27;
-    in property <color> shade: #0d0b1e;
+    in property <color> shade: #48453f;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -151,12 +151,12 @@ export component Swatch inherits Rectangle {
 export component PixelButton inherits Rectangle {
     in property <string> text: "";
     in property <bool> active: false;
-    in property <color> face: #3d4b94;
+    in property <color> face: #ece9e2;
     in property <color> face-active: #29adff;
-    in property <color> border: #83769c;
+    in property <color> border: #d4d0c8;
     in property <color> border-active: #ffec27;
-    in property <color> text-color: #fff1e8;
-    in property <color> shadow: #0d0b1e;
+    in property <color> text-color: #262626;
+    in property <color> shadow: #48453f;
     callback clicked;
     height: 30px;
     background: root.shadow;
@@ -186,13 +186,13 @@ export component PixelButton inherits Rectangle {
 // ==================== 画板 widget（可嵌入任意宿主布局） ====================
 export component PixelPainter inherits Rectangle {
     // ---------- 主题（宿主可覆盖） ----------
-    in property <color> page: #1d2b53;          // 画布底色
-    in property <color> panel: #29366f;         // 面板底色
-    in property <color> panel-light: #3d4b94;   // 按钮/高亮面
-    in property <color> edge: #83769c;          // 边框/分隔线
-    in property <color> shadow: #0d0b1e;        // 阴影/描边
-    in property <color> text-color: #fff1e8;    // 主文字
-    in property <color> dim: #aab3d8;           // 次要文字
+    in property <color> page: #ffffff;          // 画布底色
+    in property <color> panel: #f5f3ef;         // 面板底色
+    in property <color> panel-light: #ece9e2;   // 按钮/高亮面
+    in property <color> edge: #d4d0c8;          // 边框/分隔线
+    in property <color> shadow: #48453f;        // 阴影/描边
+    in property <color> text-color: #262626;    // 主文字
+    in property <color> dim: #8b8780;           // 次要文字
     in property <color> highlight: #ffec27;     // 强调色
     in property <color> danger: #ff004d;        // 危险操作
 
@@ -283,7 +283,7 @@ export component PixelPainter inherits Rectangle {
                         padding: 12px;
                         spacing: 10px;
 
-                        Text { text: "调色板 PALETTE"; color: root.highlight; font-weight: 800; letter-spacing: 1px; }
+                        Text { text: "调色板 PALETTE"; color: root.text-color; font-weight: 800; letter-spacing: 1px; }
                         GridLayout {
                             spacing: 6px;
                             for c[j] in root.palette : Swatch {
@@ -291,7 +291,7 @@ export component PixelPainter inherits Rectangle {
                                 row: Math.floor(j / 4);
                                 fill: c;
                                 selected: root.brush-color == c;
-                                select-color: root.highlight;
+                                select-color: root.text-color;
                                 shade: root.shadow;
                                 clicked => {
                                     root.brush-color = c;
@@ -302,7 +302,7 @@ export component PixelPainter inherits Rectangle {
 
                         Rectangle { height: 2px; background: root.edge; }
 
-                        Text { text: "画笔尺寸 BRUSH"; color: root.highlight; font-weight: 800; letter-spacing: 1px; }
+                        Text { text: "画笔尺寸 BRUSH"; color: root.text-color; font-weight: 800; letter-spacing: 1px; }
                         HorizontalLayout {
                             spacing: 8px;
                             PixelButton {
@@ -322,7 +322,7 @@ export component PixelPainter inherits Rectangle {
                             }
                         }
 
-                        Text { text: "工具 TOOLS"; color: root.highlight; font-weight: 800; letter-spacing: 1px; }
+                        Text { text: "工具 TOOLS"; color: root.text-color; font-weight: 800; letter-spacing: 1px; }
                         HorizontalLayout {
                             spacing: 8px;
                             PixelButton {

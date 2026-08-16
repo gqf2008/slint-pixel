@@ -1,26 +1,27 @@
-// slint-bitmap 组件画廊：展示常用像素风组件（也是复用教程的完整示例）。
-// 通过 `@slint_bitmap` 导入组件并组装，窗口控制走 install_title_bar_controls。
+// slint-bitmap 组件画廊：展示全部像素风组件（也是复用教程的完整示例）。
 
 import {
     PixelTitleBar, PixelButton, PixelCheckBox, PixelSwitch, PixelSlider,
     PixelTextInput, PixelProgressBar, PixelBadge, PixelPanel, PixelDialog,
+    PixelRadioGroup, PixelComboBox, PixelMenu, PixelTableView, PixelScrollPanel,
+    PixelCollapsible, PixelAccordion, PixelSidebar,
 } from "@slint_bitmap";
 
 export component GalleryWindow inherits Window {
     title: "Slint 像素组件库";
     no-frame: true;
-    preferred-width: 700px;
+    preferred-width: 760px;
     preferred-height: 640px;
     background: c-bg;
 
     // ---------- 主题 ----------
-    property <color> c-bg: #1d2b53;
-    property <color> c-panel: #29366f;
-    property <color> c-panel-light: #3d4b94;
-    property <color> c-border: #83769c;
-    property <color> c-shadow: #0d0b1e;
-    property <color> c-text: #fff1e8;
-    property <color> c-dim: #aab3d8;
+    property <color> c-bg: #ffffff;
+    property <color> c-panel: #f5f3ef;
+    property <color> c-panel-light: #ece9e2;
+    property <color> c-border: #d4d0c8;
+    property <color> c-shadow: #48453f;
+    property <color> c-text: #262626;
+    property <color> c-dim: #8b8780;
     property <color> c-highlight: #ffec27;
     property <color> c-danger: #ff004d;
 
@@ -29,6 +30,13 @@ export component GalleryWindow inherits Window {
     in-out property <bool> sound-on: false;
     in-out property <float> slider-value: 60.0;
     in-out property <string> input-text: "像素";
+    in-out property <int> radio-index: 1;
+    in-out property <int> combo-index: 0;
+    in-out property <int> menu-index: -1;
+    in-out property <int> table-row: -1;
+    in-out property <int> accordion-active: 1;
+    in-out property <int> sidebar-active: 0;
+    property <bool> collapsible-open: true;
     property <bool> dialog-open: false;
 
     // ---------- 回调（Rust 接线） ----------
@@ -60,11 +68,11 @@ export component GalleryWindow inherits Window {
             close-window => { root.close-window(); }
         }
 
-        HorizontalLayout {
-            spacing: 10px;
-
-            // ===== 左列 =====
+        // ===== 滚动面板：承载全部组件（单列，滚轮/拖动滚动） =====
+        PixelScrollPanel {
             VerticalLayout {
+                // 显式宽度：打破 ScrollView 视口宽度 ↔ 内容宽度的循环绑定
+                width: root.width - 28px;
                 spacing: 10px;
                 PixelPanel {
                     title: "按钮 BUTTON";
@@ -100,11 +108,24 @@ export component GalleryWindow inherits Window {
                         Text { text: "回显: " + root.input-text; color: c-dim; font-size: 12px; }
                     }
                 }
-            }
-
-            // ===== 右列 =====
-            VerticalLayout {
-                spacing: 10px;
+                PixelPanel {
+                    title: "单选框 RADIO";
+                    PixelRadioGroup {
+                        options: ["像素风", "扁平风", "拟物风"];
+                        index <=> root.radio-index;
+                    }
+                }
+                PixelPanel {
+                    title: "下拉选择 COMBOBOX";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelComboBox {
+                            model: ["#ff004d 红", "#ffa300 橙", "#ffec27 黄", "#00e436 绿", "#29adff 蓝"];
+                            index <=> root.combo-index;
+                        }
+                        Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: c-dim; font-size: 12px; }
+                    }
+                }
                 PixelPanel {
                     title: "进度 PROGRESS";
                     VerticalLayout {
@@ -131,6 +152,66 @@ export component GalleryWindow inherits Window {
                             text: "悬停看提示"; width: 120px;
                             // Slint 内置 Tooltip：延迟出现、跟随指针（样式跟随活动主题）
                             Tooltip { text: @markdown("**我是提示气泡**"); }
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "菜单 MENU";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelMenu {
+                            items: ["新建文件", "打开…", "---", "保存", "另存为…", "---", "退出"];
+                            index <=> root.menu-index;
+                            button-text: "文件菜单";
+                        }
+                        Text { text: "选择: " + (root.menu-index >= 0 ? root.menu-index : "无"); color: c-dim; font-size: 12px; }
+                    }
+                }
+                PixelPanel {
+                    title: "表格 TABLE";
+                    PixelTableView {
+                        headers: ["精灵", "HP", "攻击"];
+                        rows: [
+                            ["小妖", "12", "3"],
+                            ["骷髅", "20", "5"],
+                            ["石魔", "45", "8"],
+                            ["龙", "90", "15"]
+                        ];
+                        selected-row <=> root.table-row;
+                    }
+                }
+                PixelPanel {
+                    title: "手风琴 ACCORDION";
+                    PixelAccordion {
+                        titles: ["第一章 启程", "第二章 森林", "第三章 城堡"];
+                        contents: ["你醒来时发现自己在一片像素草地上。", "幽暗的森林里藏着宝箱与陷阱。", "城堡的大门缓缓打开，冒险继续。"];
+                        active <=> root.accordion-active;
+                    }
+                }
+                PixelPanel {
+                    title: "折叠 COLLAPSIBLE";
+                    PixelCollapsible {
+                        title: "使用说明";
+                        expanded <=> root.collapsible-open;
+                        Text {
+                            text: "点击标题栏展开/收起。内容区带高度动画。";
+                            color: c-text;
+                            font-size: 13px;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "侧边栏 SIDEBAR";
+                    PixelSidebar {
+                        height: 160px;
+                        items: ["画布", "图层", "调色板", "导出"];
+                        active <=> root.sidebar-active;
+                        title: "导航";
+                        Text {
+                            text: "当前页面: " + ["画布", "图层", "调色板", "导出"][root.sidebar-active];
+                            color: c-text;
+                            font-size: 13px;
                         }
                     }
                 }

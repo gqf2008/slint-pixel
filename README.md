@@ -31,7 +31,19 @@
 | `PixelBadge` | 徽章/标签 |
 | `PixelPanel` | 分组面板（标题 + 内容插槽 `@children`） |
 | `PixelDialog` | 模态对话框（遮罩 + 标题 + 内容插槽 + 确定/取消） |
+| `PixelRadioButton` | 单选框（独立使用） |
+| `PixelRadioGroup` | 单选框组（互斥，`options` 数据驱动） |
+| `PixelComboBox` | 下拉选择框（PopupWindow，`open` 可控） |
+| `PixelMenu` | 下拉菜单（"---" 项渲染分隔线） |
+| `PixelTableView` | 表格（表头 + 数据行 + 选中行回调） |
+| `PixelScrollPanel` | 滚动面板（基于 Slint 内置 ScrollView，滚轮/拖拽原生） |
+| `PixelCollapsible` | 可折叠面板（高度动画） |
+| `PixelAccordion` | 手风琴（`titles`/`contents` 数据驱动，互斥展开） |
+| `PixelSidebar` | 侧边栏（导航项 + 选中态 + 内容区 `@children`） |
 | `Swatch` | 像素风色块 |
+
+> 主题：默认是 **干净浅色**（纯白底 + 近白面板 + 中性深灰字，彩色仅作强调，PICO-8 绘画色板不变）。
+> 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 
 > 提示：提示气泡请直接用 Slint 内置 `Tooltip`（延迟出现、自动跟随指针）：
 > ```slint
@@ -58,7 +70,8 @@ crates/
 ├── slint-bitmap/                  # 组件库（lib）
 │   ├── ui/lib.slint               # @slint_bitmap 汇总入口（re-export 全部组件）
 │   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
-│   ├── ui/pixel_widgets.slint          # 常用控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
+│   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
+│   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
 │   ├── ui/pixel_painter_window.slint   # 成品窗口 PixelPainterWindow
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等
