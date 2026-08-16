@@ -47,7 +47,7 @@ export component PixelCheckBox inherits Rectangle {
                 Text {
                     visible: root.checked;
                     text: "✓";
-                    color: root.check-color;
+                    color: root.checked ? #ffffff : root.check-color;
                     font-weight: 700;
                     font-size: 15px;
                     horizontal-alignment: center;
@@ -427,7 +427,7 @@ export component PixelDialog inherits Rectangle {
                         PixelButton {
                             text: "确定";
                             width: 80px;
-                            face: #000000;
+                            variant: "primary";
                             clicked => {
                                 root.open = false;
                                 root.accept();

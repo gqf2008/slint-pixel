@@ -56,7 +56,7 @@ component PixelPopupList inherits Rectangle {
                             x: 10px; y: 0px;
                             width: parent.width - 20px; height: parent.height;
                             text: item;
-                            color: root.text-color;
+                            color: root.current == i ? #ffffff : root.text-color;
                             font-size: 13px;
                             vertical-alignment: center;
                         }
@@ -103,7 +103,7 @@ export component PixelRadioButton inherits Rectangle {
                 Rectangle {
                     visible: root.checked;
                     x: 7px; y: 7px; width: 8px; height: 8px;
-                    background: root.dot-color;
+                    background: root.checked ? #ffffff : root.dot-color;
                 }
                 ta := TouchArea {
                     enabled: root.enabled;
@@ -157,7 +157,7 @@ export component PixelRadioGroup inherits Rectangle {
                         Rectangle {
                             visible: root.index == i;
                             x: 7px; y: 7px; width: 8px; height: 8px;
-                            background: root.dot-color;
+                            background: root.index == i ? #ffffff : root.dot-color;
                         }
                     }
                 }
@@ -439,7 +439,7 @@ export component PixelTableView inherits Rectangle {
                         spacing: 4px;
                         for cell in r : Text {
                             text: cell;
-                            color: root.selected-row == i ? #000000 : root.text-color;
+                            color: root.selected-row == i ? #ffffff : root.text-color;
                             font-size: 12px;
                             vertical-alignment: center;
                             horizontal-alignment: center;
@@ -705,7 +705,7 @@ export component PixelSidebar inherits Rectangle {
                         x: 12px; y: 0px;
                         width: parent.width - 20px; height: parent.height;
                         text: item;
-                        color: root.active == i ? #000000 : root.text-color;
+                        color: root.active == i ? #ffffff : root.text-color;
                         font-size: 13px;
                         vertical-alignment: center;
                     }

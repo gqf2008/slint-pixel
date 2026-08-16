@@ -173,9 +173,10 @@ export component PixelButton inherits Rectangle {
         : (root.variant == "primary" ? root.primary-face
         : (root.variant == "danger" ? root.danger-face
         : (root.variant == "ghost" ? transparent : root.face)));
-    property <color> eff-text: root.variant == "primary" ? root.primary-text
+    property <color> eff-text: root.active ? #ffffff
+        : (root.variant == "primary" ? root.primary-text
         : (root.variant == "danger" ? root.danger-text
-        : (root.variant == "ghost" ? root.ghost-text : root.text-color));
+        : (root.variant == "ghost" ? root.ghost-text : root.text-color)));
     property <length> eff-height: root.size == "small" ? 24px
         : (root.size == "large" ? 42px : 30px);
 
