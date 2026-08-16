@@ -436,12 +436,16 @@ export component GalleryWindow inherits Window {
                     }
                 }
                 PixelPanel {
-                    title: "画板 PAINTER";
+                    title: "画板 PAINTER · 主题 EDITOR";
                     HorizontalLayout {
                         spacing: 8px;
                         PixelButton {
-                            text: "打开像素画板 →"; width: 160px; face: #000000;
+                            text: "打开画板"; width: 110px; variant: "primary";
                             clicked => { root.open-painter(); }
+                        }
+                        PixelButton {
+                            text: "主题编辑器"; width: 100px; variant: "primary";
+                            clicked => { root.open-theme-editor(); }
                         }
                     }
                 }
