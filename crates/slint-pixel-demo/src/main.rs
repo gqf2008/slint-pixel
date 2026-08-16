@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     gallery.on_open_painter(move || {
         if let Ok(painter) = MainWindow::new() {
             slint_pixel::install_painter(&painter);
-            slint_pixel::install_title_bar_controls(&painter);
+            slint_pixel::install_title_bar_controls_no_quit(&painter);
             slint_pixel::install_window_resize(&painter);
             if painter.show().is_ok() {
                 painters_open.borrow_mut().push(painter);
@@ -64,7 +64,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let editors_open = editors.clone();
     gallery.on_open_theme_editor(move || {
         if let Ok(editor) = ThemeEditorWindow::new() {
-            slint_pixel::install_title_bar_controls(&editor);
+            slint_pixel::install_title_bar_controls_no_quit(&editor);
             slint_pixel::install_window_resize(&editor);
             wire_generate_theme(&editor);
             if editor.show().is_ok() {

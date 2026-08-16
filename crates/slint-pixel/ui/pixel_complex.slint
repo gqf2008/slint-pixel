@@ -30,7 +30,7 @@ component PixelPopupList inherits Rectangle {
     callback selected(index: int);
 
     Rectangle {
-        width: root.width; height: root.height;
+        width: 100%; height: root.height;
         background: root.shadow;
         Rectangle {
             x: 2px; y: 2px;
@@ -212,7 +212,7 @@ export component PixelComboBox inherits Rectangle {
     }
 
     Rectangle {
-        width: root.width; height: root.height;
+        width: 100%; height: root.height;
         background: root.shadow;
         Rectangle {
             x: 1px; y: 1px;
@@ -305,7 +305,7 @@ export component PixelMenu inherits Rectangle {
     }
 
     Rectangle {
-        width: root.width; height: root.height;
+        width: 100%; height: root.height;
         background: root.shadow;
         Rectangle {
             x: ta.pressed ? 1px : 0px;
@@ -392,7 +392,7 @@ export component PixelTableView inherits Rectangle {
     opacity: root.enabled ? 1.0 : 0.5;
 
     Rectangle {
-        width: root.width; height: root.height;
+        width: 100%; height: root.height;
         background: root.shadow;
         Rectangle {
             x: 1px; y: 1px;
@@ -503,7 +503,7 @@ export component PixelCollapsible inherits Rectangle {
 
     // 标题栏
     Rectangle {
-        width: root.width;
+        width: 100%;
         height: 32px;
         background: root.shadow;
         Rectangle {
@@ -545,7 +545,7 @@ export component PixelCollapsible inherits Rectangle {
 
     // 内容区（收起时高度 0 + 裁剪，带展开动画）
     Rectangle {
-        width: root.width;
+        width: 100%;
         height: root.expanded ? body-content.preferred-height : 0px;
         background: root.body;
         border-width: 2px;
@@ -554,7 +554,7 @@ export component PixelCollapsible inherits Rectangle {
         animate height { duration: 160ms; easing: ease-out; }
         body-content := VerticalLayout {
             x: 0px;
-            width: root.width;
+            width: 100%;
             height: self.preferred-height;
             @children
         }
@@ -580,10 +580,10 @@ export component PixelAccordion inherits Rectangle {
     VerticalLayout {
         spacing: 4px;
         for t[i] in root.titles : Rectangle {
-            width: root.width;
+            width: 100%;
             // 标题栏
             Rectangle {
-                width: root.width;
+                width: 100%;
                 height: 32px;
                 background: root.shadow;
                 Rectangle {
@@ -615,7 +615,7 @@ export component PixelAccordion inherits Rectangle {
             }
             // 内容区
             Rectangle {
-                width: root.width;
+                width: 100%;
                 height: root.active == i ? acc-body.preferred-height : 0px;
                 background: root.body;
                 border-width: 2px;
@@ -624,11 +624,11 @@ export component PixelAccordion inherits Rectangle {
                 animate height { duration: 160ms; easing: ease-out; }
                 acc-body := VerticalLayout {
                     x: 0px;
-                    width: root.width;
+                    width: 100%;
                     height: self.preferred-height;
                     Text {
                         x: 10px;
-                        width: root.width - 20px;
+                        width: parent.width - 20px;
                         text: root.contents[i];
                         color: root.text-color;
                         font-size: 13px;
@@ -638,7 +638,7 @@ export component PixelAccordion inherits Rectangle {
             }
             panel-ta := TouchArea {
                 enabled: root.enabled;
-                width: root.width;
+                width: 100%;
                 height: 32px;
                 clicked => {
                     root.active = root.active == i ? -1 : i;

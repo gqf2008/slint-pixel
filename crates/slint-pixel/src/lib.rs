@@ -226,6 +226,16 @@ pub fn install_painter<T: PainterUi + 'static>(ui: &T) -> Rc<RefCell<Canvas>> {
 
 /// 安装像素标题栏窗口控制：拖拽移动、最小化、最大化/还原、关闭。
 pub fn install_title_bar_controls<T: TitleBarUi + 'static>(ui: &T) {
+    install_title_bar_controls_impl(ui, true);
+}
+
+/// 同 [`install_title_bar_controls`]，但关闭只隐藏当前窗口、不退出整个事件循环
+/// （适合子窗口；主窗口关闭用 `quit_on_close: true`）。
+pub fn install_title_bar_controls_no_quit<T: TitleBarUi + 'static>(ui: &T) {
+    install_title_bar_controls_impl(ui, false);
+}
+
+fn install_title_bar_controls_impl<T: TitleBarUi + 'static>(ui: &T, quit_on_close: bool) {
     use slint::winit_030::WinitWindowAccessor;
 
     // 拖拽移动
@@ -259,7 +269,9 @@ pub fn install_title_bar_controls<T: TitleBarUi + 'static>(ui: &T) {
     ui.on_close_window(move || {
         if let Some(ui) = weak.upgrade() {
             let _ = ui.window().hide();
-            let _ = slint::quit_event_loop();
+            if quit_on_close {
+                let _ = slint::quit_event_loop();
+            }
         }
     });
 }
