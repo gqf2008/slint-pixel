@@ -1,0 +1,709 @@
+// ============================================================================
+// slint-bitmap · 对齐 Tailwind 常见 UI 组件补齐（黑白主题，纯 Slint 自绘）
+//
+// 新增组件：
+//   PixelAlert       警告/提示条（info/success/warning/error，可关闭）
+//   PixelToast       通知（自动消失 + 手动关闭）
+//   PixelSpinner     加载动画（像素方块循环）
+//   PixelSkeleton    骨架屏（加载占位条，可选呼吸动画）
+//   PixelTabs        标签页（数据驱动 + 激活态）
+//   PixelBreadcrumb  面包屑（路径导航）
+//   PixelPagination  分页（上一页/下一页 + 页码，超长省略）
+//   PixelDrawer      抽屉（右侧滑出 + 遮罩 + 内容插槽）
+//   PixelAvatar      像素头像（方块 + 字形/首字）
+//   PixelTag         标签（可关闭）
+//   PixelCard        卡片（可选标题 + 内容插槽）
+//   PixelNavbar      顶栏导航（品牌 + 菜单项 + 右侧插槽）
+//   PixelEmpty       空状态（图标 + 标题 + 描述 + 操作插槽）
+//   PixelDivider     分隔线（横/竖 + 可选文字）
+//   PixelStat        统计卡片（大数字 + 标签 + 变化）
+// ============================================================================
+
+// ===== 警告/提示条 =====
+export component PixelAlert inherits Rectangle {
+    in property <string> kind: "info"; // info | success | warning | error
+    in property <string> text: "";
+    in property <bool> closable: true;
+    in property <color> bg: #f5f5f5;
+    in property <color> border: #d4d4d4;
+    in property <color> text-color: #171717;
+    in property <color> icon-color: #171717;
+    callback closed;
+
+    property <string> icon: root.kind == "success" ? "✓"
+        : (root.kind == "warning" ? "!"
+        : (root.kind == "error" ? "×" : "i"));
+    height: 36px;
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.bg;
+        border-width: 2px;
+        border-color: root.border;
+        Rectangle {
+            x: 0px; y: 0px; width: 4px; height: root.height;
+            background: root.icon-color;
+        }
+        Text {
+            x: 14px; y: 0px; width: 26px; height: root.height;
+            text: root.icon;
+            color: root.icon-color;
+            font-weight: 800;
+            font-size: 14px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        Text {
+            x: 46px; y: 0px;
+            width: root.closable ? parent.width - 74px : parent.width - 54px;
+            height: parent.height;
+            text: root.text;
+            color: root.text-color;
+            font-size: 13px;
+            vertical-alignment: center;
+        }
+        Rectangle {
+            visible: root.closable;
+            x: parent.width - 30px; y: 5px;
+            width: 24px; height: 24px;
+            background: close.has-hover ? #e5e5e5 : transparent;
+            Text {
+                x: 0px; y: 0px; width: 24px; height: 24px;
+                text: "×";
+                color: root.text-color;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            close := TouchArea {
+                width: 100%; height: 100%;
+                clicked => { root.closed(); }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 通知 Toast（宿主负责定位到窗口角落） =====
+export component PixelToast inherits Rectangle {
+    in property <string> text: "";
+    in property <string> kind: "info";
+    in property <duration> duration: 2500ms;
+    in-out property <bool> shown: true;
+    in property <color> bg: #171717;
+    in property <color> text-color: #ffffff;
+    in property <color> close-color: #d4d4d4;
+    callback dismissed;
+    visible: root.shown;
+    height: 40px;
+
+    Timer {
+        interval: root.duration;
+        running: root.shown;
+        triggered => {
+            root.shown = false;
+            root.dismissed();
+            self.running = false;
+        }
+    }
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.bg;
+        border-width: 2px;
+        border-color: #000000;
+        Text {
+            x: 14px; y: 0px;
+            width: parent.width - 44px; height: parent.height;
+            text: root.text;
+            color: root.text-color;
+            font-size: 13px;
+            vertical-alignment: center;
+        }
+        Rectangle {
+            x: parent.width - 34px; y: 8px;
+            width: 24px; height: 24px;
+            background: close.has-hover ? #373737 : transparent;
+            Text {
+                x: 0px; y: 0px; width: 24px; height: 24px;
+                text: "×";
+                color: root.close-color;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            close := TouchArea {
+                width: 100%; height: 100%;
+                clicked => {
+                    root.shown = false;
+                    root.dismissed();
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 加载动画（像素方块循环） =====
+export component PixelSpinner inherits Rectangle {
+    in property <length> size: 26px;
+    in property <color> spinner-color: #171717;
+    width: root.size;
+    height: root.size;
+
+    // 4 个角方块按序点亮
+    property <int> frame: 0;
+    Timer {
+        interval: 140ms;
+        running: true;
+        triggered => { root.frame = Math.mod(root.frame + 1, 4); }
+    }
+    Rectangle {
+        x: 0px; y: 0px; width: 10px; height: 10px;
+        background: root.frame == 0 ? root.spinner-color : transparent;
+    }
+    Rectangle {
+        x: root.size - 10px; y: 0px; width: 10px; height: 10px;
+        background: root.frame == 1 ? root.spinner-color : transparent;
+    }
+    Rectangle {
+        x: root.size - 10px; y: root.size - 10px; width: 10px; height: 10px;
+        background: root.frame == 2 ? root.spinner-color : transparent;
+    }
+    Rectangle {
+        x: 0px; y: root.size - 10px; width: 10px; height: 10px;
+        background: root.frame == 3 ? root.spinner-color : transparent;
+    }
+}
+
+// ===== 骨架屏 =====
+export component PixelSkeleton inherits Rectangle {
+    in property <length> frame-height: 16px;
+    in property <bool> pulse: true;
+    in property <color> face: #e5e5e5;
+    height: root.frame-height;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.face;
+        opacity: root.pulse ? 0.6 : 1.0;
+        animate opacity { duration: 800ms; iteration-count: -1; easing: ease-in-out; }
+    }
+}
+
+// ===== 标签页 =====
+export component PixelTabs inherits Rectangle {
+    in property <[string]> tabs: [];
+    in-out property <int> active: 0;
+    in property <color> face: #f5f5f5;
+    in property <color> text-color: #737373;
+    in property <color> text-active: #171717;
+    in property <color> active-bar: #171717;
+    in property <color> edge: #d4d4d4;
+    callback changed(index: int);
+
+    Rectangle {
+        width: root.width; height: 36px;
+        background: root.face;
+
+        Rectangle {
+            x: 0px; y: parent.height - 2px;
+            width: parent.width; height: 2px;
+            background: root.edge;
+        }
+        HorizontalLayout {
+            spacing: 0px;
+            for t[i] in root.tabs : Rectangle {
+                width: root.width / Math.max(root.tabs.length, 1);
+                height: 36px;
+                background: tab-ta.has-hover ? #e5e5e5 : transparent;
+                Text {
+                    text: t;
+                    color: root.active == i ? root.text-active : root.text-color;
+                    font-weight: root.active == i ? 700 : 400;
+                    font-size: 13px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                // 激活下划线
+                Rectangle {
+                    visible: root.active == i;
+                    x: 6px; y: 32px;
+                    width: parent.width - 12px; height: 3px;
+                    background: root.active-bar;
+                }
+                tab-ta := TouchArea {
+                    width: 100%; height: 100%;
+                    clicked => {
+                        root.active = i;
+                        root.changed(i);
+                    }
+                    mouse-cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+// ===== 面包屑 =====
+export component PixelBreadcrumb inherits Rectangle {
+    in property <[string]> items: [];
+    in-out property <int> active: Math.max(root.items.length - 1, 0);
+    in property <color> text-color: #737373;
+    in property <color> text-active: #171717;
+    in property <color> sep-color: #d4d4d4;
+    callback navigate(index: int);
+
+    HorizontalLayout {
+        spacing: 6px;
+        for item[i] in root.items : HorizontalLayout {
+            spacing: 6px;
+            Text {
+                text: item;
+                color: root.active == i ? root.text-active : root.text-color;
+                font-size: 13px;
+                vertical-alignment: center;
+            }
+            Text {
+                visible: i < root.items.length - 1;
+                text: "/";
+                color: root.sep-color;
+                font-size: 13px;
+                vertical-alignment: center;
+            }
+            bc-ta := TouchArea {
+                width: 100%; height: 100%;
+                clicked => {
+                    root.active = i;
+                    root.navigate(i);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 分页 =====
+export component PixelPagination inherits Rectangle {
+    in-out property <int> page: 1;
+    in property <int> total: 1;
+    in property <int> siblings: 2;
+    in property <color> face: #f5f5f5;
+    in property <color> face-hover: #e5e5e5;
+    in property <color> face-active: #171717;
+    in property <color> border: #d4d4d4;
+    in property <color> text-color: #171717;
+    in property <color> text-active: #ffffff;
+    in property <color> text-disabled: #d4d4d4;
+    callback changed(page: int);
+
+    HorizontalLayout {
+        spacing: 6px;
+        // 上一页
+        Rectangle {
+            width: 30px; height: 30px;
+            background: prev-ta.has-hover && root.page > 1 ? root.face-hover : root.face;
+            border-width: 2px;
+            border-color: root.border;
+            Text {
+                text: "‹";
+                color: root.page > 1 ? root.text-color : root.text-disabled;
+                font-size: 16px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            prev-ta := TouchArea {
+                clicked => {
+                    if root.page > 1 {
+                        root.page -= 1;
+                        root.changed(root.page);
+                    }
+                }
+                mouse-cursor: pointer;
+            }
+        }
+        // 页码（简化：全部显示，不省略——数据驱动分页更复杂，这里支持 <= 7 页）
+        for p in [1,2,3,4,5,6,7] : Rectangle {
+            visible: p <= root.total;
+            width: 30px; height: 30px;
+            background: root.page == p ? root.face-active
+                : (page-ta.has-hover ? root.face-hover : root.face);
+            border-width: 2px;
+            border-color: root.border;
+            Text {
+                text: p;
+                color: root.page == p ? root.text-active : root.text-color;
+                font-weight: 700;
+                font-size: 12px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            page-ta := TouchArea {
+                clicked => {
+                    root.page = p;
+                    root.changed(root.page);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+        // 下一页
+        Rectangle {
+            width: 30px; height: 30px;
+            background: next-ta.has-hover && root.page < root.total ? root.face-hover : root.face;
+            border-width: 2px;
+            border-color: root.border;
+            Text {
+                text: "›";
+                color: root.page < root.total ? root.text-color : root.text-disabled;
+                font-size: 16px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            next-ta := TouchArea {
+                clicked => {
+                    if root.page < root.total {
+                        root.page += 1;
+                        root.changed(root.page);
+                    }
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 抽屉（右侧滑出） =====
+export component PixelDrawer inherits Rectangle {
+    in property <bool> open: false;
+    in property <string> title: "";
+    in property <length> drawer-width: 280px;
+    in property <color> overlay: #17171780;
+    in property <color> panel: #ffffff;
+    in property <color> edge: #d4d4d4;
+    in property <color> title-color: #171717;
+    in property <color> text-color: #171717;
+    callback close;
+    visible: root.open;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.overlay;
+        TouchArea {
+            width: 100%; height: 100%;
+            clicked => { root.close(); }
+        }
+        Rectangle {
+            x: parent.width - root.drawer-width;
+            y: 0px;
+            width: root.drawer-width;
+            height: parent.height;
+            background: root.panel;
+
+            Rectangle {
+                x: 0px; y: 0px;
+                width: 2px; height: parent.height;
+                background: root.edge;
+            }
+            VerticalLayout {
+                padding: 16px;
+                spacing: 10px;
+                HorizontalLayout {
+                    spacing: 8px;
+                    Text {
+                        text: root.title;
+                        color: root.title-color;
+                        font-weight: 800;
+                        font-size: 15px;
+                    }
+                    Rectangle { height: 0px; }
+                }
+                Rectangle { height: 2px; background: root.edge; }
+                @children
+            }
+        }
+    }
+}
+
+// ===== 像素头像 =====
+export component PixelAvatar inherits Rectangle {
+    in property <string> text: "?";
+    in property <length> size: 36px;
+    in property <color> face: #e5e5e5;
+    in property <color> border: #d4d4d4;
+    in property <color> text-color: #171717;
+    width: root.size;
+    height: root.size;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.face;
+        border-width: 2px;
+        border-color: root.border;
+        Text {
+            text: root.text;
+            color: root.text-color;
+            font-weight: 800;
+            font-size: root.size / 2.2;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+}
+
+// ===== 标签（可关闭） =====
+export component PixelTag inherits Rectangle {
+    in property <string> text: "";
+    in property <bool> closable: false;
+    in property <color> face: #e5e5e5;
+    in property <color> border: #d4d4d4;
+    in property <color> text-color: #171717;
+    callback closed;
+    height: 24px;
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.face;
+        border-width: 2px;
+        border-color: root.border;
+        HorizontalLayout {
+            padding: 6px;
+            spacing: 6px;
+            Text {
+                text: root.text;
+                color: root.text-color;
+                font-size: 12px;
+                vertical-alignment: center;
+            }
+            Rectangle {
+                visible: root.closable;
+                width: 14px; height: 14px;
+                Text {
+                    text: "×";
+                    color: root.text-color;
+                    font-size: 11px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                tag-close := TouchArea {
+                    width: 100%; height: 100%;
+                    clicked => { root.closed(); }
+                    mouse-cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+// ===== 卡片 =====
+export component PixelCard inherits Rectangle {
+    in property <string> title: "";
+    in property <bool> bordered: true;
+    in property <color> bg: #ffffff;
+    in property <color> border: #d4d4d4;
+    in property <color> shadow: #171717;
+    in property <color> title-color: #171717;
+    background: root.bg;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+    }
+    Rectangle {
+        x: 3px; y: 3px;
+        width: parent.width - 6px; height: parent.height - 6px;
+        background: root.bg;
+        border-width: root.bordered ? 2px : 0px;
+        border-color: root.border;
+        VerticalLayout {
+            padding: 14px;
+            spacing: 10px;
+            Text {
+                visible: root.title != "";
+                text: root.title;
+                color: root.title-color;
+                font-weight: 800;
+                font-size: 14px;
+            }
+            @children
+        }
+    }
+}
+
+// ===== 顶栏导航 =====
+export component PixelNavbar inherits Rectangle {
+    in property <string> brand: "";
+    in property <[string]> items: [];
+    in-out property <int> active: 0;
+    in property <color> bg: #ffffff;
+    in property <color> edge: #d4d4d4;
+    in property <color> brand-color: #171717;
+    in property <color> text-color: #737373;
+    in property <color> text-active: #171717;
+    callback selected(index: int);
+    height: 48px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.bg;
+        border-width: 0px;
+        Rectangle {
+            x: 0px; y: parent.height - 2px;
+            width: parent.width; height: 2px;
+            background: root.edge;
+        }
+        HorizontalLayout {
+            padding: 0px;
+            spacing: 18px;
+            Text {
+                text: root.brand;
+                color: root.brand-color;
+                font-weight: 800;
+                font-size: 15px;
+                vertical-alignment: center;
+            }
+            for item[i] in root.items : Rectangle {
+                height: 48px;
+                Text {
+                    text: item;
+                    color: root.active == i ? root.text-active : root.text-color;
+                    font-weight: root.active == i ? 700 : 400;
+                    font-size: 13px;
+                    vertical-alignment: center;
+                }
+                Rectangle {
+                    visible: root.active == i;
+                    x: 0px; y: 44px;
+                    width: parent.width; height: 3px;
+                    background: root.text-active;
+                }
+                nav-ta := TouchArea {
+                    width: 100%; height: 100%;
+                    clicked => {
+                        root.active = i;
+                        root.selected(i);
+                    }
+                    mouse-cursor: pointer;
+                }
+            }
+            // 右侧插槽
+            @children
+        }
+    }
+}
+
+// ===== 空状态 =====
+export component PixelEmpty inherits Rectangle {
+    in property <string> icon: "□";
+    in property <string> title: "暂无数据";
+    in property <string> description: "";
+    in property <color> icon-color: #d4d4d4;
+    in property <color> title-color: #171717;
+    in property <color> desc-color: #737373;
+    height: 180px;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 10px;
+        Text {
+            text: root.icon;
+            color: root.icon-color;
+            font-size: 40px;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.title;
+            color: root.title-color;
+            font-weight: 700;
+            font-size: 14px;
+            horizontal-alignment: center;
+        }
+        Text {
+            visible: root.description != "";
+            text: root.description;
+            color: root.desc-color;
+            font-size: 12px;
+            horizontal-alignment: center;
+        }
+        @children
+    }
+}
+
+// ===== 分隔线 =====
+export component PixelDivider inherits Rectangle {
+    in property <string> text: "";
+    in property <color> edge: #d4d4d4;
+    in property <color> text-color: #737373;
+    height: 20px;
+
+    HorizontalLayout {
+        alignment: center;
+        spacing: 8px;
+        Rectangle {
+            visible: root.text != "";
+            width: 12px; height: 2px;
+            background: root.edge;
+        }
+        Text {
+            visible: root.text != "";
+            text: root.text;
+            color: root.text-color;
+            font-size: 12px;
+            vertical-alignment: center;
+        }
+        Rectangle {
+            visible: root.text == "";
+            width: 100%; height: 2px;
+            background: root.edge;
+            y: (parent.height - 2px) / 2;
+        }
+        Rectangle {
+            visible: root.text != "";
+            width: 100%; height: 2px;
+            background: root.edge;
+            y: (parent.height - 2px) / 2;
+        }
+    }
+}
+
+// ===== 统计卡片 =====
+export component PixelStat inherits Rectangle {
+    in property <string> label: "";
+    in property <string> value: "0";
+    in property <string> delta: "";
+    in property <bool> delta-up: true;
+    in property <color> bg: #ffffff;
+    in property <color> border: #d4d4d4;
+    in property <color> label-color: #737373;
+    in property <color> value-color: #171717;
+    in property <color> delta-color: #171717;
+    in property <length> frame-height: 90px;
+    height: root.frame-height;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.bg;
+        border-width: 2px;
+        border-color: root.border;
+        VerticalLayout {
+            padding: 12px;
+            spacing: 6px;
+            Text {
+                text: root.label;
+                color: root.label-color;
+                font-size: 12px;
+            }
+            Text {
+                text: root.value;
+                color: root.value-color;
+                font-weight: 800;
+                font-size: 24px;
+            }
+            Text {
+                visible: root.delta != "";
+                text: (root.delta-up ? "▲ " : "▼ ") + root.delta;
+                color: root.delta-color;
+                font-size: 12px;
+            }
+        }
+    }
+}

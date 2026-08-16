@@ -19,9 +19,9 @@
 // ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
 component TitleButton inherits Rectangle {
     in property <string> kind: "min"; // min | max | close
-    in property <color> face: #fbfbf9;
-    in property <color> hover-face: #f3f2ee;
-    in property <color> icon: #262626;
+    in property <color> face: #f5f5f5;
+    in property <color> hover-face: #e5e5e5;
+    in property <color> icon: #171717;
     callback clicked;
     width: 30px; height: 26px;
     background: ta.has-hover ? root.hover-face : root.face;
@@ -62,13 +62,13 @@ component TitleButton inherits Rectangle {
 export component PixelTitleBar inherits Rectangle {
     in property <string> title: "";
     in property <color> bg: #ffffff;
-    in property <color> text-color: #9a968f;
-    in property <color> accent: #ffec27;
-    in property <color> btn-face: #fbfbf9;
-    in property <color> btn-hover: #f3f2ee;
-    in property <color> btn-icon: #262626;
+    in property <color> text-color: #737373;
+    in property <color> accent: #171717;
+    in property <color> btn-face: #f5f5f5;
+    in property <color> btn-hover: #e5e5e5;
+    in property <color> btn-icon: #171717;
     in property <color> close-hover: #ff004d;
-    in property <color> divider: #48453f;
+    in property <color> divider: #171717;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -129,8 +129,8 @@ export component PixelTitleBar inherits Rectangle {
 export component Swatch inherits Rectangle {
     in property <color> fill;
     in property <bool> selected: false;
-    in property <color> select-color: #ffec27;
-    in property <color> shade: #48453f;
+    in property <color> select-color: #171717;
+    in property <color> shade: #171717;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -151,28 +151,49 @@ export component Swatch inherits Rectangle {
 export component PixelButton inherits Rectangle {
     in property <string> text: "";
     in property <bool> active: false;
-    in property <color> face: #f3f2ee;
-    in property <color> face-active: #29adff;
-    in property <color> border: #ddd9d2;
-    in property <color> border-active: #ffec27;
-    in property <color> text-color: #262626;
-    in property <color> shadow: #48453f;
+    // variant: default | primary | danger | ghost（对齐 Tailwind 按钮语义）
+    in property <string> variant: "default";
+    // size: small | medium | large
+    in property <string> size: "medium";
+    in property <color> face: #e5e5e5;
+    in property <color> face-active: #171717;
+    in property <color> border: #d4d4d4;
+    in property <color> border-active: #171717;
+    in property <color> text-color: #171717;
+    in property <color> shadow: #171717;
+    // variant 专用色（默认值随黑白主题）
+    in property <color> primary-face: #171717;
+    in property <color> primary-text: #ffffff;
+    in property <color> danger-face: #dc2626;
+    in property <color> danger-text: #ffffff;
+    in property <color> ghost-text: #171717;
     callback clicked;
-    height: 30px;
+
+    property <color> eff-face: root.active ? root.face-active
+        : (root.variant == "primary" ? root.primary-face
+        : (root.variant == "danger" ? root.danger-face
+        : (root.variant == "ghost" ? transparent : root.face)));
+    property <color> eff-text: root.variant == "primary" ? root.primary-text
+        : (root.variant == "danger" ? root.danger-text
+        : (root.variant == "ghost" ? root.ghost-text : root.text-color));
+    property <length> eff-height: root.size == "small" ? 24px
+        : (root.size == "large" ? 42px : 30px);
+
+    height: root.eff-height;
     background: root.shadow;
     Rectangle {
         x: ta.pressed ? 2px : 0px;
         y: ta.pressed ? 2px : 0px;
         width: root.width - (ta.pressed ? 4px : 0px);
         height: root.height - (ta.pressed ? 4px : 0px);
-        background: root.active ? root.face-active : root.face;
+        background: root.eff-face;
         border-width: 2px;
         border-color: root.active ? root.border-active : root.border;
         Text {
             text: root.text;
-            color: root.text-color;
+            color: root.eff-text;
             font-weight: 700;
-            font-size: 13px;
+            font-size: root.size == "small" ? 11px : (root.size == "large" ? 15px : 13px);
             horizontal-alignment: center;
             vertical-alignment: center;
         }
@@ -187,13 +208,13 @@ export component PixelButton inherits Rectangle {
 export component PixelPainter inherits Rectangle {
     // ---------- 主题（宿主可覆盖） ----------
     in property <color> page: #ffffff;          // 画布底色
-    in property <color> panel: #fbfbf9;         // 面板底色
-    in property <color> panel-light: #f3f2ee;   // 按钮/高亮面
-    in property <color> edge: #ddd9d2;          // 边框/分隔线
-    in property <color> shadow: #48453f;        // 阴影/描边
-    in property <color> text-color: #262626;    // 主文字
-    in property <color> dim: #9a968f;           // 次要文字
-    in property <color> highlight: #ffec27;     // 强调色
+    in property <color> panel: #f5f5f5;         // 面板底色
+    in property <color> panel-light: #e5e5e5;   // 按钮/高亮面
+    in property <color> edge: #d4d4d4;          // 边框/分隔线
+    in property <color> shadow: #171717;        // 阴影/描边
+    in property <color> text-color: #171717;    // 主文字
+    in property <color> dim: #737373;           // 次要文字
+    in property <color> highlight: #171717;     // 强调色
     in property <color> danger: #ff004d;        // 危险操作
 
     // ---------- PICO-8 色板（宿主可覆盖） ----------

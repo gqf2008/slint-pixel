@@ -47,9 +47,25 @@
 | `PixelTooltip` | 悬停提示气泡（延迟显示，包裹任意目标） |
 | `PixelBubble` | 富内容气泡/弹出卡片（触发图标 + 箭头 + 内容插槽） |
 | `PixelPopconfirm` | 操作确认气泡（触发按钮 + 确定/取消） |
+| `PixelAlert` | 警告/提示条（info/success/warning/error，可关闭） |
+| `PixelToast` | 通知（自动消失 + 手动关闭） |
+| `PixelSpinner` | 加载动画（像素方块循环） |
+| `PixelSkeleton` | 骨架屏（加载占位条，呼吸动画） |
+| `PixelTabs` | 标签页（数据驱动 + 激活态） |
+| `PixelBreadcrumb` | 面包屑（路径导航） |
+| `PixelPagination` | 分页（上一页/下一页 + 页码） |
+| `PixelDrawer` | 抽屉（右侧滑出 + 遮罩 + 内容插槽） |
+| `PixelAvatar` | 像素头像（方块 + 字形/首字） |
+| `PixelTag` | 标签（可关闭） |
+| `PixelCard` | 卡片（可选标题 + 内容插槽） |
+| `PixelNavbar` | 顶栏导航（品牌 + 菜单项 + 右侧插槽） |
+| `PixelEmpty` | 空状态（图标 + 标题 + 描述 + 操作插槽） |
+| `PixelDivider` | 分隔线（可带文字） |
+| `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
-> 主题：默认是 **明亮浅色**（纯白底 + 极浅面板 + 中性深灰字，彩色仅作强调，PICO-8 绘画色板不变）。
+> 主题：默认是 **黑白**（纯白底 + 灰阶面板 + 近黑文字，主色仅黑白灰，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
+> `PixelButton` 支持 `variant`（default/primary/danger/ghost）与 `size`（small/medium/large），对齐 Tailwind 按钮语义。
 > 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 
 > 提示：提示气泡请直接用 Slint 内置 `Tooltip`（延迟出现、自动跟随指针）：
@@ -80,6 +96,7 @@ crates/
 │   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
 │   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
 │   ├── ui/pixel_extra.slint           # 表单/文本/输入/图标按钮/提示/气泡/确认
+│   ├── ui/pixel_tailwind.slint        # 对齐 Tailwind：警告/通知/加载/骨架/标签页/面包屑/分页/抽屉/头像/卡片/顶栏/空状态/统计
 │   ├── ui/pixel_painter_window.slint   # 成品窗口 PixelPainterWindow
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等
@@ -219,5 +236,4 @@ shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` �
 - Linux Wayland 下合成器可能强制保留系统装饰，`no-frame` 效果取决于合成器。
 - 高 DPI（150%）显示器下按物理像素渲染，画布仍保持像素锐利。
 - `install_painter` 导出的 PNG 保存在进程当前工作目录。
-- 暂未内置：下拉选择框 / 单选框组 / 菜单 / 表格 / 滚动条皮肤等，可按需在
-  `pixel_widgets.slint` 里扩展（组件均遵循同一像素风主题约定）。
+- 组件清单已对齐 Tailwind 常见 UI：按钮/表单/反馈/导航/数据展示/覆盖层均已覆盖；仍需按需扩展的：日期选择器、上传、时间线等，可在 `pixel_tailwind.slint` 里继续追加（组件均遵循同一黑白像素风主题约定）。

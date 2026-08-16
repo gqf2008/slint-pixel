@@ -7,6 +7,9 @@ import {
     PixelCollapsible, PixelAccordion, PixelSidebar,
     PixelText, PixelTitle, PixelForm, PixelFormItem, PixelTextArea,
     PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm,
+    PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
+    PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat,
 } from "@slint_bitmap";
 
 export component GalleryWindow inherits Window {
@@ -83,12 +86,23 @@ export component GalleryWindow inherits Window {
                 width: root.width - 28px;
                 spacing: 10px;
                 PixelPanel {
-                    title: "按钮 BUTTON";
-                    HorizontalLayout {
+                    title: "按钮 BUTTON · VARIANT / SIZE";
+                    VerticalLayout {
                         spacing: 8px;
-                        PixelButton { text: "画笔"; width: 90px; active: true; }
-                        PixelButton { text: "橡皮擦"; width: 90px; }
-                        PixelButton { text: "清空"; width: 90px; face: c-danger; face-active: #ff2f77; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton { text: "默认"; width: 80px; active: true; }
+                            PixelButton { text: "主要"; width: 80px; variant: "primary"; }
+                            PixelButton { text: "危险"; width: 80px; variant: "danger"; }
+                            PixelButton { text: "幽灵"; width: 80px; variant: "ghost"; }
+                        }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton { text: "小"; width: 60px; size: "small"; }
+                            PixelButton { text: "中"; width: 60px; }
+                            PixelButton { text: "大"; width: 60px; size: "large"; }
+                            PixelButton { text: "清空"; width: 80px; face: c-danger; face-active: #ff2f77; }
+                        }
                     }
                 }
                 PixelPanel {
@@ -304,6 +318,95 @@ export component GalleryWindow inherits Window {
                             cancel => { root.action-status = "已取消删除"; }
                         }
                         PixelText { text: root.action-status; color: c-dim; }
+                    }
+                }
+                PixelPanel {
+                    title: "警告 ALERT";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelAlert { kind: "info"; text: "这是信息提示条 info"; }
+                        PixelAlert { kind: "success"; text: "操作成功 success"; }
+                        PixelAlert { kind: "warning"; text: "注意：磁盘空间不足 warning"; }
+                        PixelAlert { kind: "error"; text: "保存失败 error"; closable: false; }
+                    }
+                }
+                PixelPanel {
+                    title: "通知 TOAST · 加载 SPINNER · 骨架 SKELETON";
+                    VerticalLayout {
+                        spacing: 10px;
+                        HorizontalLayout {
+                            spacing: 10px;
+                            PixelToast { text: "像素通知：已保存"; shown: true; duration: 9999s; }
+                            PixelSpinner { }
+                            PixelSpinner { size: 40px; }
+                        }
+                        PixelSkeleton { frame-height: 14px; }
+                        PixelSkeleton { frame-height: 14px; pulse: false; }
+                    }
+                }
+                PixelPanel {
+                    title: "标签页 TABS";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelTabs {
+                            tabs: ["画布", "图层", "导出"];
+                            active: 1;
+                        }
+                        PixelText { text: "当前标签内容区由宿主切换（active 索引）。"; color: c-dim; }
+                    }
+                }
+                PixelPanel {
+                    title: "面包屑 BREADCRUMB · 分页 PAGINATION";
+                    VerticalLayout {
+                        spacing: 10px;
+                        PixelBreadcrumb { items: ["首页", "素材", "像素小妖"]; }
+                        PixelPagination { page: 2; total: 5; }
+                    }
+                }
+                PixelPanel {
+                    title: "头像 AVATAR · 标签 TAG";
+                    HorizontalLayout {
+                        spacing: 12px;
+                        PixelAvatar { text: "P"; }
+                        PixelAvatar { text: "妖"; }
+                        PixelTag { text: "像素"; }
+                        PixelTag { text: "稀有"; closable: true; }
+                    }
+                }
+                PixelPanel {
+                    title: "卡片 CARD";
+                    PixelCard {
+                        title: "像素小妖";
+                        width: 260px;
+                        PixelText { text: "稀有度：传说"; }
+                        PixelText { text: "掉落：金币 × 12"; color: c-dim; }
+                        PixelButton { text: "查看详情"; width: 100px; size: "small"; }
+                    }
+                }
+                PixelPanel {
+                    title: "顶栏 NAVBAR";
+                    PixelNavbar {
+                        brand: "PIXEL";
+                        items: ["首页", "素材", "作品"];
+                        active: 0;
+                    }
+                }
+                PixelPanel {
+                    title: "空状态 EMPTY · 分隔线 DIVIDER · 统计 STAT";
+                    VerticalLayout {
+                        spacing: 10px;
+                        PixelEmpty {
+                            title: "还没有像素素材";
+                            description: "点击下方按钮开始创作";
+                            height: 140px;
+                            PixelButton { text: "去创作"; width: 90px; variant: "primary"; }
+                        }
+                        PixelDivider { text: "分隔线"; }
+                        HorizontalLayout {
+                            spacing: 10px;
+                            PixelStat { label: "今日作品"; value: "128"; delta: "12.5%"; }
+                            PixelStat { label: "金币"; value: "9,999"; delta: "-3.2%"; delta-up: false; }
+                        }
                     }
                 }
                 PixelPanel {

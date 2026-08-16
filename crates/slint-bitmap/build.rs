@@ -4,6 +4,7 @@ fn main() {
     println!("cargo:rerun-if-changed=ui/pixel_widgets.slint");
     println!("cargo:rerun-if-changed=ui/pixel_complex.slint");
     println!("cargo:rerun-if-changed=ui/pixel_extra.slint");
+    println!("cargo:rerun-if-changed=ui/pixel_tailwind.slint");
     println!("cargo:rerun-if-changed=ui/pixel_painter_window.slint");
 
     // 与 src/lib.rs::library_paths() 保持一致：`@slint_bitmap` -> 组件库汇总入口

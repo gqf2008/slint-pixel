@@ -3,6 +3,7 @@ fn main() {
     println!("cargo:rerun-if-changed=ui/gallery.slint");
     println!("cargo:rerun-if-changed=../slint-bitmap/ui/pixel_complex.slint");
     println!("cargo:rerun-if-changed=../slint-bitmap/ui/pixel_extra.slint");
+    println!("cargo:rerun-if-changed=../slint-bitmap/ui/pixel_tailwind.slint");
     // 下游消费者标准写法：注册 @slint_bitmap 库路径（本库所有 .slint 依赖也会被监听）
     let library_paths = slint_bitmap::library_paths();
     for path in library_paths.values() {
