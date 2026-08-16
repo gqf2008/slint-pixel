@@ -22,9 +22,9 @@ export component PixelCheckBox inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #ece9e2;
+    in property <color> face: #f3f2ee;
     in property <color> face-checked: #29adff;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> shadow: #48453f;
     in property <color> text-color: #262626;
     in property <color> check-color: #48453f;
@@ -76,10 +76,10 @@ export component PixelCheckBox inherits Rectangle {
 export component PixelSwitch inherits Rectangle {
     in-out property <bool> checked: false;
     in property <bool> enabled: true;
-    in property <color> track-off: #f5f3ef;
+    in property <color> track-off: #fbfbf9;
     in property <color> track-on: #29adff;
     in property <color> thumb: #262626;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> shadow: #48453f;
     callback toggled;
     width: 46px;
@@ -120,10 +120,10 @@ export component PixelSlider inherits Rectangle {
     in property <float> min: 0.0;
     in property <float> max: 100.0;
     in property <bool> enabled: true;
-    in property <color> track: #f5f3ef;
+    in property <color> track: #fbfbf9;
     in property <color> fill: #29adff;
     in property <color> thumb: #262626;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> shadow: #48453f;
     callback changed(value: float);
     height: 28px;
@@ -197,11 +197,11 @@ export component PixelTextInput inherits Rectangle {
     in property <string> placeholder: "";
     in property <bool> enabled: true;
     in property <color> face: #ffffff;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> border-focus: #1a73e8;
     in property <color> shadow: #48453f;
     in property <color> text-color: #262626;
-    in property <color> placeholder-color: #8b8780;
+    in property <color> placeholder-color: #9a968f;
     callback accepted;
     callback edited;
     height: 32px;
@@ -244,9 +244,9 @@ export component PixelTextInput inherits Rectangle {
 export component PixelProgressBar inherits Rectangle {
     in property <float> progress: 0.0; // 0..1
     in property <bool> show-text: false;
-    in property <color> track: #f5f3ef;
+    in property <color> track: #fbfbf9;
     in property <color> fill: #29adff;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> shadow: #48453f;
     in property <color> text-color: #262626;
     height: 24px;
@@ -287,8 +287,9 @@ export component PixelProgressBar inherits Rectangle {
 // ===== 徽章 =====
 export component PixelBadge inherits Rectangle {
     in property <string> text: "";
+    in property <length> font-size: 12px;
     in property <color> face: #29adff;
-    in property <color> border: #d4d0c8;
+    in property <color> border: #ddd9d2;
     in property <color> shadow: #48453f;
     in property <color> text-color: #48453f;
     height: 22px;
@@ -306,7 +307,7 @@ export component PixelBadge inherits Rectangle {
                 text: root.text;
                 color: root.text-color;
                 font-weight: 700;
-                font-size: 12px;
+                font-size: root.font-size;
                 horizontal-alignment: center;
                 vertical-alignment: center;
             }
@@ -319,8 +320,8 @@ export component PixelBadge inherits Rectangle {
 // （否则在 ScrollView 等容器里面板高度会塌缩成只有标题行）。
 export component PixelPanel inherits Rectangle {
     in property <string> title: "";
-    in property <color> panel: #f5f3ef;
-    in property <color> edge: #d4d0c8;
+    in property <color> panel: #fbfbf9;
+    in property <color> edge: #ddd9d2;
     in property <color> title-color: #262626;
 
     background: root.panel;
@@ -347,8 +348,8 @@ export component PixelDialog inherits Rectangle {
     in property <bool> open: false;
     in property <string> title: "对话框";
     in property <color> overlay: #48453f80;
-    in property <color> panel: #f5f3ef;
-    in property <color> edge: #d4d0c8;
+    in property <color> panel: #fbfbf9;
+    in property <color> edge: #ddd9d2;
     in property <color> shadow: #48453f;
     in property <color> title-color: #262626;
     in property <color> text-color: #262626;

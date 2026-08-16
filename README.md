@@ -40,9 +40,16 @@
 | `PixelCollapsible` | 可折叠面板（高度动画） |
 | `PixelAccordion` | 手风琴（`titles`/`contents` 数据驱动，互斥展开） |
 | `PixelSidebar` | 侧边栏（导航项 + 选中态 + 内容区 `@children`） |
-| `Swatch` | 像素风色块 |
+| `PixelText` / `PixelTitle` | 像素风文本 / 标题（统一字号） |
+| `PixelForm` / `PixelFormItem` | 表单容器 / 表单项（左标签 + 右控件插槽） |
+| `PixelTextArea` | 多行文本输入（换行 + 占位符） |
+| `PixelIconButton` | 图标按钮（通用字形图标 + 悬停高亮） |
+| `PixelTooltip` | 悬停提示气泡（延迟显示，包裹任意目标） |
+| `PixelBubble` | 富内容气泡/弹出卡片（触发图标 + 箭头 + 内容插槽） |
+| `PixelPopconfirm` | 操作确认气泡（触发按钮 + 确定/取消） |
+| `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
-> 主题：默认是 **干净浅色**（纯白底 + 近白面板 + 中性深灰字，彩色仅作强调，PICO-8 绘画色板不变）。
+> 主题：默认是 **明亮浅色**（纯白底 + 极浅面板 + 中性深灰字，彩色仅作强调，PICO-8 绘画色板不变）。
 > 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 
 > 提示：提示气泡请直接用 Slint 内置 `Tooltip`（延迟出现、自动跟随指针）：
@@ -72,6 +79,7 @@ crates/
 │   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
 │   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
 │   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
+│   ├── ui/pixel_extra.slint           # 表单/文本/输入/图标按钮/提示/气泡/确认
 │   ├── ui/pixel_painter_window.slint   # 成品窗口 PixelPainterWindow
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等

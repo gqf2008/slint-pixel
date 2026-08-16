@@ -5,6 +5,8 @@ import {
     PixelTextInput, PixelProgressBar, PixelBadge, PixelPanel, PixelDialog,
     PixelRadioGroup, PixelComboBox, PixelMenu, PixelTableView, PixelScrollPanel,
     PixelCollapsible, PixelAccordion, PixelSidebar,
+    PixelText, PixelTitle, PixelForm, PixelFormItem, PixelTextArea,
+    PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm,
 } from "@slint_bitmap";
 
 export component GalleryWindow inherits Window {
@@ -16,12 +18,12 @@ export component GalleryWindow inherits Window {
 
     // ---------- 主题 ----------
     property <color> c-bg: #ffffff;
-    property <color> c-panel: #f5f3ef;
-    property <color> c-panel-light: #ece9e2;
-    property <color> c-border: #d4d0c8;
+    property <color> c-panel: #fbfbf9;
+    property <color> c-panel-light: #f3f2ee;
+    property <color> c-border: #ddd9d2;
     property <color> c-shadow: #48453f;
     property <color> c-text: #262626;
-    property <color> c-dim: #8b8780;
+    property <color> c-dim: #9a968f;
     property <color> c-highlight: #ffec27;
     property <color> c-danger: #ff004d;
 
@@ -38,6 +40,12 @@ export component GalleryWindow inherits Window {
     in-out property <int> sidebar-active: 0;
     property <bool> collapsible-open: true;
     property <bool> dialog-open: false;
+    in-out property <string> form-name: "像素小妖";
+    in-out property <string> form-desc: "住在森林里的像素生物，会掉落金币。";
+    in-out property <int> form-class: 1;
+    in-out property <bool> popconfirm-open: false;
+    property <bool> bubble-open: false;
+    property <string> action-status: "就绪";
 
     // ---------- 回调（Rust 接线） ----------
     callback drag-start();
@@ -213,6 +221,89 @@ export component GalleryWindow inherits Window {
                             color: c-text;
                             font-size: 13px;
                         }
+                    }
+                }
+                PixelPanel {
+                    title: "表单 FORM";
+                    PixelForm {
+                        spacing: 10px;
+                        PixelFormItem {
+                            label: "名称";
+                            PixelTextInput { text <=> root.form-name; }
+                        }
+                        PixelFormItem {
+                            label: "描述";
+                            PixelTextArea { text <=> root.form-desc; placeholder: "写点什么…"; }
+                        }
+                        PixelFormItem {
+                            label: "分类";
+                            PixelComboBox {
+                                model: ["普通", "稀有", "传说"];
+                                index <=> root.form-class;
+                            }
+                        }
+                        PixelFormItem {
+                            label: "状态";
+                            PixelText { text: root.action-status; color: c-dim; }
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "文本 TEXT";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelTitle { text: "像素小标题 PIXEL TITLE"; }
+                        PixelText { text: "正文：这是一段像素风文本，用 PixelText 统一字号。"; }
+                        PixelText { text: "次要说明文字，用 color 覆盖即可。"; color: c-dim; }
+                    }
+                }
+                PixelPanel {
+                    title: "图标按钮 ICON";
+                    HorizontalLayout {
+                        spacing: 10px;
+                        Rectangle {
+                            PixelIconButton { icon: "×"; clicked => { root.action-status = "点击了关闭图标"; } }
+                            // 右上角数字角标（PixelBadge 作角标）
+                            PixelBadge { text: "3"; x: 24px; y: -6px; width: 22px; height: 16px; face: c-danger; text-color: #ffffff; font-size: 10px; }
+                        }
+                        PixelIconButton { icon: "✓"; clicked => { root.action-status = "点击了确认图标"; } }
+                        PixelIconButton { icon: "▲"; active: true; clicked => { root.action-status = "点击了上箭头"; } }
+                        PixelIconButton { icon: "★"; clicked => { root.action-status = "点击了星标"; } }
+                        PixelIconButton { icon: "♥"; clicked => { root.action-status = "点击了爱心"; } }
+                    }
+                }
+                PixelPanel {
+                    title: "气泡 TOOLTIP · BUBBLE";
+                    HorizontalLayout {
+                        spacing: 12px;
+                        PixelTooltip {
+                            text: "这是像素风悬停提示气泡";
+                            PixelButton { text: "悬停我"; width: 90px; }
+                        }
+                        PixelBubble {
+                            icon: "ⓘ";
+                            title: "使用说明";
+                            open: root.bubble-open;
+                            PixelText { text: "气泡内容插槽可以放任意组件，点外部自动关闭。"; }
+                            PixelButton {
+                                text: "知道了"; width: 90px;
+                                clicked => { root.bubble-open = false; }
+                            }
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "确认 POPCONFIRM";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelPopconfirm {
+                            text: "确定要删除这个像素小妖吗？此操作不可撤销。";
+                            button-text: "删除角色";
+                            open: root.popconfirm-open;
+                            confirm => { root.action-status = "已确认删除"; }
+                            cancel => { root.action-status = "已取消删除"; }
+                        }
+                        PixelText { text: root.action-status; color: c-dim; }
                     }
                 }
                 PixelPanel {
