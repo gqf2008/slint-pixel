@@ -88,7 +88,7 @@ export component ThemeEditorWindow inherits Window {
     }
 
     VerticalLayout {
-        padding: 12px;
+        padding: 8px;
         spacing: 10px;
 
         PixelTitleBar {
@@ -113,7 +113,7 @@ export component ThemeEditorWindow inherits Window {
             border-width: 2px;
             border-color: PixelTheme.edge;
             VerticalLayout {
-                padding: 12px;
+                padding: 8px;
                 spacing: 10px;
                 Text { text: "预设主题"; color: PixelTheme.text; font-weight: 800; font-size: 13px; }
                 HorizontalLayout {
@@ -132,7 +132,7 @@ export component ThemeEditorWindow inherits Window {
             border-width: 2px;
             border-color: PixelTheme.edge;
             VerticalLayout {
-                padding: 12px;
+                padding: 8px;
                 spacing: 8px;
                 Text { text: "语义色（点候选色实时生效，主界面同步变化）"; color: PixelTheme.text; font-weight: 800; font-size: 13px; }
                 ThemeColorRow { label: "背景 bg"; value: PixelTheme.bg; options: [#ffffff, #f7f7f7, #141414, #eef4ff]; select(c) => { PixelTheme.bg = c; } }
@@ -153,7 +153,7 @@ export component ThemeEditorWindow inherits Window {
             border-width: 2px;
             border-color: PixelTheme.edge;
             VerticalLayout {
-                padding: 12px;
+                padding: 8px;
                 spacing: 10px;
                 HorizontalLayout {
                     spacing: 10px;
