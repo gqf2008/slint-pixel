@@ -19,9 +19,9 @@
 // ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
 component TitleButton inherits Rectangle {
     in property <string> kind: "min"; // min | max | close
-    in property <color> face: #f5f5f5;
-    in property <color> hover-face: #e5e5e5;
-    in property <color> icon: #171717;
+    in property <color> face: #fafafa;
+    in property <color> hover-face: #e6e6e6;
+    in property <color> icon: #000000;
     callback clicked;
     width: 30px; height: 26px;
     background: ta.has-hover ? root.hover-face : root.face;
@@ -62,13 +62,13 @@ component TitleButton inherits Rectangle {
 export component PixelTitleBar inherits Rectangle {
     in property <string> title: "";
     in property <color> bg: #ffffff;
-    in property <color> text-color: #737373;
-    in property <color> accent: #171717;
-    in property <color> btn-face: #f5f5f5;
-    in property <color> btn-hover: #e5e5e5;
-    in property <color> btn-icon: #171717;
+    in property <color> text-color: #525252;
+    in property <color> accent: #000000;
+    in property <color> btn-face: #fafafa;
+    in property <color> btn-hover: #e6e6e6;
+    in property <color> btn-icon: #000000;
     in property <color> close-hover: #ff004d;
-    in property <color> divider: #171717;
+    in property <color> divider: #000000;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -129,8 +129,8 @@ export component PixelTitleBar inherits Rectangle {
 export component Swatch inherits Rectangle {
     in property <color> fill;
     in property <bool> selected: false;
-    in property <color> select-color: #171717;
-    in property <color> shade: #171717;
+    in property <color> select-color: #000000;
+    in property <color> shade: #000000;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -155,18 +155,18 @@ export component PixelButton inherits Rectangle {
     in property <string> variant: "default";
     // size: small | medium | large
     in property <string> size: "medium";
-    in property <color> face: #e5e5e5;
-    in property <color> face-active: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> border-active: #171717;
-    in property <color> text-color: #171717;
-    in property <color> shadow: #171717;
+    in property <color> face: #e6e6e6;
+    in property <color> face-active: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> border-active: #000000;
+    in property <color> text-color: #000000;
+    in property <color> shadow: #000000;
     // variant 专用色（默认值随黑白主题）
-    in property <color> primary-face: #171717;
+    in property <color> primary-face: #000000;
     in property <color> primary-text: #ffffff;
     in property <color> danger-face: #dc2626;
     in property <color> danger-text: #ffffff;
-    in property <color> ghost-text: #171717;
+    in property <color> ghost-text: #000000;
     callback clicked;
 
     property <color> eff-face: root.active ? root.face-active
@@ -208,13 +208,13 @@ export component PixelButton inherits Rectangle {
 export component PixelPainter inherits Rectangle {
     // ---------- 主题（宿主可覆盖） ----------
     in property <color> page: #ffffff;          // 画布底色
-    in property <color> panel: #f5f5f5;         // 面板底色
-    in property <color> panel-light: #e5e5e5;   // 按钮/高亮面
-    in property <color> edge: #d4d4d4;          // 边框/分隔线
-    in property <color> shadow: #171717;        // 阴影/描边
-    in property <color> text-color: #171717;    // 主文字
-    in property <color> dim: #737373;           // 次要文字
-    in property <color> highlight: #171717;     // 强调色
+    in property <color> panel: #fafafa;         // 面板底色
+    in property <color> panel-light: #e6e6e6;   // 按钮/高亮面
+    in property <color> edge: #1a1a1a;          // 边框/分隔线
+    in property <color> shadow: #000000;        // 阴影/描边
+    in property <color> text-color: #000000;    // 主文字
+    in property <color> dim: #525252;           // 次要文字
+    in property <color> highlight: #000000;     // 强调色
     in property <color> danger: #ff004d;        // 危险操作
 
     // ---------- PICO-8 色板（宿主可覆盖） ----------

@@ -64,7 +64,7 @@
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
-> 主题：默认是 **黑白**（纯白底 + 灰阶面板 + 近黑文字，主色仅黑白灰，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
+> 主题：默认是 **纯黑白**（纯白底 + 近白面板 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
 > `PixelButton` 支持 `variant`（default/primary/danger/ghost）与 `size`（small/medium/large），对齐 Tailwind 按钮语义。
 > 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 

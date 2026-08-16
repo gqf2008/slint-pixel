@@ -22,12 +22,12 @@ export component PixelCheckBox inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #e5e5e5;
-    in property <color> face-checked: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
-    in property <color> check-color: #171717;
+    in property <color> face: #e6e6e6;
+    in property <color> face-checked: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
+    in property <color> check-color: #000000;
     callback toggled;
     height: 24px;
     opacity: root.enabled ? 1.0 : 0.5;
@@ -76,11 +76,11 @@ export component PixelCheckBox inherits Rectangle {
 export component PixelSwitch inherits Rectangle {
     in-out property <bool> checked: false;
     in property <bool> enabled: true;
-    in property <color> track-off: #f5f5f5;
-    in property <color> track-on: #171717;
-    in property <color> thumb: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
+    in property <color> track-off: #fafafa;
+    in property <color> track-on: #000000;
+    in property <color> thumb: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
     callback toggled;
     width: 46px;
     height: 24px;
@@ -120,11 +120,11 @@ export component PixelSlider inherits Rectangle {
     in property <float> min: 0.0;
     in property <float> max: 100.0;
     in property <bool> enabled: true;
-    in property <color> track: #f5f5f5;
-    in property <color> fill: #171717;
-    in property <color> thumb: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
+    in property <color> track: #fafafa;
+    in property <color> fill: #000000;
+    in property <color> thumb: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
     callback changed(value: float);
     height: 28px;
 
@@ -197,11 +197,11 @@ export component PixelTextInput inherits Rectangle {
     in property <string> placeholder: "";
     in property <bool> enabled: true;
     in property <color> face: #ffffff;
-    in property <color> border: #d4d4d4;
-    in property <color> border-focus: #171717;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
-    in property <color> placeholder-color: #737373;
+    in property <color> border: #1a1a1a;
+    in property <color> border-focus: #000000;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
+    in property <color> placeholder-color: #525252;
     callback accepted;
     callback edited;
     height: 32px;
@@ -244,11 +244,11 @@ export component PixelTextInput inherits Rectangle {
 export component PixelProgressBar inherits Rectangle {
     in property <float> progress: 0.0; // 0..1
     in property <bool> show-text: false;
-    in property <color> track: #f5f5f5;
-    in property <color> fill: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
+    in property <color> track: #fafafa;
+    in property <color> fill: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
     height: 24px;
 
     property <float> clamped: Math.max(0.0, Math.min(1.0, root.progress));
@@ -288,10 +288,10 @@ export component PixelProgressBar inherits Rectangle {
 export component PixelBadge inherits Rectangle {
     in property <string> text: "";
     in property <length> font-size: 12px;
-    in property <color> face: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
+    in property <color> face: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
     height: 22px;
 
     Rectangle {
@@ -320,9 +320,9 @@ export component PixelBadge inherits Rectangle {
 // （否则在 ScrollView 等容器里面板高度会塌缩成只有标题行）。
 export component PixelPanel inherits Rectangle {
     in property <string> title: "";
-    in property <color> panel: #f5f5f5;
-    in property <color> edge: #d4d4d4;
-    in property <color> title-color: #171717;
+    in property <color> panel: #fafafa;
+    in property <color> edge: #1a1a1a;
+    in property <color> title-color: #000000;
 
     background: root.panel;
     border-width: 2px;
@@ -347,12 +347,12 @@ export component PixelPanel inherits Rectangle {
 export component PixelDialog inherits Rectangle {
     in property <bool> open: false;
     in property <string> title: "对话框";
-    in property <color> overlay: #17171780;
-    in property <color> panel: #f5f5f5;
-    in property <color> edge: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> title-color: #171717;
-    in property <color> text-color: #171717;
+    in property <color> overlay: #00000080;
+    in property <color> panel: #fafafa;
+    in property <color> edge: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> title-color: #000000;
+    in property <color> text-color: #000000;
     callback accept;
     callback cancel;
     visible: root.open;
@@ -391,7 +391,7 @@ export component PixelDialog inherits Rectangle {
                         }
                         PixelButton {
                             text: "确定";
-                            face: #171717;
+                            face: #000000;
                             clicked => { root.accept(); }
                         }
                     }

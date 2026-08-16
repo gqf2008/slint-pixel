@@ -21,13 +21,13 @@ export component GalleryWindow inherits Window {
 
     // ---------- 主题 ----------
     property <color> c-bg: #ffffff;
-    property <color> c-panel: #fbfbf9;
-    property <color> c-panel-light: #f3f2ee;
-    property <color> c-border: #ddd9d2;
-    property <color> c-shadow: #48453f;
-    property <color> c-text: #262626;
-    property <color> c-dim: #9a968f;
-    property <color> c-highlight: #ffec27;
+    property <color> c-panel: #fafafa;
+    property <color> c-panel-light: #e6e6e6;
+    property <color> c-border: #1a1a1a;
+    property <color> c-shadow: #000000;
+    property <color> c-text: #000000;
+    property <color> c-dim: #525252;
+    property <color> c-highlight: #000000;
     property <color> c-danger: #ff004d;
 
     // ---------- 演示状态 ----------
@@ -142,7 +142,7 @@ export component GalleryWindow inherits Window {
                     VerticalLayout {
                         spacing: 6px;
                         PixelComboBox {
-                            model: ["#ff004d 红", "#ffa300 橙", "#ffec27 黄", "#00e436 绿", "#29adff 蓝"];
+                            model: ["#ff004d 红", "#ffa300 橙", "#000000 黄", "#00e436 绿", "#000000 蓝"];
                             index <=> root.combo-index;
                         }
                         Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: c-dim; font-size: 12px; }
@@ -163,7 +163,7 @@ export component GalleryWindow inherits Window {
                         spacing: 8px;
                         PixelBadge { text: "NEW"; width: 60px; face: c-danger; }
                         PixelBadge { text: "PICO-8"; width: 76px; face: c-highlight; }
-                        PixelBadge { text: "16×16"; width: 76px; face: #29adff; }
+                        PixelBadge { text: "16×16"; width: 76px; face: #000000; }
                     }
                 }
                 PixelPanel {
@@ -424,7 +424,7 @@ export component GalleryWindow inherits Window {
                     HorizontalLayout {
                         spacing: 8px;
                         PixelButton {
-                            text: "打开像素画板 →"; width: 160px; face: #29adff;
+                            text: "打开像素画板 →"; width: 160px; face: #000000;
                             clicked => { root.open-painter(); }
                         }
                     }

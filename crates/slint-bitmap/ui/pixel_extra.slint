@@ -33,7 +33,7 @@ export component PixelTitle inherits Text {
 export component PixelFormItem inherits Rectangle {
     in property <string> label: "";
     in property <length> label-width: 90px;
-    in property <color> label-color: #171717;
+    in property <color> label-color: #000000;
     HorizontalLayout {
         spacing: 10px;
         Text {
@@ -63,11 +63,11 @@ export component PixelTextArea inherits Rectangle {
     in property <bool> enabled: true;
     in property <length> frame-height: 96px;
     in property <color> face: #ffffff;
-    in property <color> border: #d4d4d4;
-    in property <color> border-focus: #171717;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
-    in property <color> placeholder-color: #737373;
+    in property <color> border: #1a1a1a;
+    in property <color> border-focus: #000000;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
+    in property <color> placeholder-color: #525252;
     callback accepted;
     callback edited;
     height: root.frame-height;
@@ -111,12 +111,12 @@ export component PixelIconButton inherits Rectangle {
     in property <string> icon: "?";
     in property <bool> active: false;
     in property <bool> enabled: true;
-    in property <color> face: #e5e5e5;
-    in property <color> face-hover: #e5e5e5;
-    in property <color> face-active: #171717;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> icon-color: #171717;
+    in property <color> face: #e6e6e6;
+    in property <color> face-hover: #e6e6e6;
+    in property <color> face-active: #000000;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> icon-color: #000000;
     callback clicked;
     width: 34px;
     height: 34px;
@@ -154,10 +154,10 @@ export component PixelTooltip inherits Rectangle {
     in property <string> text: "";
     in property <duration> delay: 400ms;
     in-out property <bool> open: false;
-    in property <color> bubble-bg: #171717;
+    in property <color> bubble-bg: #000000;
     in property <color> bubble-border: #000000;
     in property <color> text-color: #ffffff;
-    in property <color> arrow: #171717;
+    in property <color> arrow: #000000;
 
     // 悬停轮询：悬停/外部 open 则显示，离开则关闭
     property <bool> hovered: ta.has-hover;
@@ -214,15 +214,15 @@ export component PixelBubble inherits Rectangle {
     in property <string> icon: "?";
     in-out property <bool> open: false;
     in property <string> title: "";
-    in property <color> face: #e5e5e5;
-    in property <color> face-hover: #e5e5e5;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> icon-color: #171717;
+    in property <color> face: #e6e6e6;
+    in property <color> face-hover: #e6e6e6;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> icon-color: #000000;
     in property <color> bubble-bg: #ffffff;
-    in property <color> bubble-edge: #d4d4d4;
-    in property <color> bubble-shadow: #171717;
-    in property <color> title-color: #171717;
+    in property <color> bubble-edge: #1a1a1a;
+    in property <color> bubble-shadow: #000000;
+    in property <color> title-color: #000000;
     callback closed;
     width: 34px;
     height: 34px;
@@ -313,15 +313,15 @@ export component PixelPopconfirm inherits Rectangle {
     in property <string> cancel-text: "取消";
     in-out property <bool> open: false;
     in property <bool> enabled: true;
-    in property <color> face: #e5e5e5;
-    in property <color> face-hover: #e5e5e5;
+    in property <color> face: #e6e6e6;
+    in property <color> face-hover: #e6e6e6;
     in property <color> danger: #ff004d;
-    in property <color> border: #d4d4d4;
-    in property <color> shadow: #171717;
-    in property <color> text-color: #171717;
+    in property <color> border: #1a1a1a;
+    in property <color> shadow: #000000;
+    in property <color> text-color: #000000;
     in property <color> bubble-bg: #ffffff;
-    in property <color> bubble-edge: #d4d4d4;
-    in property <color> bubble-shadow: #171717;
+    in property <color> bubble-edge: #1a1a1a;
+    in property <color> bubble-shadow: #000000;
     callback confirm;
     callback cancel;
     width: 96px;
