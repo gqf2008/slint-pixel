@@ -197,7 +197,7 @@ mod tests {
     #[test]
     fn export_png_roundtrip() {
         let dir = std::env::temp_dir();
-        let path = dir.join("slint_bitmap_test_export.png");
+        let path = dir.join("slint_pixel_test_export.png");
         let mut c = Canvas::new(16, 24);
         c.paint_brush(0, 0, 1, Some([255, 0, 77, 255]));
         c.export_png(&path).unwrap();

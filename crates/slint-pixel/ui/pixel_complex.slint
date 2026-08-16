@@ -1,5 +1,5 @@
 // ============================================================================
-// slint-bitmap · 进阶像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
+// slint-pixel · 进阶像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
 //
 // 组件清单：
 //   PixelRadioButton   单选框（独立使用，in-out checked）
@@ -20,8 +20,8 @@ component PixelPopupList inherits Rectangle {
     in property <[string]> items: [];
     in property <int> current: -1;
     in property <length> item-height: 28px;
-    in property <color> face: #fafafa;
-    in property <color> face-hover: #e6e6e6;
+    in property <color> face: #ffffff;
+    in property <color> face-hover: #f2f2f2;
     in property <color> face-current: #000000;
     in property <color> edge: #1a1a1a;
     in property <color> shadow: #000000;
@@ -78,7 +78,7 @@ export component PixelRadioButton inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
+    in property <color> face: #f2f2f2;
     in property <color> face-checked: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -129,7 +129,7 @@ export component PixelRadioGroup inherits Rectangle {
     in property <[string]> options: [];
     in-out property <int> index: 0;
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
+    in property <color> face: #f2f2f2;
     in property <color> face-checked: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -194,8 +194,8 @@ export component PixelComboBox inherits Rectangle {
     in property <color> shadow: #000000;
     in property <color> text-color: #000000;
     in property <color> dim: #525252;
-    in property <color> item-face: #fafafa;
-    in property <color> item-hover: #e6e6e6;
+    in property <color> item-face: #ffffff;
+    in property <color> item-hover: #f2f2f2;
     in property <color> item-current: #000000;
     in property <color> item-border: #1a1a1a;
     callback selected(index: int);
@@ -283,13 +283,13 @@ export component PixelMenu inherits Rectangle {
     in-out property <bool> open: false;
     in property <string> button-text: "菜单";
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
+    in property <color> face: #f2f2f2;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
     in property <color> text-color: #000000;
     in property <color> dim: #525252;
-    in property <color> item-face: #fafafa;
-    in property <color> item-hover: #e6e6e6;
+    in property <color> item-face: #ffffff;
+    in property <color> item-hover: #f2f2f2;
     in property <color> item-current: #000000;
     in property <color> item-border: #1a1a1a;
     callback selected(index: int);
@@ -379,9 +379,9 @@ export component PixelTableView inherits Rectangle {
     in property <length> header-height: 28px;
     in property <length> row-height: 26px;
     in property <color> face: #ffffff;
-    in property <color> header-face: #fafafa;
+    in property <color> header-face: #ffffff;
     in property <color> row-even: #ffffff;
-    in property <color> row-odd: #fafafa;
+    in property <color> row-odd: #ffffff;
     in property <color> row-selected: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -490,8 +490,8 @@ export component PixelCollapsible inherits Rectangle {
     in property <string> title: "";
     in-out property <bool> expanded: false;
     in property <bool> enabled: true;
-    in property <color> header-face: #fafafa;
-    in property <color> header-hover: #e6e6e6;
+    in property <color> header-face: #ffffff;
+    in property <color> header-hover: #f2f2f2;
     in property <color> body: #ffffff;
     in property <color> edge: #1a1a1a;
     in property <color> shadow: #000000;
@@ -566,8 +566,8 @@ export component PixelAccordion inherits Rectangle {
     in property <[string]> contents: [];
     in-out property <int> active: -1;
     in property <bool> enabled: true;
-    in property <color> header-face: #fafafa;
-    in property <color> header-hover: #e6e6e6;
+    in property <color> header-face: #ffffff;
+    in property <color> header-hover: #f2f2f2;
     in property <color> body: #ffffff;
     in property <color> edge: #1a1a1a;
     in property <color> shadow: #000000;
@@ -655,8 +655,8 @@ export component PixelSidebar inherits Rectangle {
     in property <string> title: "";
     in property <bool> enabled: true;
     in property <length> sidebar-width: 170px;
-    in property <color> sidebar-bg: #fafafa;
-    in property <color> item-hover: #e6e6e6;
+    in property <color> sidebar-bg: #ffffff;
+    in property <color> item-hover: #f2f2f2;
     in property <color> item-active: #000000;
     in property <color> content-bg: #ffffff;
     in property <color> edge: #1a1a1a;

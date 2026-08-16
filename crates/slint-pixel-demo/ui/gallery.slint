@@ -1,4 +1,4 @@
-// slint-bitmap 组件画廊：展示全部像素风组件（也是复用教程的完整示例）。
+// slint-pixel 组件画廊：展示全部像素风组件（也是复用教程的完整示例）。
 
 import {
     PixelTitleBar, PixelButton, PixelCheckBox, PixelSwitch, PixelSlider,
@@ -9,8 +9,8 @@ import {
     PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm,
     PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
     PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
-    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat,
-} from "@slint_bitmap";
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize,
+} from "@slint_pixel";
 
 export component GalleryWindow inherits Window {
     title: "Slint 像素组件库";
@@ -21,8 +21,8 @@ export component GalleryWindow inherits Window {
 
     // ---------- 主题 ----------
     property <color> c-bg: #ffffff;
-    property <color> c-panel: #fafafa;
-    property <color> c-panel-light: #e6e6e6;
+    property <color> c-panel: #ffffff;
+    property <color> c-panel-light: #f2f2f2;
     property <color> c-border: #1a1a1a;
     property <color> c-shadow: #000000;
     property <color> c-text: #000000;
@@ -56,6 +56,7 @@ export component GalleryWindow inherits Window {
     callback toggle-maximize();
     callback close-window();
     callback open-painter();
+    callback begin-resize(string);
     callback dialog-accept();
     callback dialog-cancel();
 
@@ -431,6 +432,11 @@ export component GalleryWindow inherits Window {
                 }
             }
         }
+    }
+
+    // ===== 无边框窗口缩放热区（内容之上、对话框之下） =====
+    PixelWindowResize {
+        begin-resize(dir) => { root.begin-resize(dir); }
     }
 
     // ===== 模态对话框（覆盖层） =====

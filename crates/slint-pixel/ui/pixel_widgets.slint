@@ -1,5 +1,5 @@
 // ============================================================================
-// slint-bitmap · 常用像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
+// slint-pixel · 常用像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
 //
 // 组件清单：
 //   PixelCheckBox   复选框（像素勾选 + 文字标签）
@@ -22,7 +22,7 @@ export component PixelCheckBox inherits Rectangle {
     in-out property <bool> checked: false;
     in property <string> text: "";
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
+    in property <color> face: #f2f2f2;
     in property <color> face-checked: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -76,7 +76,7 @@ export component PixelCheckBox inherits Rectangle {
 export component PixelSwitch inherits Rectangle {
     in-out property <bool> checked: false;
     in property <bool> enabled: true;
-    in property <color> track-off: #fafafa;
+    in property <color> track-off: #ffffff;
     in property <color> track-on: #000000;
     in property <color> thumb: #000000;
     in property <color> border: #1a1a1a;
@@ -120,7 +120,7 @@ export component PixelSlider inherits Rectangle {
     in property <float> min: 0.0;
     in property <float> max: 100.0;
     in property <bool> enabled: true;
-    in property <color> track: #fafafa;
+    in property <color> track: #ffffff;
     in property <color> fill: #000000;
     in property <color> thumb: #000000;
     in property <color> border: #1a1a1a;
@@ -244,7 +244,7 @@ export component PixelTextInput inherits Rectangle {
 export component PixelProgressBar inherits Rectangle {
     in property <float> progress: 0.0; // 0..1
     in property <bool> show-text: false;
-    in property <color> track: #fafafa;
+    in property <color> track: #ffffff;
     in property <color> fill: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -320,7 +320,7 @@ export component PixelBadge inherits Rectangle {
 // （否则在 ScrollView 等容器里面板高度会塌缩成只有标题行）。
 export component PixelPanel inherits Rectangle {
     in property <string> title: "";
-    in property <color> panel: #fafafa;
+    in property <color> panel: #ffffff;
     in property <color> edge: #1a1a1a;
     in property <color> title-color: #000000;
 
@@ -345,14 +345,16 @@ export component PixelPanel inherits Rectangle {
 
 // ===== 模态对话框（遮罩 + 标题 + 内容插槽 + 确定/取消） =====
 export component PixelDialog inherits Rectangle {
-    in property <bool> open: false;
+    in-out property <bool> open: false;
     in property <string> title: "对话框";
     in property <color> overlay: #00000080;
-    in property <color> panel: #fafafa;
+    in property <color> panel: #ffffff;
     in property <color> edge: #1a1a1a;
     in property <color> shadow: #000000;
     in property <color> title-color: #000000;
     in property <color> text-color: #000000;
+    in property <color> close-color: #000000;
+    in property <color> close-hover: #f2f2f2;
     callback accept;
     callback cancel;
     visible: root.open;
@@ -374,11 +376,40 @@ export component PixelDialog inherits Rectangle {
                 VerticalLayout {
                     padding: 14px;
                     spacing: 10px;
-                    Text {
-                        text: root.title;
-                        color: root.title-color;
-                        font-weight: 800;
-                        letter-spacing: 1px;
+
+                    // 标题行：左标题 + 右上角关闭按钮
+                    Rectangle {
+                        height: 26px;
+                        Text {
+                            x: 0px; y: 0px; height: 26px;
+                            text: root.title;
+                            color: root.title-color;
+                            font-weight: 800;
+                            letter-spacing: 1px;
+                            vertical-alignment: center;
+                        }
+                        Rectangle {
+                            x: parent.width - 28px; y: 1px;
+                            width: 24px; height: 24px;
+                            background: close-btn.has-hover ? root.close-hover : transparent;
+                            Text {
+                                x: 0px; y: 0px; width: 24px; height: 24px;
+                                text: "×";
+                                color: root.close-color;
+                                font-size: 15px;
+                                font-weight: 700;
+                                horizontal-alignment: center;
+                                vertical-alignment: center;
+                            }
+                            close-btn := TouchArea {
+                                width: 100%; height: 100%;
+                                clicked => {
+                                    root.open = false;
+                                    root.cancel();
+                                }
+                                mouse-cursor: pointer;
+                            }
+                        }
                     }
                     Rectangle { height: 2px; background: root.edge; }
                     @children
@@ -387,12 +418,20 @@ export component PixelDialog inherits Rectangle {
                         spacing: 8px;
                         PixelButton {
                             text: "取消";
-                            clicked => { root.cancel(); }
+                            width: 80px;
+                            clicked => {
+                                root.open = false;
+                                root.cancel();
+                            }
                         }
                         PixelButton {
                             text: "确定";
+                            width: 80px;
                             face: #000000;
-                            clicked => { root.accept(); }
+                            clicked => {
+                                root.open = false;
+                                root.accept();
+                            }
                         }
                     }
                 }

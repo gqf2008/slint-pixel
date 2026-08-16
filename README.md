@@ -1,9 +1,9 @@
-# slint-bitmap
+# slint-pixel
 
 基于 **Rust + Slint 1.17** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
-- **可复用**：所有组件通过 `@slint_bitmap` 导入到任意 Slint 项目（见下方组件清单）。
+- **可复用**：所有组件通过 `@slint_pixel` 导入到任意 Slint 项目（见下方组件清单）。
 - **一键接线**：Rust 侧调用 `install_painter()` / `install_title_bar_controls()`，
   画/擦、清空、导出 PNG、窗口控制全部自动接好。
 - **自绘像素标题栏**：无系统边框（`no-frame`），可拖拽、双击最大化，右侧最小化/最大化/关闭。
@@ -61,10 +61,11 @@
 | `PixelNavbar` | 顶栏导航（品牌 + 菜单项 + 右侧插槽） |
 | `PixelEmpty` | 空状态（图标 + 标题 + 描述 + 操作插槽） |
 | `PixelDivider` | 分隔线（可带文字） |
-| `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
+| PixelStat | 统计卡片（大数字 + 标签 + 变化） |
+| PixelWindowResize | 无边框窗口缩放热区（四边/四角，配合 install_window_resize） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
-> 主题：默认是 **纯黑白**（纯白底 + 近白面板 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
+> 主题：默认是 **纯白**（纯白底 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
 > `PixelButton` 支持 `variant`（default/primary/danger/ghost）与 `size`（small/medium/large），对齐 Tailwind 按钮语义。
 > 所有组件主题色均为 `in` 属性，宿主可在 `.slint` 里整体覆盖为深色或任意配色。
 
@@ -84,14 +85,14 @@
 cargo run
 ```
 
-启动后打开 **组件画廊**（展示全部常用控件），点画廊里的 **打开像素画板 →** 可打开画板窗口。
+启动后打开 **组件画廊**（展示全部常用控件），点画廊里的 **打开像素画板 →** 可打开画板窗口。窗口为无边框自绘标题栏，**四边/四角可直接拖拽缩放**，标题栏可拖动/最小化/最大化/关闭。
 
 ## 结构（workspace）
 
 ```
 crates/
-├── slint-bitmap/                  # 组件库（lib）
-│   ├── ui/lib.slint               # @slint_bitmap 汇总入口（re-export 全部组件）
+├── slint-pixel/                  # 组件库（lib）
+│   ├── ui/lib.slint               # @slint_pixel 汇总入口（re-export 全部组件）
 │   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
 │   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
 │   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
@@ -101,9 +102,9 @@ crates/
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等
 │       └── canvas.rs              # 画布数据、放大渲染、PNG 导出（含单元测试）
-└── slint-bitmap-demo/             # 演示程序（bin，作为下游消费者组装窗口）
+└── slint-pixel-demo/             # 演示程序（bin，作为下游消费者组装窗口）
     ├── ui/gallery.slint           # 组件画廊窗口
-    ├── ui/main.slint              # 画板窗口（通过 @slint_bitmap 组装）
+    ├── ui/main.slint              # 画板窗口（通过 @slint_pixel 组装）
     └── src/main.rs                # 接线：install_painter / install_title_bar_controls / 打开画板
 ```
 
@@ -114,19 +115,19 @@ crates/
 ```toml
 [dependencies]
 slint = "1.17"
-slint-bitmap = { path = "path/to/slint-bitmap/crates/slint-bitmap" }
+slint-pixel = { path = "path/to/slint-pixel/crates/slint-pixel" }
 
 [build-dependencies]
 slint-build = "1.17"
-slint-bitmap = { path = "path/to/slint-bitmap/crates/slint-bitmap" }
+slint-pixel = { path = "path/to/slint-pixel/crates/slint-pixel" }
 ```
 
-### 2. 在 `build.rs` 注册 `@slint_bitmap` 库并编译自己的 UI
+### 2. 在 `build.rs` 注册 `@slint_pixel` 库并编译自己的 UI
 
 ```rust
 fn main() {
     println!("cargo:rerun-if-changed=ui/main.slint");
-    let library_paths = slint_bitmap::library_paths();
+    let library_paths = slint_pixel::library_paths();
     for path in library_paths.values() {
         println!("cargo:rerun-if-changed={}", path.display());
     }
@@ -138,7 +139,7 @@ fn main() {
 ### 3. 在 `ui/main.slint` 里导入组件并组装
 
 ```slint
-import { PixelPainter, PixelTitleBar } from "@slint_bitmap";
+import { PixelPainter, PixelTitleBar } from "@slint_pixel";
 
 export component MainWindow inherits Window {
     no-frame: true;
@@ -177,7 +178,7 @@ export component MainWindow inherits Window {
 }
 ```
 
-完整参考：`crates/slint-bitmap-demo/ui/main.slint` 与 `crates/slint-bitmap-demo/ui/gallery.slint`。
+完整参考：`crates/slint-pixel-demo/ui/main.slint` 与 `crates/slint-pixel-demo/ui/gallery.slint`。
 
 ### 4. Rust 侧一键接线
 
@@ -185,13 +186,13 @@ export component MainWindow inherits Window {
 slint::include_modules!();
 
 // 把生成的 MainWindow 适配到组件库契约（一行宏，无需手写胶水代码）
-slint_bitmap::impl_painter_ui!(MainWindow);
-slint_bitmap::impl_title_bar_ui!(MainWindow);
+slint_pixel::impl_painter_ui!(MainWindow);
+slint_pixel::impl_title_bar_ui!(MainWindow);
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ui = MainWindow::new()?;
-    slint_bitmap::install_painter(&ui);           // 画/擦、清空、导出 PNG
-    slint_bitmap::install_title_bar_controls(&ui); // 拖拽、最小化、最大化、关闭
+    slint_pixel::install_painter(&ui);           // 画/擦、清空、导出 PNG
+    slint_pixel::install_title_bar_controls(&ui); // 拖拽、最小化、最大化、关闭
     ui.run()?;
     Ok(())
 }
@@ -201,9 +202,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ```rust
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let ui = slint_bitmap::PixelPainterWindow::new()?;
-    slint_bitmap::install_painter(&ui);
-    slint_bitmap::install_title_bar_controls(&ui);
+    let ui = slint_pixel::PixelPainterWindow::new()?;
+    slint_pixel::install_painter(&ui);
+    slint_pixel::install_title_bar_controls(&ui);
     ui.run()?;
     Ok(())
 }

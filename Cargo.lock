@@ -4371,24 +4371,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "slint-bitmap"
-version = "0.1.0"
-dependencies = [
- "image",
- "slint",
- "slint-build",
-]
-
-[[package]]
-name = "slint-bitmap-demo"
-version = "0.1.0"
-dependencies = [
- "slint",
- "slint-bitmap",
- "slint-build",
-]
-
-[[package]]
 name = "slint-build"
 version = "1.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4411,6 +4393,24 @@ dependencies = [
  "proc-macro2",
  "quote",
  "spin_on",
+]
+
+[[package]]
+name = "slint-pixel"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "slint",
+ "slint-build",
+]
+
+[[package]]
+name = "slint-pixel-demo"
+version = "0.1.0"
+dependencies = [
+ "slint",
+ "slint-build",
+ "slint-pixel",
 ]
 
 [[package]]

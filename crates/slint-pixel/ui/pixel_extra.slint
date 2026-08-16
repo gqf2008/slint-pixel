@@ -1,5 +1,5 @@
 // ============================================================================
-// slint-bitmap · 表单/反馈/文本类像素风组件（纯 Slint 自绘，跨平台）
+// slint-pixel · 表单/反馈/文本类像素风组件（纯 Slint 自绘，跨平台）
 //
 // 组件清单：
 //   PixelText        像素风文本（默认字号/颜色）
@@ -111,8 +111,8 @@ export component PixelIconButton inherits Rectangle {
     in property <string> icon: "?";
     in property <bool> active: false;
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
-    in property <color> face-hover: #e6e6e6;
+    in property <color> face: #f2f2f2;
+    in property <color> face-hover: #f2f2f2;
     in property <color> face-active: #000000;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -214,8 +214,8 @@ export component PixelBubble inherits Rectangle {
     in property <string> icon: "?";
     in-out property <bool> open: false;
     in property <string> title: "";
-    in property <color> face: #e6e6e6;
-    in property <color> face-hover: #e6e6e6;
+    in property <color> face: #f2f2f2;
+    in property <color> face-hover: #f2f2f2;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
     in property <color> icon-color: #000000;
@@ -313,8 +313,8 @@ export component PixelPopconfirm inherits Rectangle {
     in property <string> cancel-text: "取消";
     in-out property <bool> open: false;
     in property <bool> enabled: true;
-    in property <color> face: #e6e6e6;
-    in property <color> face-hover: #e6e6e6;
+    in property <color> face: #f2f2f2;
+    in property <color> face-hover: #f2f2f2;
     in property <color> danger: #ff004d;
     in property <color> border: #1a1a1a;
     in property <color> shadow: #000000;
@@ -423,6 +423,76 @@ export component PixelPopconfirm inherits Rectangle {
                     }
                 }
             }
+        }
+    }
+}
+// ===== 无边框窗口缩放热区（放在 Window 根、内容之上） =====
+// 触发 begin-resize(direction)，宿主用 winit drag_resize_window 执行系统级缩放。
+export component PixelWindowResize inherits Rectangle {
+    callback begin-resize(string);
+
+    // 上
+    TouchArea {
+        x: 0px; y: 0px; width: parent.width; height: 6px;
+        mouse-cursor: ns-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("north"); }
+        }
+    }
+    // 下
+    TouchArea {
+        x: 0px; y: parent.height - 6px; width: parent.width; height: 6px;
+        mouse-cursor: ns-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("south"); }
+        }
+    }
+    // 左
+    TouchArea {
+        x: 0px; y: 0px; width: 6px; height: parent.height;
+        mouse-cursor: ew-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("west"); }
+        }
+    }
+    // 右
+    TouchArea {
+        x: parent.width - 6px; y: 0px; width: 6px; height: parent.height;
+        mouse-cursor: ew-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("east"); }
+        }
+    }
+    // 左上
+    TouchArea {
+        x: 0px; y: 0px; width: 14px; height: 14px;
+        mouse-cursor: nwse-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("north-west"); }
+        }
+    }
+    // 右上
+    TouchArea {
+        x: parent.width - 14px; y: 0px; width: 14px; height: 14px;
+        mouse-cursor: nesw-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("north-east"); }
+        }
+    }
+    // 左下
+    TouchArea {
+        x: 0px; y: parent.height - 14px; width: 14px; height: 14px;
+        mouse-cursor: nesw-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("south-west"); }
+        }
+    }
+    // 右下
+    TouchArea {
+        x: parent.width - 14px; y: parent.height - 14px; width: 14px; height: 14px;
+        mouse-cursor: nwse-resize;
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left { root.begin-resize("south-east"); }
         }
     }
 }

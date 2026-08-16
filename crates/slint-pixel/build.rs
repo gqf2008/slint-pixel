@@ -7,9 +7,9 @@ fn main() {
     println!("cargo:rerun-if-changed=ui/pixel_tailwind.slint");
     println!("cargo:rerun-if-changed=ui/pixel_painter_window.slint");
 
-    // 与 src/lib.rs::library_paths() 保持一致：`@slint_bitmap` -> 组件库汇总入口
+    // 与 src/lib.rs::library_paths() 保持一致：`@slint_pixel` -> 组件库汇总入口
     let library_paths = std::collections::HashMap::from([(
-        "slint_bitmap".to_string(),
+        "slint_pixel".to_string(),
         std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ui/lib.slint"),
     )]);
 

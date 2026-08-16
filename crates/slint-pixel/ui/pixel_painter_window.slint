@@ -1,10 +1,11 @@
-// slint-bitmap 演示窗口：下游消费者的最小示例。
-// 与 slint-bitmap 库内的 PixelPainterWindow 等价，这里以“消费者”身份
-// 通过 `@slint_bitmap` 导入组件并自行组装，验证组件库的可复用性。
+// slint-pixel · 成品像素风窗口（无边框 + 自绘像素标题栏 + 画板 widget）
+// 由 slint-pixel 库编译并导出 Rust 类型 `PixelPainterWindow`，
+// 下游可 `slint_pixel::PixelPainterWindow::new()` 直接使用，
+// 也可参考本文件在自己的 .slint 里用 `@slint_pixel` 组装窗口。
 
-import { PixelPainter, PixelTitleBar } from "@slint_bitmap";
+import { PixelPainter, PixelTitleBar, PixelWindowResize } from "@slint_pixel";
 
-export component MainWindow inherits Window {
+export component PixelPainterWindow inherits Window {
     title: "Slint 像素画板";
     no-frame: true;
     preferred-width: 720px;
@@ -13,8 +14,8 @@ export component MainWindow inherits Window {
 
     // ---------- 主题 ----------
     property <color> c-bg: #ffffff;
-    property <color> c-panel: #fafafa;
-    property <color> c-panel-light: #e6e6e6;
+    property <color> c-panel: #ffffff;
+    property <color> c-panel-light: #f2f2f2;
     property <color> c-border: #1a1a1a;
     property <color> c-shadow: #000000;
     property <color> c-text: #000000;
@@ -37,11 +38,13 @@ export component MainWindow inherits Window {
     callback minimize();
     callback toggle-maximize();
     callback close-window();
+    callback begin-resize(string);
 
     VerticalLayout {
         padding: 12px;
         spacing: 10px;
 
+        // ===== 自绘像素标题栏 =====
         PixelTitleBar {
             title: "SLINT PIXEL PAINTER · 像素画板";
             bg: c-bg;
@@ -58,6 +61,7 @@ export component MainWindow inherits Window {
             close-window => { root.close-window(); }
         }
 
+        // ===== 画板 widget =====
         PixelPainter {
             page: c-bg;
             panel: c-panel;
@@ -79,5 +83,10 @@ export component MainWindow inherits Window {
             clear-canvas => { root.clear-canvas(); }
             save-png => { root.save-png(); }
         }
+    }
+
+    // ===== 无边框窗口缩放热区（内容之上） =====
+    PixelWindowResize {
+        begin-resize(dir) => { root.begin-resize(dir); }
     }
 }

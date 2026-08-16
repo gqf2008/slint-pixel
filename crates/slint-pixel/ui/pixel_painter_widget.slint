@@ -1,9 +1,9 @@
 // ============================================================================
-// slint-bitmap · 可复用像素风组件库（Slint 1.17）
+// slint-pixel · 可复用像素风组件库（Slint 1.17）
 //
-// 本文件是 `@slint_bitmap` 库的唯一入口（file-based library）。
+// 本文件是 `@slint_pixel` 库的唯一入口（file-based library）。
 // 其他 Slint 项目可在 build.rs 注册 library path 后，用
-//   `import { PixelPainter, PixelTitleBar, Swatch, PixelButton } from "@slint_bitmap"`
+//   `import { PixelPainter, PixelTitleBar, Swatch, PixelButton } from "@slint_pixel"`
 // 直接复用本文件导出的组件。
 //
 // 导出组件：
@@ -19,8 +19,8 @@
 // ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
 component TitleButton inherits Rectangle {
     in property <string> kind: "min"; // min | max | close
-    in property <color> face: #fafafa;
-    in property <color> hover-face: #e6e6e6;
+    in property <color> face: #ffffff;
+    in property <color> hover-face: #f2f2f2;
     in property <color> icon: #000000;
     callback clicked;
     width: 30px; height: 26px;
@@ -64,8 +64,8 @@ export component PixelTitleBar inherits Rectangle {
     in property <color> bg: #ffffff;
     in property <color> text-color: #525252;
     in property <color> accent: #000000;
-    in property <color> btn-face: #fafafa;
-    in property <color> btn-hover: #e6e6e6;
+    in property <color> btn-face: #ffffff;
+    in property <color> btn-hover: #f2f2f2;
     in property <color> btn-icon: #000000;
     in property <color> close-hover: #ff004d;
     in property <color> divider: #000000;
@@ -155,7 +155,7 @@ export component PixelButton inherits Rectangle {
     in property <string> variant: "default";
     // size: small | medium | large
     in property <string> size: "medium";
-    in property <color> face: #e6e6e6;
+    in property <color> face: #f2f2f2;
     in property <color> face-active: #000000;
     in property <color> border: #1a1a1a;
     in property <color> border-active: #000000;
@@ -208,8 +208,8 @@ export component PixelButton inherits Rectangle {
 export component PixelPainter inherits Rectangle {
     // ---------- 主题（宿主可覆盖） ----------
     in property <color> page: #ffffff;          // 画布底色
-    in property <color> panel: #fafafa;         // 面板底色
-    in property <color> panel-light: #e6e6e6;   // 按钮/高亮面
+    in property <color> panel: #ffffff;         // 面板底色
+    in property <color> panel-light: #f2f2f2;   // 按钮/高亮面
     in property <color> edge: #1a1a1a;          // 边框/分隔线
     in property <color> shadow: #000000;        // 阴影/描边
     in property <color> text-color: #000000;    // 主文字
