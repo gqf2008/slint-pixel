@@ -405,6 +405,7 @@ export component PixelPopconfirm inherits Rectangle {
                         spacing: 8px;
                         PixelButton {
                             text: root.cancel-text;
+                            width: 80px;
                             clicked => {
                                 root.open = false;
                                 root.cancel();
@@ -413,8 +414,8 @@ export component PixelPopconfirm inherits Rectangle {
                         }
                         PixelButton {
                             text: root.confirm-text;
-                            face: root.danger;
-                            face-active: #ff2f77;
+                            width: 80px;
+                            variant: "danger";
                             clicked => {
                                 root.open = false;
                                 root.confirm();

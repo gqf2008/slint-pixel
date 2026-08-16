@@ -170,46 +170,47 @@ export component PixelButton inherits Rectangle {
     in property <color> ghost-text: PixelTheme.text;
     callback clicked;
 
-    property <color> eff-face: root.active ? root.face-active
+    // active 态：浅底 + 加粗黑边框 + 底部高亮条（不做黑底，保持纯白主题清爽）
+    property <color> eff-face: root.active ? root.face
         : (root.variant == "primary" ? root.primary-face
         : (root.variant == "danger" ? root.danger-face
         : (root.variant == "ghost" ? transparent : root.face)));
-    property <color> eff-text: root.active ? #ffffff
+    property <color> eff-text: root.active ? root.text-color
         : (root.variant == "primary" ? root.primary-text
         : (root.variant == "danger" ? root.danger-text
         : (root.variant == "ghost" ? root.ghost-text : root.text-color)));
     property <length> eff-height: root.size == "small" ? 24px
         : (root.size == "large" ? 42px : 30px);
 
+    // 根即按钮面：无内部 width/height 依赖，保证布局里显式 width 生效
     height: root.eff-height;
-    background: transparent;
-    // 阴影层（ghost 不显示，避免黑底透出）
-    Rectangle {
-        visible: root.variant != "ghost";
-        x: 2px; y: 2px;
-        width: root.width; height: root.height;
-        background: root.shadow;
-    }
-    Rectangle {
+    horizontal-stretch: 0;
+    vertical-stretch: 0;
+    background: root.eff-face;
+    border-width: 2px;
+    border-color: root.active ? root.border-active : root.border;
+    Text {
         x: ta.pressed ? 2px : 0px;
         y: ta.pressed ? 2px : 0px;
-        width: root.width - (ta.pressed ? 4px : 0px);
-        height: root.height - (ta.pressed ? 4px : 0px);
-        background: root.eff-face;
-        border-width: 2px;
-        border-color: root.active ? root.border-active : root.border;
-        Text {
-            text: root.text;
-            color: root.eff-text;
-            font-weight: 700;
-            font-size: root.size == "small" ? 11px : (root.size == "large" ? 15px : 13px);
-            horizontal-alignment: center;
-            vertical-alignment: center;
-        }
-        ta := TouchArea {
-            clicked => { root.clicked(); }
-            mouse-cursor: pointer;
-        }
+        width: 100%; height: 100%;
+        text: root.text;
+        color: root.eff-text;
+        font-weight: 700;
+        font-size: root.size == "small" ? 11px : (root.size == "large" ? 15px : 13px);
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    // 底部高亮条（active 标记）
+    Rectangle {
+        visible: root.active;
+        x: 3px; y: parent.height - 4px;
+        width: parent.width - 6px; height: 3px;
+        background: root.border-active;
+    }
+    ta := TouchArea {
+        width: 100%; height: 100%;
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
     }
 }
 
