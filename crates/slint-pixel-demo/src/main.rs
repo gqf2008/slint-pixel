@@ -28,13 +28,27 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // 画廊里的“打开像素画板”：新开一个画板窗口并保持存活
     let painters: Rc<RefCell<Vec<MainWindow>>> = Rc::new(RefCell::new(Vec::new()));
+
     let painters_open = painters.clone();
+    let attach_timers: Rc<RefCell<Vec<slint::Timer>>> = Rc::new(RefCell::new(Vec::new()));
+    let attach_timers_p = attach_timers.clone();
+    let gallery_ref = gallery.clone_strong();
     gallery.on_open_painter(move || {
         if let Ok(painter) = MainWindow::new() {
             slint_pixel::install_painter(&painter);
             slint_pixel::install_title_bar_controls_no_quit(&painter);
             slint_pixel::install_window_resize(&painter);
             if painter.show().is_ok() {
+                // 挂到画廊窗口，任务栏不单独显示（show 后 winit 窗口异步创建，延迟再挂）
+                let p2 = painter.clone_strong();
+                let g2 = gallery_ref.clone_strong();
+                let t = slint::Timer::default();
+                t.start(
+                    slint::TimerMode::SingleShot,
+                    std::time::Duration::from_millis(500),
+                    move || slint_pixel::attach_owner(&p2, &g2),
+                );
+                attach_timers_p.borrow_mut().push(t);
                 painters_open.borrow_mut().push(painter);
             }
         }
@@ -62,12 +76,23 @@ fn main() -> Result<(), Box<dyn Error>> {
     // 主题编辑器：打开独立窗口（实时改 PixelTheme，画廊/画板同步）
     let editors: Rc<RefCell<Vec<ThemeEditorWindow>>> = Rc::new(RefCell::new(Vec::new()));
     let editors_open = editors.clone();
+    let gallery_ref2 = gallery.clone_strong();
     gallery.on_open_theme_editor(move || {
         if let Ok(editor) = ThemeEditorWindow::new() {
             slint_pixel::install_title_bar_controls_no_quit(&editor);
             slint_pixel::install_window_resize(&editor);
             wire_generate_theme(&editor);
             if editor.show().is_ok() {
+                // 挂到画廊窗口，任务栏不单独显示（show 后 winit 窗口异步创建，延迟再挂）
+                let e2 = editor.clone_strong();
+                let g2 = gallery_ref2.clone_strong();
+                let t = slint::Timer::default();
+                t.start(
+                    slint::TimerMode::SingleShot,
+                    std::time::Duration::from_millis(500),
+                    move || slint_pixel::attach_owner(&e2, &g2),
+                );
+                attach_timers.borrow_mut().push(t);
                 editors_open.borrow_mut().push(editor);
             }
         }

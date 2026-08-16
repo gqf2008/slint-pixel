@@ -321,6 +321,54 @@ pub fn install_window_resize<T: ResizeUi + 'static>(ui: &T) {
         });
     });
 }
+
+/// 把 `child` 窗口设为 `owner` 的子窗口。
+/// Windows 上子窗口不再单独出现在任务栏（跟随 owner 一起最小化/还原）；
+/// 其他平台为 no-op。需在窗口 `show()` 且 winit 窗口创建完成后调用
+/// （`with_winit_window` 只在事件循环运行时有效，show 后窗口是异步创建的，
+/// 通常需在事件循环内调用，或 show 后延迟一小段时间）。
+#[cfg(target_os = "windows")]
+pub fn attach_owner<C: slint::ComponentHandle, O: slint::ComponentHandle>(child: &C, owner: &O) {
+    use slint::winit_030::WinitWindowAccessor;
+    let child_hwnd = child.window().with_winit_window(win_hwnd);
+    let owner_hwnd = owner.window().with_winit_window(win_hwnd);
+    if let (Some(Some(c)), Some(Some(o))) = (child_hwnd, owner_hwnd) {
+        set_parent_hwnd(c, o);
+    }
+}
+
+/// 非 Windows 平台：无 owner 概念，no-op（macOS 用 NSWindow parent、Linux 用 transient 由宿主自行处理）。
+#[cfg(not(target_os = "windows"))]
+pub fn attach_owner<C: slint::ComponentHandle, O: slint::ComponentHandle>(_child: &C, _owner: &O) {}
+
+#[cfg(target_os = "windows")]
+#[allow(unsafe_code)]
+fn win_hwnd(w: &slint::winit_030::winit::window::Window) -> Option<isize> {
+    use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+    let handle = w.window_handle().ok()?;
+    match handle.as_raw() {
+        RawWindowHandle::Win32(h) => Some(h.hwnd.get()),
+        _ => None,
+    }
+}
+
+#[cfg(target_os = "windows")]
+#[allow(unsafe_code)]
+fn set_parent_hwnd(child: isize, owner: isize) {
+    const GWLP_HWNDPARENT: i32 = -8;
+    // SAFETY: 标准 Win32 API；HWND 来自 winit 窗口，调用发生在 UI 线程
+    unsafe extern "system" {
+        fn SetWindowLongPtrW(
+            hWnd: *const core::ffi::c_void,
+            nIndex: i32,
+            dwNewLong: isize,
+        ) -> isize;
+    }
+    // SAFETY: child/owner 是有效 HWND，由 winit 窗口句柄转换而来
+    unsafe {
+        SetWindowLongPtrW(child as *const core::ffi::c_void, GWLP_HWNDPARENT, owner);
+    }
+}
 /// 逻辑坐标 → 网格列/行（越界裁剪到画布内）。
 fn cell_index(pos: f32) -> usize {
     let cell = (pos / CELL_PX as f32) as i32;

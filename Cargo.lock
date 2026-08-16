@@ -4400,6 +4400,7 @@ name = "slint-pixel"
 version = "0.1.0"
 dependencies = [
  "image",
+ "raw-window-handle",
  "slint",
  "slint-build",
 ]
