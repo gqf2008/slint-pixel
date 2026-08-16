@@ -1,0 +1,400 @@
+// Slint 像素画板：像素风格的小工具窗口（无边框 + 自绘像素标题栏，跨平台）
+// 画布为 16×16 像素网格，每个格子放大为 24px 显示（由 Rust 侧渲染位图）。
+
+// ===== 像素标题栏按钮（图标用矩形/通用字形绘制，跨平台） =====
+component TitleButton inherits Rectangle {
+    in property <string> kind: "min"; // min | max | close
+    in property <color> face: #29366f;
+    in property <color> hover-face: #3d4b94;
+    in property <color> icon: #fff1e8;
+    callback clicked;
+    width: 30px; height: 26px;
+    background: ta.has-hover ? root.hover-face : root.face;
+    border-width: 1px;
+    border-color: root.face;
+
+    // 最小化：横条
+    Rectangle {
+        visible: root.kind == "min";
+        x: 9px; y: 12px; width: 12px; height: 2px;
+        background: root.icon;
+    }
+    // 最大化：方框
+    Rectangle {
+        visible: root.kind == "max";
+        x: 9px; y: 7px; width: 12px; height: 12px;
+        background: transparent;
+        border-width: 2px;
+        border-color: root.icon;
+    }
+    // 关闭：通用字形 ×（跨平台字体均有）
+    Text {
+        visible: root.kind == "close";
+        text: "×";
+        color: root.icon;
+        font-size: 16px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    ta := TouchArea {
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+// ===== 像素标题栏 =====
+component PixelTitleBar inherits Rectangle {
+    in property <string> title: "";
+    in property <color> bg: #1d2b53;
+    in property <color> text-color: #aab3d8;
+    in property <color> accent: #ffec27;
+    in property <color> btn-face: #29366f;
+    in property <color> btn-hover: #3d4b94;
+    in property <color> btn-icon: #fff1e8;
+    in property <color> close-hover: #ff004d;
+    in property <color> divider: #0d0b1e;
+    callback drag-start;
+    callback minimize;
+    callback toggle-maximize;
+    callback close-window;
+    height: 34px;
+    background: root.bg;
+
+    // 底层：全宽拖拽热区（声明在最前位于底层，按钮在上层优先接收点击）
+    TouchArea {
+        pointer-event(ev) => {
+            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left {
+                root.drag-start();
+            }
+        }
+        double-clicked => { root.toggle-maximize(); }
+    }
+
+    // 左侧 logo
+    Rectangle {
+        x: 6px; y: 4px; width: 26px; height: 26px;
+        background: root.divider;
+        Rectangle {
+            x: 2px; y: 2px; width: 22px; height: 22px;
+            background: root.accent;
+        }
+    }
+    // 标题文字
+    Text {
+        x: 40px; y: 0px; height: 34px;
+        text: root.title;
+        color: root.text-color;
+        vertical-alignment: center;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    // 右侧按钮（锚定右端：3×30 + 2×6 + 右内边距 4 = 106px）
+    HorizontalLayout {
+        x: parent.width - 106px;
+        y: 4px; width: 102px; height: 26px;
+        spacing: 6px;
+        TitleButton {
+            kind: "min"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
+            clicked => { root.minimize(); }
+        }
+        TitleButton {
+            kind: "max"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
+            clicked => { root.toggle-maximize(); }
+        }
+        TitleButton {
+            kind: "close"; face: root.btn-face; hover-face: root.close-hover; icon: root.btn-icon;
+            clicked => { root.close-window(); }
+        }
+    }
+}
+
+// ===== 色块 =====
+component Swatch inherits Rectangle {
+    in property <color> fill;
+    in property <bool> selected: false;
+    in property <color> select-color: #ffec27;
+    in property <color> shade: #0d0b1e;
+    callback clicked;
+    width: 34px;
+    height: 34px;
+    background: root.shade;
+    border-width: 2px;
+    border-color: root.selected ? root.select-color : root.shade;
+    Rectangle {
+        x: 2px; y: 2px; width: 30px; height: 30px;
+        background: root.fill;
+        TouchArea {
+            clicked => { root.clicked(); }
+            mouse-cursor: pointer;
+        }
+    }
+}
+
+// ===== 像素风按钮 =====
+component PixelButton inherits Rectangle {
+    in property <string> text: "";
+    in property <bool> active: false;
+    in property <color> face: #3d4b94;
+    in property <color> face-active: #29adff;
+    in property <color> border: #83769c;
+    in property <color> border-active: #ffec27;
+    in property <color> text-color: #fff1e8;
+    in property <color> shadow: #0d0b1e;
+    callback clicked;
+    height: 30px;
+    background: root.shadow;
+    Rectangle {
+        x: ta.pressed ? 2px : 0px;
+        y: ta.pressed ? 2px : 0px;
+        width: root.width - (ta.pressed ? 4px : 0px);
+        height: root.height - (ta.pressed ? 4px : 0px);
+        background: root.active ? root.face-active : root.face;
+        border-width: 2px;
+        border-color: root.active ? root.border-active : root.border;
+        Text {
+            text: root.text;
+            color: root.text-color;
+            font-weight: 700;
+            font-size: 13px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        ta := TouchArea {
+            clicked => { root.clicked(); }
+            mouse-cursor: pointer;
+        }
+    }
+}
+
+// ==================== 主窗口 ====================
+export component PixelPainter inherits Window {
+    title: "Slint 像素画板";
+    no-frame: true;
+    preferred-width: 720px;
+    preferred-height: 560px;
+    background: c-bg;
+
+    // ---------- 主题（暗色像素风） ----------
+    property <color> c-bg: #1d2b53;
+    property <color> c-panel: #29366f;
+    property <color> c-panel-light: #3d4b94;
+    property <color> c-border: #83769c;
+    property <color> c-shadow: #0d0b1e;
+    property <color> c-text: #fff1e8;
+    property <color> c-dim: #aab3d8;
+    property <color> c-accent: #29adff;
+    property <color> c-highlight: #ffec27;
+    property <color> c-danger: #ff004d;
+
+    // ---------- PICO-8 色板 ----------
+    property <[color]> palette: [
+        #000000, #1d2b53, #7e2553, #008751, #ab5236, #5f574f, #c2c3c7, #fff1e8,
+        #ff004d, #ffa300, #ffec27, #00e436, #29adff, #83769c, #ff77a8, #ffccaa
+    ];
+
+    // ---------- 工具状态（UI 写、Rust 读） ----------
+    in-out property <color> brush-color: #ff004d;
+    in-out property <bool> eraser: false;
+    in-out property <int> brush-size: 1;
+    property <bool> painting: false;
+    property <bool> erasing: false;
+
+    // ---------- Rust 驱动的显示状态 ----------
+    in property <image> canvas-image;
+    in property <string> status-text: "就绪 —— 左键画 / 右键擦除，点击色板选色";
+
+    // ---------- 回调到 Rust ----------
+    callback paint(length, length, bool);
+    callback clear-canvas();
+    callback save-png();
+    callback drag-start();
+    callback minimize();
+    callback toggle-maximize();
+    callback close-window();
+
+    VerticalLayout {
+        padding: 12px;
+        spacing: 10px;
+
+        // ===== 自绘像素标题栏 =====
+        PixelTitleBar {
+            title: "SLINT PIXEL PAINTER · 像素画板";
+            bg: c-bg;
+            text-color: c-dim;
+            accent: c-highlight;
+            btn-face: c-panel;
+            btn-hover: c-panel-light;
+            btn-icon: c-text;
+            close-hover: c-danger;
+            divider: c-shadow;
+            drag-start => { root.drag-start(); }
+            minimize => { root.minimize(); }
+            toggle-maximize => { root.toggle-maximize(); }
+            close-window => { root.close-window(); }
+        }
+
+        // ===== 主区域 =====
+        HorizontalLayout {
+            spacing: 12px;
+
+            // 画布外框
+            Rectangle {
+                width: 424px; height: 424px;
+                background: c-shadow;
+                Rectangle {
+                    x: 6px; y: 6px; width: 412px; height: 412px;
+                    background: c-border;
+                    Rectangle {
+                        x: 4px; y: 4px; width: 404px; height: 404px;
+                        background: c-bg;
+                        Image {
+                            x: 10px; y: 10px; width: 384px; height: 384px;
+                            source: root.canvas-image;
+                            image-rendering: pixelated;
+                            TouchArea {
+                                pointer-event(ev) => {
+                                    if ev.kind == PointerEventKind.down {
+                                        if ev.button == PointerEventButton.left {
+                                            root.painting = true;
+                                            root.paint(self.mouse-x, self.mouse-y, root.eraser);
+                                        } else if ev.button == PointerEventButton.right {
+                                            root.erasing = true;
+                                            root.paint(self.mouse-x, self.mouse-y, true);
+                                        }
+                                    } else if ev.kind == PointerEventKind.up {
+                                        root.painting = false;
+                                        root.erasing = false;
+                                    }
+                                }
+                                moved => {
+                                    if root.painting {
+                                        root.paint(self.mouse-x, self.mouse-y, root.eraser);
+                                    } else if root.erasing {
+                                        root.paint(self.mouse-x, self.mouse-y, true);
+                                    }
+                                }
+                                mouse-cursor: crosshair;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 控制面板
+            Rectangle {
+                width: 250px;
+                background: c-shadow;
+                Rectangle {
+                    x: 4px; y: 4px; width: 242px; height: parent.height - 8px;
+                    background: c-panel;
+                    VerticalLayout {
+                        padding: 12px;
+                        spacing: 10px;
+
+                        Text { text: "调色板 PALETTE"; color: c-highlight; font-weight: 800; letter-spacing: 1px; }
+                        GridLayout {
+                            spacing: 6px;
+                            for c[j] in root.palette : Swatch {
+                                col: Math.mod(j, 4);
+                                row: Math.floor(j / 4);
+                                fill: c;
+                                selected: root.brush-color == c;
+                                select-color: c-highlight;
+                                shade: c-shadow;
+                                clicked => {
+                                    root.brush-color = c;
+                                    root.eraser = false;
+                                }
+                            }
+                        }
+
+                        Rectangle { height: 2px; background: c-border; }
+
+                        Text { text: "画笔尺寸 BRUSH"; color: c-highlight; font-weight: 800; letter-spacing: 1px; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton {
+                                text: "1×1"; width: 62px;
+                                active: root.brush-size == 1;
+                                clicked => { root.brush-size = 1; }
+                            }
+                            PixelButton {
+                                text: "2×2"; width: 62px;
+                                active: root.brush-size == 2;
+                                clicked => { root.brush-size = 2; }
+                            }
+                            PixelButton {
+                                text: "3×3"; width: 62px;
+                                active: root.brush-size == 3;
+                                clicked => { root.brush-size = 3; }
+                            }
+                        }
+
+                        Text { text: "工具 TOOLS"; color: c-highlight; font-weight: 800; letter-spacing: 1px; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton {
+                                text: "画笔"; width: 96px;
+                                active: !root.eraser;
+                                clicked => { root.eraser = false; }
+                            }
+                            PixelButton {
+                                text: "橡皮擦"; width: 96px;
+                                active: root.eraser;
+                                clicked => { root.eraser = true; }
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton {
+                                text: "清空"; width: 104px;
+                                face: c-danger;
+                                face-active: #ff2f77;
+                                clicked => { root.clear-canvas(); }
+                            }
+                            PixelButton {
+                                text: "存 PNG"; width: 104px;
+                                clicked => { root.save-png(); }
+                            }
+                        }
+
+                        Rectangle { height: 2px; background: c-border; }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            Text { text: "当前笔刷"; color: c-dim; vertical-alignment: center; }
+                            Rectangle {
+                                width: 28px; height: 28px;
+                                background: c-shadow;
+                                Rectangle {
+                                    x: 2px; y: 2px; width: 24px; height: 24px;
+                                    background: root.brush-color;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ===== 状态栏 =====
+        Rectangle {
+            height: 28px;
+            background: c-panel;
+            border-width: 2px;
+            border-color: c-border;
+            HorizontalLayout {
+                padding: 6px;
+                Text {
+                    text: root.status-text;
+                    color: c-dim;
+                    font-size: 12px;
+                    vertical-alignment: center;
+                }
+            }
+        }
+    }
+}
