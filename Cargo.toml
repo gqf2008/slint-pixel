@@ -1,16 +1,12 @@
-[package]
-name = "slint-bitmap"
+[workspace]
+resolver = "2"
+members = ["crates/slint-bitmap", "crates/slint-bitmap-demo"]
+# cargo run / cargo test 默认操作演示窗口
+default-members = ["crates/slint-bitmap-demo"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
-build = "build.rs"
-description = "像素风格小工具：基于 Slint 1.17 的 16×16 像素画板"
 
-[dependencies]
-slint = { version = "1.17", features = ["unstable-winit-030"] }
-image = { version = "0.25", default-features = false, features = ["png"] }
-
-[build-dependencies]
-slint-build = "1.17"
-
-[lints.rust]
+[workspace.lints.rust]
 unsafe_code = "deny"

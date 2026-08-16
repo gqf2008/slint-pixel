@@ -1,0 +1,86 @@
+// slint-bitmap · 成品像素风窗口（无边框 + 自绘像素标题栏 + 画板 widget）
+// 由 slint-bitmap 库编译并导出 Rust 类型 `PixelPainterWindow`，
+// 下游可 `slint_bitmap::PixelPainterWindow::new()` 直接使用，
+// 也可参考本文件在自己的 .slint 里用 `@slint_bitmap` 组装窗口。
+
+import { PixelPainter, PixelTitleBar } from "@slint_bitmap";
+
+export component PixelPainterWindow inherits Window {
+    title: "Slint 像素画板";
+    no-frame: true;
+    preferred-width: 720px;
+    preferred-height: 560px;
+    background: c-bg;
+
+    // ---------- 主题 ----------
+    property <color> c-bg: #1d2b53;
+    property <color> c-panel: #29366f;
+    property <color> c-panel-light: #3d4b94;
+    property <color> c-border: #83769c;
+    property <color> c-shadow: #0d0b1e;
+    property <color> c-text: #fff1e8;
+    property <color> c-dim: #aab3d8;
+    property <color> c-highlight: #ffec27;
+    property <color> c-danger: #ff004d;
+
+    // ---------- 与画板 widget 双向同步的状态 ----------
+    in-out property <color> brush-color: #ff004d;
+    in-out property <bool> eraser: false;
+    in-out property <int> brush-size: 1;
+    in-out property <image> canvas-image;
+    in-out property <string> status-text: "就绪 —— 左键画 / 右键擦除，点击色板选色";
+
+    // ---------- 转发回调（Rust 侧用 install_painter / install_title_bar_controls 接线） ----------
+    callback paint(length, length, bool);
+    callback clear-canvas();
+    callback save-png();
+    callback drag-start();
+    callback minimize();
+    callback toggle-maximize();
+    callback close-window();
+
+    VerticalLayout {
+        padding: 12px;
+        spacing: 10px;
+
+        // ===== 自绘像素标题栏 =====
+        PixelTitleBar {
+            title: "SLINT PIXEL PAINTER · 像素画板";
+            bg: c-bg;
+            text-color: c-dim;
+            accent: c-highlight;
+            btn-face: c-panel;
+            btn-hover: c-panel-light;
+            btn-icon: c-text;
+            close-hover: c-danger;
+            divider: c-shadow;
+            drag-start => { root.drag-start(); }
+            minimize => { root.minimize(); }
+            toggle-maximize => { root.toggle-maximize(); }
+            close-window => { root.close-window(); }
+        }
+
+        // ===== 画板 widget =====
+        PixelPainter {
+            page: c-bg;
+            panel: c-panel;
+            panel-light: c-panel-light;
+            edge: c-border;
+            shadow: c-shadow;
+            text-color: c-text;
+            dim: c-dim;
+            highlight: c-highlight;
+            danger: c-danger;
+
+            brush-color <=> root.brush-color;
+            eraser <=> root.eraser;
+            brush-size <=> root.brush-size;
+            canvas-image <=> root.canvas-image;
+            status-text <=> root.status-text;
+
+            paint(px, py, erase) => { root.paint(px, py, erase); }
+            clear-canvas => { root.clear-canvas(); }
+            save-png => { root.save-png(); }
+        }
+    }
+}

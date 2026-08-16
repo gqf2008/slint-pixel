@@ -1,0 +1,17 @@
+[package]
+name = "slint-bitmap-demo"
+version.workspace = true
+edition.workspace = true
+build = "build.rs"
+description = "slint-bitmap 演示：作为下游消费者，用 @slint_bitmap 库组装像素风窗口"
+
+[dependencies]
+slint = { version = "1.17", features = ["unstable-winit-030"] }
+slint-bitmap = { path = "../slint-bitmap" }
+
+[build-dependencies]
+slint-build = "1.17"
+slint-bitmap = { path = "../slint-bitmap" }
+
+[lints]
+workspace = true

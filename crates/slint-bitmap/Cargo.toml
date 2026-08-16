@@ -1,0 +1,16 @@
+[package]
+name = "slint-bitmap"
+version.workspace = true
+edition.workspace = true
+build = "build.rs"
+description = "可复用像素风 Slint 1.17 组件库：16×16 像素画板 widget + 像素标题栏（跨平台）"
+
+[dependencies]
+slint = { version = "1.17", features = ["unstable-winit-030"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[build-dependencies]
+slint-build = "1.17"
+
+[lints]
+workspace = true
