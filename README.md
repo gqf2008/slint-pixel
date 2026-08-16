@@ -1,7 +1,13 @@
 # slint-pixel
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Slint](https://img.shields.io/badge/Slint-1.17-blue.svg)](https://slint.dev)
+
 基于 **Rust + Slint 1.17** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
+
+- **仓库**：<https://github.com/gqf2008/slint-pixel>
+- **许可证**：MIT
 
 - **可复用**：所有组件通过 `@slint_pixel` 导入到任意 Slint 项目（见下方组件清单）。
 - **一键接线**：Rust 侧调用 `install_painter()` / `install_title_bar_controls()`，
@@ -116,6 +122,20 @@ crates/
 ## 在其它 Slint 项目里复用
 
 ### 1. 添加依赖
+
+从 GitHub 直接引入（推荐）：
+
+```toml
+[dependencies]
+slint = "1.17"
+slint-pixel = { git = "https://github.com/gqf2008/slint-pixel" }
+
+[build-dependencies]
+slint-build = "1.17"
+slint-pixel = { git = "https://github.com/gqf2008/slint-pixel" }
+```
+
+本地开发时也可用 `path` 引入：
 
 ```toml
 [dependencies]
