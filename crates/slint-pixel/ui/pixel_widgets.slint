@@ -80,6 +80,7 @@ export component PixelSwitch inherits Rectangle {
     in property <color> track-off: PixelTheme.hover;
     in property <color> track-on: PixelTheme.accent;
     in property <color> thumb: #ffffff;
+    in property <color> thumb-off: PixelTheme.text;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
     callback toggled;
@@ -98,7 +99,7 @@ export component PixelSwitch inherits Rectangle {
             Rectangle {
                 x: root.checked ? parent.width - 22px : 2px;
                 y: 2px; width: 18px; height: 18px;
-                background: root.thumb;
+                background: root.checked ? root.thumb : root.thumb-off;
                 border-width: 2px;
                 border-color: root.border;
                 animate x { duration: 120ms; easing: ease-out; }
