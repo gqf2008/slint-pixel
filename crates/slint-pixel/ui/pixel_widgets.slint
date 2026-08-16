@@ -96,7 +96,8 @@ export component PixelSwitch inherits Rectangle {
             Rectangle {
                 x: root.checked ? parent.width - 22px : 2px;
                 y: 2px; width: 18px; height: 18px;
-                background: root.checked ? root.thumb : root.thumb-off;
+                // 滑块恒白，只有轨道随状态变色（开=accent 黑，关=浅灰），语义更直观
+                background: root.thumb;
                 border-width: 2px;
                 border-color: root.border;
                 animate x { duration: 120ms; easing: ease-out; }
