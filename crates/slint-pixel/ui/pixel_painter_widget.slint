@@ -163,8 +163,8 @@ export component PixelButton inherits Rectangle {
     in property <color> text-color: PixelTheme.text;
     in property <color> shadow: PixelTheme.shadow;
     // variant 专用色（默认值随黑白主题）
-    in property <color> primary-face: PixelTheme.accent;
-    in property <color> primary-text: #ffffff;
+    in property <color> primary-face: #ffffff;
+    in property <color> primary-text: PixelTheme.text;
     in property <color> danger-face: PixelTheme.danger;
     in property <color> danger-text: #ffffff;
     in property <color> ghost-text: PixelTheme.text;
@@ -187,7 +187,7 @@ export component PixelButton inherits Rectangle {
     horizontal-stretch: 0;
     vertical-stretch: 0;
     background: root.eff-face;
-    border-width: 2px;
+    border-width: root.variant == "primary" ? 3px : 2px;
     border-color: root.active ? root.border-active : root.border;
     Text {
         x: ta.pressed ? 2px : 0px;
