@@ -45,14 +45,11 @@ export component PixelCheckBox inherits Rectangle {
                 background: root.checked ? root.face-checked : root.face;
                 border-width: 2px;
                 border-color: root.checked ? root.face-checked : root.border;
-                Text {
+                // 选中标记与单选框 PixelRadioButton 保持一致：白色实心方块
+                Rectangle {
                     visible: root.checked;
-                    text: "✓";
-                    color: root.checked ? #ffffff : root.check-color;
-                    font-weight: 700;
-                    font-size: 15px;
-                    horizontal-alignment: center;
-                    vertical-alignment: center;
+                    x: 7px; y: 7px; width: 8px; height: 8px;
+                    background: root.checked ? #ffffff : root.check-color;
                 }
                 box := TouchArea {
                     enabled: root.enabled;
