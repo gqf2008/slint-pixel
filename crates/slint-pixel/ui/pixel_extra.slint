@@ -324,7 +324,6 @@ export component PixelPopconfirm inherits Rectangle {
     in property <color> text-color: PixelTheme.text;
     in property <color> bubble-bg: PixelTheme.bg;
     in property <color> bubble-edge: PixelTheme.edge;
-    in property <color> bubble-shadow: PixelTheme.shadow;
     callback confirm;
     callback cancel;
     width: 96px;
@@ -376,53 +375,40 @@ export component PixelPopconfirm inherits Rectangle {
         y: root.height + 4px;
         width: 240px;
         close-policy: close-on-click-outside;
+        // 单层气泡：白底 + 黑边框 + 文字 + 按钮
         Rectangle {
-            background: root.bubble-shadow;
-            Rectangle {
-                x: 3px; y: 3px;
-                width: parent.width - 6px;
-                background: root.bubble-bg;
-                border-width: 2px;
-                border-color: root.bubble-edge;
-                // 箭头
-                Rectangle {
-                    x: 12px; y: -7px; width: 10px; height: 5px;
-                    background: root.bubble-bg;
-                    Rectangle {
-                        x: 1px; y: 0px; width: 8px; height: 3px;
-                        background: root.bubble-edge;
-                    }
+            background: root.bubble-bg;
+            border-width: 2px;
+            border-color: root.bubble-edge;
+            VerticalLayout {
+                padding: 12px;
+                spacing: 10px;
+                Text {
+                    text: root.text;
+                    color: root.text-color;
+                    font-size: 13px;
+                    wrap: word-wrap;
                 }
-                VerticalLayout {
-                    padding: 12px;
-                    spacing: 10px;
-                    Text {
-                        text: root.text;
-                        color: root.text-color;
-                        font-size: 13px;
-                        wrap: word-wrap;
-                    }
-                    HorizontalLayout {
-                        alignment: end;
-                        spacing: 8px;
-                        PixelButton {
-                            text: root.cancel-text;
-                            width: 80px;
-                            clicked => {
-                                root.open = false;
-                                root.cancel();
-                                popup.close();
-                            }
+                HorizontalLayout {
+                    alignment: end;
+                    spacing: 8px;
+                    PixelButton {
+                        text: root.cancel-text;
+                        width: 80px;
+                        clicked => {
+                            root.open = false;
+                            root.cancel();
+                            popup.close();
                         }
-                        PixelButton {
-                            text: root.confirm-text;
-                            width: 80px;
-                            variant: "danger";
-                            clicked => {
-                                root.open = false;
-                                root.confirm();
-                                popup.close();
-                            }
+                    }
+                    PixelButton {
+                        text: root.confirm-text;
+                        width: 80px;
+                        variant: "danger";
+                        clicked => {
+                            root.open = false;
+                            root.confirm();
+                            popup.close();
                         }
                     }
                 }
