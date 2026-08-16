@@ -391,8 +391,13 @@ export component PixelTableView inherits Rectangle {
     callback row-clicked(row: int);
     opacity: root.enabled ? 1.0 : 0.5;
 
+    // 内容总高（表头 + 数据行 + 上下边框），自适应展开，避免在布局里塌缩被 clip
+    property <length> body-height: root.header-height + root.row-height * root.rows.length + 4px;
+    preferred-height: root.body-height;
+    min-height: root.body-height;
+
     Rectangle {
-        width: 100%; height: root.height;
+        width: 100%; height: 100%;
         background: root.shadow;
         Rectangle {
             x: 1px; y: 1px;

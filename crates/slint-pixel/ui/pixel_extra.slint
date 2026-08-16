@@ -185,20 +185,17 @@ export component PixelTooltip inherits Rectangle {
     popup := PopupWindow {
         x: 0px;
         y: root.height + 4px;
+        width: 200px;
         close-policy: no-auto-close;
         Rectangle {
+            width: 200px;
             background: root.bubble-border;
             Rectangle {
                 x: 2px; y: 2px;
-                width: parent.width - 4px; height: parent.height - 4px;
+                width: parent.width - 4px;
                 background: root.bubble-bg;
                 border-width: 2px;
                 border-color: root.bubble-border;
-                // 箭头（向上小三角）
-                Rectangle {
-                    x: 12px; y: -6px; width: 8px; height: 4px;
-                    background: root.arrow;
-                }
                 Text {
                     x: 8px; y: 6px;
                     width: parent.width - 16px;
@@ -233,6 +230,14 @@ export component PixelBubble inherits Rectangle {
     init => {
         if root.open {
             popup.show();
+        }
+    }
+    // open 变化时自动显示/关闭（init 时 open 绑定尚未求值，需此回调兜底）
+    changed open => {
+        if root.open {
+            popup.show();
+        } else {
+            popup.close();
         }
     }
 
@@ -275,6 +280,7 @@ export component PixelBubble inherits Rectangle {
         width: 280px;
         close-policy: close-on-click-outside;
         Rectangle {
+            width: 280px;
             background: root.bubble-shadow;
             Rectangle {
                 x: 3px; y: 3px;
@@ -282,15 +288,6 @@ export component PixelBubble inherits Rectangle {
                 background: root.bubble-bg;
                 border-width: 2px;
                 border-color: root.bubble-edge;
-                // 箭头（向上小三角）
-                Rectangle {
-                    x: 12px; y: -7px; width: 10px; height: 5px;
-                    background: root.bubble-bg;
-                    Rectangle {
-                        x: 1px; y: 0px; width: 8px; height: 3px;
-                        background: root.bubble-edge;
-                    }
-                }
                 VerticalLayout {
                     padding: 12px;
                     spacing: 8px;
