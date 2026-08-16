@@ -2,7 +2,9 @@
 //!
 //! 提供：
 //! - Slint 组件（经 `@slint_bitmap` 导入，嵌入你自己的 `.slint`）：
-//!   `PixelPainter` 画板 widget、`PixelTitleBar` 像素标题栏、`Swatch` 色块、`PixelButton` 像素按钮。
+//!   `PixelPainter` 画板、`PixelTitleBar` 标题栏、`PixelButton` 按钮、`PixelCheckBox` 复选、
+//!   `PixelSwitch` 开关、`PixelSlider` 滑块、`PixelTextInput` 输入框、`PixelProgressBar` 进度条、
+//!   `PixelBadge` 徽章、`PixelPanel` 面板、`PixelDialog` 对话框、`Swatch` 色块。
 //! - 成品窗口 [`PixelPainterWindow`]（Rust 类型，直接 `::new()` 使用）。
 //! - Rust 侧一键接线：`install_painter()`（画/擦、清空、导出 PNG）与
 //!   `install_title_bar_controls()`（拖拽、最小化、最大化、关闭）。
@@ -80,7 +82,7 @@ slint::include_modules!();
 pub fn library_paths() -> HashMap<String, PathBuf> {
     HashMap::from([(
         "slint_bitmap".to_string(),
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ui/pixel_painter_widget.slint"),
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("ui/lib.slint"),
     )])
 }
 

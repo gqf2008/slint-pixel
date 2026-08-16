@@ -1,0 +1,180 @@
+// slint-bitmap 组件画廊：展示常用像素风组件（也是复用教程的完整示例）。
+// 通过 `@slint_bitmap` 导入组件并组装，窗口控制走 install_title_bar_controls。
+
+import {
+    PixelTitleBar, PixelButton, PixelCheckBox, PixelSwitch, PixelSlider,
+    PixelTextInput, PixelProgressBar, PixelBadge, PixelPanel, PixelDialog,
+} from "@slint_bitmap";
+
+export component GalleryWindow inherits Window {
+    title: "Slint 像素组件库";
+    no-frame: true;
+    preferred-width: 700px;
+    preferred-height: 640px;
+    background: c-bg;
+
+    // ---------- 主题 ----------
+    property <color> c-bg: #1d2b53;
+    property <color> c-panel: #29366f;
+    property <color> c-panel-light: #3d4b94;
+    property <color> c-border: #83769c;
+    property <color> c-shadow: #0d0b1e;
+    property <color> c-text: #fff1e8;
+    property <color> c-dim: #aab3d8;
+    property <color> c-highlight: #ffec27;
+    property <color> c-danger: #ff004d;
+
+    // ---------- 演示状态 ----------
+    in-out property <bool> grid-enabled: true;
+    in-out property <bool> sound-on: false;
+    in-out property <float> slider-value: 60.0;
+    in-out property <string> input-text: "像素";
+    property <bool> dialog-open: false;
+
+    // ---------- 回调（Rust 接线） ----------
+    callback drag-start();
+    callback minimize();
+    callback toggle-maximize();
+    callback close-window();
+    callback open-painter();
+    callback dialog-accept();
+    callback dialog-cancel();
+
+    VerticalLayout {
+        padding: 12px;
+        spacing: 10px;
+
+        PixelTitleBar {
+            title: "SLINT WIDGET GALLERY · 像素组件库";
+            bg: c-bg;
+            text-color: c-dim;
+            accent: c-highlight;
+            btn-face: c-panel;
+            btn-hover: c-panel-light;
+            btn-icon: c-text;
+            close-hover: c-danger;
+            divider: c-shadow;
+            drag-start => { root.drag-start(); }
+            minimize => { root.minimize(); }
+            toggle-maximize => { root.toggle-maximize(); }
+            close-window => { root.close-window(); }
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+
+            // ===== 左列 =====
+            VerticalLayout {
+                spacing: 10px;
+                PixelPanel {
+                    title: "按钮 BUTTON";
+                    HorizontalLayout {
+                        spacing: 8px;
+                        PixelButton { text: "画笔"; width: 90px; active: true; }
+                        PixelButton { text: "橡皮擦"; width: 90px; }
+                        PixelButton { text: "清空"; width: 90px; face: c-danger; face-active: #ff2f77; }
+                    }
+                }
+                PixelPanel {
+                    title: "复选 / 开关 CHECKBOX · SWITCH";
+                    HorizontalLayout {
+                        spacing: 12px;
+                        PixelCheckBox { text: "启用网格"; width: 100px; checked <=> root.grid-enabled; }
+                        PixelCheckBox { text: "自动保存"; width: 100px; }
+                        PixelSwitch { checked <=> root.sound-on; }
+                    }
+                }
+                PixelPanel {
+                    title: "滑块 SLIDER";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelSlider { value <=> root.slider-value; }
+                        Text { text: "值: " + Math.round(root.slider-value) + " / 100"; color: c-dim; font-size: 12px; }
+                    }
+                }
+                PixelPanel {
+                    title: "输入 TEXT INPUT";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelTextInput { text <=> root.input-text; placeholder: "输入文字…"; }
+                        Text { text: "回显: " + root.input-text; color: c-dim; font-size: 12px; }
+                    }
+                }
+            }
+
+            // ===== 右列 =====
+            VerticalLayout {
+                spacing: 10px;
+                PixelPanel {
+                    title: "进度 PROGRESS";
+                    VerticalLayout {
+                        spacing: 6px;
+                        PixelProgressBar { progress: root.slider-value / 100.0; show-text: true; }
+                        PixelProgressBar { progress: 0.35; }
+                        PixelProgressBar { progress: 0.85; show-text: true; }
+                    }
+                }
+                PixelPanel {
+                    title: "徽章 BADGE";
+                    HorizontalLayout {
+                        spacing: 8px;
+                        PixelBadge { text: "NEW"; width: 60px; face: c-danger; }
+                        PixelBadge { text: "PICO-8"; width: 76px; face: c-highlight; }
+                        PixelBadge { text: "16×16"; width: 76px; face: #29adff; }
+                    }
+                }
+                PixelPanel {
+                    title: "提示 TOOLTIP";
+                    HorizontalLayout {
+                        spacing: 8px;
+                        PixelButton {
+                            text: "悬停看提示"; width: 120px;
+                            // Slint 内置 Tooltip：延迟出现、跟随指针（样式跟随活动主题）
+                            Tooltip { text: @markdown("**我是提示气泡**"); }
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "对话框 DIALOG";
+                    HorizontalLayout {
+                        spacing: 8px;
+                        PixelButton {
+                            text: "打开对话框"; width: 140px;
+                            clicked => { root.dialog-open = true; }
+                        }
+                    }
+                }
+                PixelPanel {
+                    title: "画板 PAINTER";
+                    HorizontalLayout {
+                        spacing: 8px;
+                        PixelButton {
+                            text: "打开像素画板 →"; width: 160px; face: #29adff;
+                            clicked => { root.open-painter(); }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ===== 模态对话框（覆盖层） =====
+    PixelDialog {
+        open: root.dialog-open;
+        title: "像素对话框";
+        Text {
+            text: "这是 PixelDialog 的内容插槽，可以放任意组件。点击确定或取消关闭。";
+            color: c-text;
+            font-size: 13px;
+            wrap: word-wrap;
+        }
+        accept => {
+            root.dialog-accept();
+            root.dialog-open = false;
+        }
+        cancel => {
+            root.dialog-cancel();
+            root.dialog-open = false;
+        }
+    }
+}

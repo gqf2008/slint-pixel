@@ -1,22 +1,47 @@
 # slint-bitmap
 
-基于 **Rust + Slint 1.17** 的可复用像素风组件库：一个 16×16 像素画板 widget +
-自绘像素标题栏，并附带一个成品像素风窗口与演示程序。
+基于 **Rust + Slint 1.17** 的像素风可复用组件库：16×16 像素画板 widget、
+自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
-- **可复用**：`PixelPainter` 画板 widget / `PixelTitleBar` 像素标题栏 / `Swatch` 色块 /
-  `PixelButton` 像素按钮均可通过 `@slint_bitmap` 导入到任意 Slint 项目。
+- **可复用**：所有组件通过 `@slint_bitmap` 导入到任意 Slint 项目（见下方组件清单）。
 - **一键接线**：Rust 侧调用 `install_painter()` / `install_title_bar_controls()`，
   画/擦、清空、导出 PNG、窗口控制全部自动接好。
-- **自绘像素标题栏**：无系统边框（`no-frame`），标题栏可拖拽移动、双击最大化，
-  右侧提供 最小化 / 最大化 / 关闭 按钮。
+- **自绘像素标题栏**：无系统边框（`no-frame`），可拖拽、双击最大化，右侧最小化/最大化/关闭。
 - **像素画布**：16×16 网格，格子放大 24px 显示（棋盘格 + 网格线 + 立体像素块）。
-- **PICO-8 色板**：16 色，点击选色。
-- **画笔**：1×1 / 2×2 / 3×3 笔刷；左键画、右键擦除。
+- **PICO-8 色板**：16 色，点击选色；画笔 1×1 / 2×2 / 3×3；左键画、右键擦除。
 - **导出**：一键保存为网格分辨率 PNG（透明背景），存到当前工作目录。
-- **跨平台**：仅依赖 `slint` + `image`（纯 Rust），无平台特定代码；
-  窗口控制使用 Slint/Winit 跨平台 API（Windows / macOS / Linux）。
+- **跨平台**：仅依赖 `slint` + `image`（纯 Rust），无平台特定代码。
 
-![screenshot](docs/screenshot.png)
+![gallery](docs/gallery.png)
+
+## 组件清单
+
+所有组件都是 `in`/`in-out` 属性 + 回调，宿主可覆盖主题色，无系统依赖、跨平台。
+
+| 组件 | 说明 |
+| --- | --- |
+| `PixelPainter` | 16×16 像素画板 widget（画布 + 色板 + 工具栏 + 状态栏） |
+| `PixelTitleBar` | 可拖拽像素标题栏（拖拽/最小化/最大化/关闭回调） |
+| `PixelButton` | 像素按压按钮（按下下沉效果） |
+| `PixelCheckBox` | 复选框（像素勾选 + 文字标签） |
+| `PixelSwitch` | 开关（滑块滑动动画） |
+| `PixelSlider` | 滑块（拖拽取值，min/max，`changed(value)` 回调） |
+| `PixelTextInput` | 单行文本输入（占位符 + 焦点高亮 + `accepted`/`edited`） |
+| `PixelProgressBar` | 进度条（0..1，可选百分比文字） |
+| `PixelBadge` | 徽章/标签 |
+| `PixelPanel` | 分组面板（标题 + 内容插槽 `@children`） |
+| `PixelDialog` | 模态对话框（遮罩 + 标题 + 内容插槽 + 确定/取消） |
+| `Swatch` | 像素风色块 |
+
+> 提示：提示气泡请直接用 Slint 内置 `Tooltip`（延迟出现、自动跟随指针）：
+> ```slint
+> PixelButton {
+>     text: "悬停";
+>     Tooltip { text: @markdown("**提示文字**"); }
+> }
+> ```
+> 在盒布局中放置组件时，未显式给 `width` 的组件会拉伸占满剩余空间，
+> 需要固定宽度的场景请显式指定（如 `PixelButton { width: 90px; }`）。
 
 ## 运行演示
 
@@ -24,19 +49,24 @@
 cargo run
 ```
 
+启动后打开 **组件画廊**（展示全部常用控件），点画廊里的 **打开像素画板 →** 可打开画板窗口。
+
 ## 结构（workspace）
 
 ```
 crates/
 ├── slint-bitmap/                  # 组件库（lib）
-│   ├── ui/pixel_painter_widget.slint    # 组件入口：PixelPainter / PixelTitleBar / Swatch / PixelButton
-│   ├── ui/pixel_painter_window.slint    # 成品窗口 PixelPainterWindow（无边框 + 标题栏 + 画板）
+│   ├── ui/lib.slint               # @slint_bitmap 汇总入口（re-export 全部组件）
+│   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
+│   ├── ui/pixel_widgets.slint          # 常用控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
+│   ├── ui/pixel_painter_window.slint   # 成品窗口 PixelPainterWindow
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等
 │       └── canvas.rs              # 画布数据、放大渲染、PNG 导出（含单元测试）
 └── slint-bitmap-demo/             # 演示程序（bin，作为下游消费者组装窗口）
-    ├── ui/main.slint              # 通过 @slint_bitmap 导入组件并组装
-    └── src/main.rs                # 调用 install_painter / install_title_bar_controls
+    ├── ui/gallery.slint           # 组件画廊窗口
+    ├── ui/main.slint              # 画板窗口（通过 @slint_bitmap 组装）
+    └── src/main.rs                # 接线：install_painter / install_title_bar_controls / 打开画板
 ```
 
 ## 在其它 Slint 项目里复用
@@ -109,7 +139,7 @@ export component MainWindow inherits Window {
 }
 ```
 
-完整参考：`crates/slint-bitmap-demo/ui/main.slint`。
+完整参考：`crates/slint-bitmap-demo/ui/main.slint` 与 `crates/slint-bitmap-demo/ui/gallery.slint`。
 
 ### 4. Rust 侧一键接线
 
@@ -143,11 +173,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ### 自定义主题
 
-`PixelPainter` 暴露了 `page / panel / panel-light / edge / shadow / text-color / dim /
-highlight / danger` 与 `palette`（PICO-8 色板数组）等 `in` 属性，宿主可在 `.slint`
-里直接覆盖，无需改组件库。
+所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /
+shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的
+`track / fill / thumb / border / shadow` 等），宿主可在 `.slint` 里直接覆盖。
 
-## 操作
+## 操作（画板）
 
 | 操作 | 说明 |
 | --- | --- |
@@ -168,3 +198,5 @@ highlight / danger` 与 `palette`（PICO-8 色板数组）等 `in` 属性，宿�
 - Linux Wayland 下合成器可能强制保留系统装饰，`no-frame` 效果取决于合成器。
 - 高 DPI（150%）显示器下按物理像素渲染，画布仍保持像素锐利。
 - `install_painter` 导出的 PNG 保存在进程当前工作目录。
+- 暂未内置：下拉选择框 / 单选框组 / 菜单 / 表格 / 滚动条皮肤等，可按需在
+  `pixel_widgets.slint` 里扩展（组件均遵循同一像素风主题约定）。

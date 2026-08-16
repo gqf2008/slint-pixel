@@ -1,20 +1,39 @@
 #![deny(unsafe_code)]
 
+use std::cell::RefCell;
 use std::error::Error;
+use std::rc::Rc;
 
-slint::include_modules!();
+// build.rs 编译了两个入口（ui/main.slint 画板窗口、ui/gallery.slint 组件画廊），
+// `slint::include_modules!()` 只会包含最后一个，这里手动包含两个生成文件。
+include!(concat!(env!("OUT_DIR"), "/main.rs"));
+include!(concat!(env!("OUT_DIR"), "/gallery.rs"));
 
-// 把生成的 MainWindow 类型适配到 slint-bitmap 的接线契约（固有方法优先于 trait 方法）
+// 把生成的窗口类型适配到组件库接线契约（固有方法优先于 trait 方法）
 slint_bitmap::impl_painter_ui!(MainWindow);
 slint_bitmap::impl_title_bar_ui!(MainWindow);
+slint_bitmap::impl_title_bar_ui!(GalleryWindow);
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let ui = MainWindow::new()?;
+    use slint::ComponentHandle;
 
-    // 一键接线：画/擦、清空、导出 PNG + 标题栏窗口控制
-    let _canvas = slint_bitmap::install_painter(&ui);
-    slint_bitmap::install_title_bar_controls(&ui);
+    let gallery = GalleryWindow::new()?;
+    slint_bitmap::install_title_bar_controls(&gallery);
 
-    ui.run()?;
+    // 画廊里的“打开像素画板”：新开一个画板窗口并保持存活
+    let painters: Rc<RefCell<Vec<MainWindow>>> = Rc::new(RefCell::new(Vec::new()));
+    let painters_open = painters.clone();
+    gallery.on_open_painter(move || {
+        if let Ok(painter) = MainWindow::new() {
+            slint_bitmap::install_painter(&painter);
+            slint_bitmap::install_title_bar_controls(&painter);
+            if painter.show().is_ok() {
+                painters_open.borrow_mut().push(painter);
+            }
+        }
+    });
+
+    gallery.show()?;
+    slint::run_event_loop()?;
     Ok(())
 }

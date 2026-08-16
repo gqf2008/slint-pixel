@@ -1,0 +1,405 @@
+// ============================================================================
+// slint-bitmap · 常用像素风组件（无系统依赖，纯 Slint 自绘，跨平台）
+//
+// 组件清单：
+//   PixelCheckBox   复选框（像素勾选 + 文字标签）
+//   PixelSwitch     开关（滑块滑动）
+//   PixelSlider     滑块（拖拽取值，支持 min/max）
+//   PixelTextInput  单行文本输入（像素边框 + 占位符 + 焦点高亮）
+//   PixelProgressBar 进度条（0..1，可选百分比文字）
+//   PixelBadge      徽章/标签
+//   PixelPanel      分组面板（标题 + 内容插槽 @children）
+//   PixelDialog     模态对话框（遮罩 + 标题 + 内容插槽 + 确定/取消）
+// 提示气泡请直接用 Slint 内置 Tooltip：Tooltip { text: @markdown("...") }
+//
+// 所有组件主题色均为 in 属性，宿主可在 .slint 里覆盖。
+// ============================================================================
+
+import { PixelButton } from "pixel_painter_widget.slint";
+
+// ===== 复选框 =====
+export component PixelCheckBox inherits Rectangle {
+    in-out property <bool> checked: false;
+    in property <string> text: "";
+    in property <bool> enabled: true;
+    in property <color> face: #3d4b94;
+    in property <color> face-checked: #29adff;
+    in property <color> border: #83769c;
+    in property <color> shadow: #0d0b1e;
+    in property <color> text-color: #fff1e8;
+    in property <color> check-color: #0d0b1e;
+    callback toggled;
+    height: 24px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    HorizontalLayout {
+        spacing: 8px;
+        Rectangle {
+            width: 22px; height: 22px;
+            background: root.shadow;
+            Rectangle {
+                x: box.pressed ? 1px : 0px;
+                y: box.pressed ? 1px : 0px;
+                width: 22px; height: 22px;
+                background: root.checked ? root.face-checked : root.face;
+                border-width: 2px;
+                border-color: root.checked ? root.face-checked : root.border;
+                Text {
+                    visible: root.checked;
+                    text: "✓";
+                    color: root.check-color;
+                    font-weight: 700;
+                    font-size: 15px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                box := TouchArea {
+                    enabled: root.enabled;
+                    clicked => {
+                        root.checked = !root.checked;
+                        root.toggled();
+                    }
+                    mouse-cursor: pointer;
+                }
+            }
+        }
+        Text {
+            text: root.text;
+            color: root.text-color;
+            vertical-alignment: center;
+            font-size: 13px;
+        }
+    }
+}
+
+// ===== 开关 =====
+export component PixelSwitch inherits Rectangle {
+    in-out property <bool> checked: false;
+    in property <bool> enabled: true;
+    in property <color> track-off: #29366f;
+    in property <color> track-on: #29adff;
+    in property <color> thumb: #fff1e8;
+    in property <color> border: #83769c;
+    in property <color> shadow: #0d0b1e;
+    callback toggled;
+    width: 46px;
+    height: 24px;
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 0px; y: 0px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.checked ? root.track-on : root.track-off;
+            border-width: 2px;
+            border-color: root.border;
+            Rectangle {
+                x: root.checked ? parent.width - 22px : 2px;
+                y: 2px; width: 18px; height: 18px;
+                background: root.thumb;
+                border-width: 2px;
+                border-color: root.border;
+                animate x { duration: 120ms; easing: ease-out; }
+            }
+            ta := TouchArea {
+                enabled: root.enabled;
+                clicked => {
+                    root.checked = !root.checked;
+                    root.toggled();
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 滑块 =====
+export component PixelSlider inherits Rectangle {
+    in-out property <float> value: 0.0;
+    in property <float> min: 0.0;
+    in property <float> max: 100.0;
+    in property <bool> enabled: true;
+    in property <color> track: #29366f;
+    in property <color> fill: #29adff;
+    in property <color> thumb: #fff1e8;
+    in property <color> border: #83769c;
+    in property <color> shadow: #0d0b1e;
+    callback changed(value: float);
+    height: 28px;
+
+    // 0..1 归一化进度
+    property <float> ratio: (root.value - root.min) / Math.max(root.max - root.min, 0.0001);
+
+    // 轨道（两侧留出滑块空间）
+    Rectangle {
+        x: 12px; y: 11px;
+        width: root.width - 24px; height: 6px;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: 4px;
+            background: root.track;
+            border-width: 1px;
+            border-color: root.border;
+            Rectangle {
+                x: 1px; y: 1px;
+                width: Math.max((parent.width - 2px) * root.ratio, 0px);
+                height: 2px;
+                background: root.fill;
+            }
+        }
+    }
+
+    // 滑块头
+    Rectangle {
+        x: 12px + (root.width - 24px) * root.ratio - 9px;
+        y: 2px;
+        width: 18px; height: 24px;
+        background: root.shadow;
+        Rectangle {
+            x: knob.pressed ? 1px : 0px;
+            y: knob.pressed ? 1px : 0px;
+            width: 18px; height: 24px;
+            background: root.thumb;
+            border-width: 2px;
+            border-color: root.border;
+        }
+    }
+
+    knob := TouchArea {
+        width: 100%; height: 100%;
+        enabled: root.enabled;
+        pointer-event(ev) => {
+            if ev.button != PointerEventButton.left { return; }
+            if ev.kind == PointerEventKind.down {
+                root.set-value-from-x(self.mouse-x);
+            }
+        }
+        moved => {
+            if self.pressed {
+                root.set-value-from-x(self.mouse-x);
+            }
+        }
+        mouse-cursor: pointer;
+    }
+
+    // 由像素 x 坐标换算 value（轨道起点 12px，宽度 width-24px 线性映射）
+    function set-value-from-x(x: length) {
+        root.value = Math.max(root.min, Math.min(root.max,
+            root.min + (x - 12px) * (root.max - root.min) / Math.max(root.width - 24px, 1px)));
+        root.changed(root.value);
+    }
+}
+// ===== 单行文本输入 =====
+export component PixelTextInput inherits Rectangle {
+    in-out property <string> text: "";
+    in property <string> placeholder: "";
+    in property <bool> enabled: true;
+    in property <color> face: #1d2b53;
+    in property <color> border: #83769c;
+    in property <color> border-focus: #ffec27;
+    in property <color> shadow: #0d0b1e;
+    in property <color> text-color: #fff1e8;
+    in property <color> placeholder-color: #aab3d8;
+    callback accepted;
+    callback edited;
+    height: 32px;
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: input.has-focus ? root.border-focus : root.border;
+            input := TextInput {
+                enabled: root.enabled;
+                x: 6px; y: 0px;
+                width: parent.width - 12px; height: parent.height;
+                text <=> root.text;
+                color: root.text-color;
+                font-size: 13px;
+                single-line: true;
+                vertical-alignment: center;
+                accepted => { root.accepted(); }
+                edited => { root.edited(); }
+                // 占位符：无内容且未聚焦时显示
+            }
+            Text {
+                visible: root.text == "" && !input.has-focus;
+                x: 8px; y: 0px; height: parent.height;
+                text: root.placeholder;
+                color: root.placeholder-color;
+                font-size: 13px;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+// ===== 进度条 =====
+export component PixelProgressBar inherits Rectangle {
+    in property <float> progress: 0.0; // 0..1
+    in property <bool> show-text: false;
+    in property <color> track: #29366f;
+    in property <color> fill: #29adff;
+    in property <color> border: #83769c;
+    in property <color> shadow: #0d0b1e;
+    in property <color> text-color: #fff1e8;
+    height: 24px;
+
+    property <float> clamped: Math.max(0.0, Math.min(1.0, root.progress));
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.track;
+            border-width: 2px;
+            border-color: root.border;
+            Rectangle {
+                x: 2px; y: 2px;
+                width: (parent.width - 4px) * root.clamped;
+                height: parent.height - 4px;
+                background: root.fill;
+                // 像素分格效果
+                clip: true;
+            }
+        }
+        Text {
+            visible: root.show-text;
+            width: root.width; height: root.height;
+            text: Math.round(root.clamped * 100) + "%";
+            color: root.text-color;
+            font-weight: 700;
+            font-size: 12px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+}
+
+// ===== 徽章 =====
+export component PixelBadge inherits Rectangle {
+    in property <string> text: "";
+    in property <color> face: #29adff;
+    in property <color> border: #83769c;
+    in property <color> shadow: #0d0b1e;
+    in property <color> text-color: #0d0b1e;
+    height: 22px;
+
+    Rectangle {
+        width: root.width; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: root.border;
+            Text {
+                text: root.text;
+                color: root.text-color;
+                font-weight: 700;
+                font-size: 12px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+// ===== 分组面板（标题 + 内容插槽） =====
+export component PixelPanel inherits Rectangle {
+    in property <string> title: "";
+    in property <color> panel: #29366f;
+    in property <color> edge: #83769c;
+    in property <color> shadow: #0d0b1e;
+    in property <color> title-color: #ffec27;
+
+    background: root.shadow;
+    Rectangle {
+        x: 3px; y: 3px;
+        width: parent.width - 6px; height: parent.height - 6px;
+        background: root.panel;
+        border-width: 2px;
+        border-color: root.edge;
+        VerticalLayout {
+            padding: 10px;
+            spacing: 8px;
+            Text {
+                text: root.title;
+                color: root.title-color;
+                font-weight: 800;
+                font-size: 12px;
+                letter-spacing: 1px;
+            }
+            Rectangle { height: 2px; background: root.edge; }
+            @children
+        }
+    }
+}
+
+
+// ===== 模态对话框（遮罩 + 标题 + 内容插槽 + 确定/取消） =====
+export component PixelDialog inherits Rectangle {
+    in property <bool> open: false;
+    in property <string> title: "对话框";
+    in property <color> overlay: #0d0b1e80;
+    in property <color> panel: #29366f;
+    in property <color> edge: #83769c;
+    in property <color> shadow: #0d0b1e;
+    in property <color> title-color: #ffec27;
+    in property <color> text-color: #fff1e8;
+    callback accept;
+    callback cancel;
+    visible: root.open;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.overlay;
+        Rectangle {
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            width: 360px; height: 220px;
+            background: root.shadow;
+            Rectangle {
+                x: 4px; y: 4px;
+                width: parent.width - 8px; height: parent.height - 8px;
+                background: root.panel;
+                border-width: 2px;
+                border-color: root.edge;
+                VerticalLayout {
+                    padding: 14px;
+                    spacing: 10px;
+                    Text {
+                        text: root.title;
+                        color: root.title-color;
+                        font-weight: 800;
+                        letter-spacing: 1px;
+                    }
+                    Rectangle { height: 2px; background: root.edge; }
+                    @children
+                    HorizontalLayout {
+                        alignment: end;
+                        spacing: 8px;
+                        PixelButton {
+                            text: "取消";
+                            clicked => { root.cancel(); }
+                        }
+                        PixelButton {
+                            text: "确定";
+                            face: #29adff;
+                            clicked => { root.accept(); }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
