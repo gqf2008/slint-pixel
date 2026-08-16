@@ -27,7 +27,7 @@ export component PixelCheckBox inherits Rectangle {
     in property <color> face-checked: PixelTheme.accent;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.text;
     in property <color> check-color: PixelTheme.text;
     callback toggled;
     height: 24px;
@@ -77,9 +77,9 @@ export component PixelCheckBox inherits Rectangle {
 export component PixelSwitch inherits Rectangle {
     in-out property <bool> checked: false;
     in property <bool> enabled: true;
-    in property <color> track-off: PixelTheme.panel;
+    in property <color> track-off: PixelTheme.hover;
     in property <color> track-on: PixelTheme.accent;
-    in property <color> thumb: PixelTheme.accent;
+    in property <color> thumb: #ffffff;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
     callback toggled;
@@ -201,7 +201,7 @@ export component PixelTextInput inherits Rectangle {
     in property <color> border: PixelTheme.edge;
     in property <color> border-focus: PixelTheme.accent;
     in property <color> shadow: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.text;
     in property <color> placeholder-color: PixelTheme.dim;
     callback accepted;
     callback edited;
@@ -249,7 +249,7 @@ export component PixelProgressBar inherits Rectangle {
     in property <color> fill: PixelTheme.accent;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.text;
     height: 24px;
 
     property <float> clamped: Math.max(0.0, Math.min(1.0, root.progress));
@@ -353,7 +353,7 @@ export component PixelDialog inherits Rectangle {
     in property <color> edge: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
     in property <color> title-color: PixelTheme.text;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.text;
     in property <color> close-color: PixelTheme.text;
     in property <color> close-hover: PixelTheme.hover;
     callback accept;
