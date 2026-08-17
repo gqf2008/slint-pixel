@@ -492,7 +492,7 @@ export component PixelScrollPanel inherits Rectangle {
 }
 
 // ===== 可折叠面板 =====
-export component PixelCollapsible inherits Rectangle {
+export component PixelCollapsible inherits VerticalLayout {
     in property <string> title: "";
     in-out property <bool> expanded: false;
     in property <bool> enabled: true;
@@ -505,6 +505,7 @@ export component PixelCollapsible inherits Rectangle {
     in property <color> highlight: PixelTheme.accent;
     callback toggled(expanded: bool);
     opacity: root.enabled ? 1.0 : 0.5;
+    spacing: 0px;
 
     // 标题栏
     Rectangle {
@@ -551,7 +552,7 @@ export component PixelCollapsible inherits Rectangle {
     // 内容区（收起时高度 0 + 裁剪，带展开动画）
     Rectangle {
         width: 100%;
-        height: root.expanded ? body-content.preferred-height : 0px;
+        height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
         background: root.body;
         border-width: 2px;
         border-color: root.edge;
@@ -566,7 +567,7 @@ export component PixelCollapsible inherits Rectangle {
 }
 
 // ===== 手风琴（互斥展开，数据驱动） =====
-export component PixelAccordion inherits Rectangle {
+export component PixelAccordion inherits VerticalLayout {
     in property <[string]> titles: [];
     in property <[string]> contents: [];
     in-out property <int> active: -1;
@@ -580,72 +581,73 @@ export component PixelAccordion inherits Rectangle {
     in property <color> highlight: PixelTheme.accent;
     callback toggled(index: int);
     opacity: root.enabled ? 1.0 : 0.5;
+    spacing: 4px;
 
-    VerticalLayout {
-        spacing: 4px;
-        for t[i] in root.titles : Rectangle {
+    for t[i] in root.titles : VerticalLayout {
+        width: 100%;
+        spacing: 0px;
+
+        // 标题栏
+        Rectangle {
             width: 100%;
-            // 标题栏
+            height: 32px;
+            background: root.shadow;
             Rectangle {
-                width: 100%;
-                height: 32px;
-                background: root.shadow;
-                Rectangle {
-                    x: panel-ta.pressed ? 1px : 0px;
-                    y: panel-ta.pressed ? 1px : 0px;
-                    width: parent.width - 2px; height: parent.height - 2px;
-                    background: panel-ta.has-hover ? root.header-hover : root.header-face;
-                    border-width: 2px;
-                    border-color: root.edge;
-                    Text {
-                        x: 10px; y: 0px;
-                        width: parent.width - 40px; height: parent.height;
-                        text: t;
-                        color: root.text-color;
-                        font-weight: 700;
-                        font-size: 13px;
-                        vertical-alignment: center;
-                    }
-                    Text {
-                        x: parent.width - 30px; y: 0px;
-                        width: 24px; height: parent.height;
-                        text: root.active == i ? "▼" : "▶";
-                        color: root.text-color;
-                        font-size: 11px;
-                        horizontal-alignment: center;
-                        vertical-alignment: center;
-                    }
-                }
-            }
-            // 内容区
-            Rectangle {
-                width: 100%;
-                height: root.active == i ? acc-body.preferred-height : 0px;
-                background: root.body;
+                x: panel-ta.pressed ? 1px : 0px;
+                y: panel-ta.pressed ? 1px : 0px;
+                width: parent.width - 2px; height: parent.height - 2px;
+                background: panel-ta.has-hover ? root.header-hover : root.header-face;
                 border-width: 2px;
                 border-color: root.edge;
-                clip: true;
-                animate height { duration: 160ms; easing: ease-out; }
-                acc-body := VerticalLayout {
-                    x: 0px;
-                    width: 100%;
-                    Text {
-                        x: 10px;
-                        width: parent.width - 20px;
-                        text: root.contents[i];
-                        color: root.text-color;
-                        font-size: 13px;
-                        wrap: word-wrap;
-                    }
+                Text {
+                    x: 10px; y: 0px;
+                    width: parent.width - 40px; height: parent.height;
+                    text: t;
+                    color: root.text-color;
+                    font-weight: 700;
+                    font-size: 13px;
+                    vertical-alignment: center;
+                }
+                Text {
+                    x: parent.width - 30px; y: 0px;
+                    width: 24px; height: parent.height;
+                    text: root.active == i ? "▼" : "▶";
+                    color: root.text-color;
+                    font-size: 11px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
                 }
             }
             panel-ta := TouchArea {
                 enabled: root.enabled;
-                width: 100%;
-                height: 32px;
+                width: 100%; height: 100%;
                 clicked => {
                     root.active = root.active == i ? -1 : i;
                     root.toggled(root.active);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+
+        // 内容区
+        Rectangle {
+            width: 100%;
+            height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
+            background: root.body;
+            border-width: 2px;
+            border-color: root.edge;
+            clip: true;
+            animate height { duration: 160ms; easing: ease-out; }
+            acc-body := VerticalLayout {
+                x: 0px;
+                width: 100%;
+                Text {
+                    x: 10px;
+                    width: parent.width - 20px;
+                    text: root.contents[i];
+                    color: root.text-color;
+                    font-size: 13px;
+                    wrap: word-wrap;
                 }
             }
         }

@@ -6,7 +6,7 @@ import {
     PixelRadioGroup, PixelComboBox, PixelMenu, PixelTableView, PixelScrollPanel,
     PixelCollapsible, PixelAccordion, PixelSidebar,
     PixelText, PixelTitle, PixelForm, PixelFormItem, PixelTextArea,
-    PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm,
+    PixelIconButton, PixelBubble, PixelPopconfirm,
     PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
     PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
     PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme,
@@ -234,14 +234,37 @@ export component GalleryWindow inherits Window {
                 }
                 PixelPanel {
                     title: "折叠 COLLAPSIBLE";
-                    PixelCollapsible {
-                        title: "使用说明";
-                        expanded <=> root.collapsible-open;
-                        Text {
-                            text: "点击标题栏展开/收起。内容区带高度动画。";
-                            color: c-text;
-                            font-size: 13px;
-                            wrap: word-wrap;
+                    VerticalLayout {
+                        spacing: 8px;
+                        PixelCollapsible {
+                            title: "使用说明";
+                            expanded <=> root.collapsible-open;
+                            Text {
+                                text: "点击标题栏展开/收起。内容区带高度动画。";
+                                color: c-text;
+                                font-size: 13px;
+                                wrap: word-wrap;
+                            }
+                        }
+                        PixelCollapsible {
+                            title: "快捷键";
+                            expanded: false;
+                            Text {
+                                text: "Ctrl+N 新建，Ctrl+S 保存，Ctrl+E 导出 PNG。";
+                                color: c-text;
+                                font-size: 13px;
+                                wrap: word-wrap;
+                            }
+                        }
+                        PixelCollapsible {
+                            title: "常见问题";
+                            expanded: false;
+                            Text {
+                                text: "如何更换主题？打开主题编辑器即可一键换肤。";
+                                color: c-text;
+                                font-size: 13px;
+                                wrap: word-wrap;
+                            }
                         }
                     }
                 }
@@ -312,9 +335,11 @@ export component GalleryWindow inherits Window {
                     title: "气泡 TOOLTIP · BUBBLE";
                     HorizontalLayout {
                         spacing: 12px;
-                        PixelTooltip {
-                            text: "这是像素风悬停提示气泡";
+                        Rectangle {
+                            width: 90px;
+                            height: 34px;
                             PixelButton { text: "悬停我"; width: 90px; }
+                            Tooltip { text: @markdown("这是像素风悬停提示气泡"); }
                         }
                         PixelBubble {
                             icon: "ⓘ";
@@ -335,6 +360,7 @@ export component GalleryWindow inherits Window {
                         PixelPopconfirm {
                             text: "确定要删除这个像素小妖吗？此操作不可撤销。";
                             button-text: "删除角色";
+                            viewport-width: root.width;
                             open: root.popconfirm-open;
                             confirm => { root.action-status = "已确认删除"; }
                             cancel => { root.action-status = "已取消删除"; }
