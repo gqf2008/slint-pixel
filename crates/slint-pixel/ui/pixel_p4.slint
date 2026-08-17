@@ -319,6 +319,8 @@ export component PixelSearchBox inherits Rectangle {
             search-input := TextInput {
                 x: 6px; width: parent.width - 40px; height: parent.height;
                 text <=> root.query;
+                single-line: true;
+                vertical-alignment: center;
                 accepted => { root.search(root.query); }
             }
             Text {

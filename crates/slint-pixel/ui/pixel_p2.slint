@@ -202,6 +202,8 @@ export component PixelCommandPalette inherits Rectangle {
                         TextInput {
                             text <=> root.query;
                             width: 100%; height: 100%;
+                            single-line: true;
+                            vertical-alignment: center;
                         }
                         Text {
                             visible: root.query == "";
