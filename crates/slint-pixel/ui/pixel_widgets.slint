@@ -196,6 +196,8 @@ export component PixelTextInput inherits Rectangle {
     in-out property <string> text: "";
     in property <string> placeholder: "";
     in property <bool> enabled: true;
+    // 输入类型："text"（默认）/ "password"（掩码显示，ABB 等宿主的凭证框）
+    in property <string> input-type: "text";
     in property <color> face: PixelTheme.bg;
     in property <color> border: PixelTheme.edge;
     in property <color> border-focus: PixelTheme.accent;
@@ -223,6 +225,7 @@ export component PixelTextInput inherits Rectangle {
                 color: root.text-color;
                 font-size: 13px;
                 single-line: true;
+                input-type: root.input-type == "password" ? password : text;
                 vertical-alignment: center;
                 accepted => { root.accepted(); }
                 edited => { root.edited(); }
