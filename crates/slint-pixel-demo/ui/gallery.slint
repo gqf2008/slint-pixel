@@ -478,72 +478,76 @@ export component GalleryWindow inherits Window {
                     VerticalLayout {
                         spacing: 10px;
                         HorizontalLayout {
+                            width: 100%;
                             spacing: 8px;
-                            PixelImage { source: @image-url("../../../docs/gallery.png"); width: 80px; height: 60px; }
-                            PixelImageViewer { source: @image-url("../../../docs/gallery.png"); width: 80px; height: 60px; }
-                            PixelImageCrop { source: @image-url("../../../docs/gallery.png"); width: 80px; height: 60px; }
-                            PixelQRCode { code: "SLINT"; width: 60px; height: 60px; }
+                            PixelImage { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                            PixelImageViewer { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                            PixelImageCrop { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                            PixelQRCode { code: "SLINT"; width: 25%; height: 60px; }
                         }
-                        PixelTagInput { tags: ["像素", "复古", "RPG"]; width: 200px; }
-                        PixelAutoComplete { options: ["PixelButton", "PixelImage", "PixelList"]; width: 200px; }
+                        PixelTagInput { tags: ["像素", "复古", "RPG"]; width: 100%; }
+                        PixelAutoComplete { options: ["PixelButton", "PixelImage", "PixelList"]; width: 100%; }
                         PixelCascader {
                             level1: ["文件", "编辑"];
                             level2: [["新建", "打开"], ["撤销", "重做"]];
-                            width: 200px;
+                            width: 100%;
                         }
                         HorizontalLayout {
+                            width: 100%;
                             spacing: 10px;
-                            PixelDateRangePicker { width: 280px; height: 160px; }
-                            PixelCalendar { width: 160px; height: 180px; }
+                            PixelDateRangePicker { width: 50%; height: 160px; }
+                            PixelCalendar { width: 50%; height: 180px; }
                         }
                         PixelRating { value: 3; max: 5; }
                         PixelDescriptionList {
                             labels: ["类型", "稀有度", "掉落"];
                             values: ["像素小妖", "传说", "金币 × 12"];
-                            width: 260px;
+                            width: 100%;
                         }
-                        PixelResult { status: "success"; title: "保存成功"; description: "你的像素作品已保存到本地。"; }
+                        PixelResult { status: "success"; title: "保存成功"; description: "你的像素作品已保存到本地。"; width: 100%; }
                         PixelAvatarGroup { names: ["A", "B", "C"]; size: 26px; }
                         HorizontalLayout {
+                            width: 100%;
                             spacing: 8px;
-                            PixelList { items: ["列表项 1", "列表项 2", "列表项 3"]; width: 140px; }
-                            PixelVirtualList { items: ["虚拟项 1", "虚拟项 2", "虚拟项 3", "虚拟项 4"]; width: 140px; viewport-height: 90px; }
+                            PixelList { items: ["列表项 1", "列表项 2", "列表项 3"]; width: 50%; }
+                            PixelVirtualList { items: ["虚拟项 1", "虚拟项 2", "虚拟项 3", "虚拟项 4"]; width: 50%; viewport-height: 90px; }
                         }
                         PixelTreeTable {
                             headers: ["名称", "数值"];
                             rows: [["根节点", "10"], ["  子节点", "5"], ["  孙节点", "2"]];
                             levels: [0, 1, 2];
-                            width: 260px;
+                            width: 100%;
                         }
                         PixelDataTable {
                             headers: ["名称", "数值"];
                             rows: [["Alpha", "10"], ["Beta", "20"], ["Gamma", "30"]];
-                            width: 260px;
+                            width: 100%;
                         }
-                        PixelSearchBox { query: "像素"; width: 200px; }
-                        PixelNotificationCenter { messages: ["新版本发布", "系统维护通知"]; width: 240px; }
+                        PixelSearchBox { query: "像素"; width: 100%; }
+                        PixelNotificationCenter { messages: ["新版本发布", "系统维护通知"]; width: 100%; }
                         PixelSubMenu {
                             items: ["文件", "编辑"];
                             children: [["新建", "打开"], ["撤销", "重做"]];
-                            width: 240px;
+                            width: 100%;
                         }
                         HorizontalLayout {
+                            width: 100%;
                             spacing: 8px;
-                            PixelBackTop { }
+                            PixelBackTop { width: 36px; }
                             PixelAffix {
-                                width: 120px; height: 40px;
+                                width: 50%; height: 40px;
                                 PixelText { text: "Affix"; }
                             }
                             PixelSticky {
-                                width: 120px; height: 40px;
+                                width: 50%; height: 40px;
                                 PixelText { text: "Sticky"; }
                             }
                         }
-                        PixelRichTextEditor { value: "像素风富文本"; width: 300px; }
-                        PixelCodeBlock { code: "let a = 1;\nprintln!(a);"; width: 300px; }
+                        PixelRichTextEditor { value: "像素风富文本"; width: 100%; }
+                        PixelCodeBlock { code: "let a = 1;\nprintln!(a);"; width: 100%; }
                         PixelWatermark {
                             text: "PIXEL WATERMARK";
-                            width: 300px; height: 60px;
+                            width: 100%; height: 60px;
                             PixelText { text: "底层内容"; }
                         }
                     }
