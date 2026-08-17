@@ -152,6 +152,9 @@ export component Swatch inherits Rectangle {
 export component PixelButton inherits Rectangle {
     in property <string> text: "";
     in property <bool> active: false;
+    // 禁用态：置灰（opacity 0.5）+ 不响应点击（ABB 等宿主大量用 enabled 控制
+    // 按钮可用性，如安装中禁用重复点击）
+    in property <bool> enabled: true;
     // variant: default | primary | danger | ghost（对齐 Tailwind 按钮语义）
     in property <string> variant: "default";
     // size: small | medium | large
@@ -186,6 +189,7 @@ export component PixelButton inherits Rectangle {
     height: root.eff-height;
     horizontal-stretch: 0;
     vertical-stretch: 0;
+    opacity: root.enabled ? 1.0 : 0.5;
     background: root.eff-face;
     border-width: root.variant == "primary" ? 3px : 2px;
     border-color: root.active ? root.border-active : root.border;
@@ -208,6 +212,7 @@ export component PixelButton inherits Rectangle {
         background: root.border-active;
     }
     ta := TouchArea {
+        enabled: root.enabled;
         width: 100%; height: 100%;
         clicked => { root.clicked(); }
         mouse-cursor: pointer;
