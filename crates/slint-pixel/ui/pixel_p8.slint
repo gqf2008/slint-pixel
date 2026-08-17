@@ -1,0 +1,456 @@
+import { PixelTheme } from "pixel_theme.slint";
+import { PixelButton } from "pixel_painter_widget.slint";
+
+// ============================================================================
+// slint-pixel · 高级组件 P2：图表/流程/排期/地图/媒体/文档/条码/验证码
+// ============================================================================
+
+// ===== 组织架构图 =====
+export component PixelOrgChart inherits Rectangle {
+    in property <[string]> names: [];
+    in property <[string]> roles: [];
+    in property <[int]> levels: [];
+    in-out property <int> selected: -1;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback item-selected(index: int);
+    preferred-height: root.names.length * 36px + 4px;
+    min-height: root.names.length * 36px + 4px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 2px; spacing: 0px;
+                for n[i] in root.names : Rectangle {
+                    height: 36px;
+                    background: root.selected == i ? root.border : transparent;
+                    Text {
+                        x: 12px + root.levels[i] * 24px;
+                        width: parent.width - 24px - root.levels[i] * 24px;
+                        height: 18px;
+                        text: n;
+                        color: root.selected == i ? #ffffff : PixelTheme.text;
+                        font-size: 12px;
+                        vertical-alignment: center;
+                    }
+                    Text {
+                        x: 12px + root.levels[i] * 24px;
+                        y: 18px;
+                        width: parent.width - 24px - root.levels[i] * 24px;
+                        height: 18px;
+                        text: root.roles.length > i ? root.roles[i] : "";
+                        color: root.selected == i ? #ffffff : PixelTheme.dim;
+                        font-size: 10px;
+                        vertical-alignment: center;
+                    }
+                    org-ta := TouchArea {
+                        clicked => {
+                            root.selected = i;
+                            root.item-selected(i);
+                        }
+                        mouse-cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 流程图 =====
+export component PixelFlowChart inherits Rectangle {
+    in property <[string]> nodes: [];
+    in property <[string]> edges: [];
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    height: 80px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            HorizontalLayout {
+                for nd[i] in root.nodes : Rectangle {
+                    width: 80px; height: 40px;
+                    background: root.border;
+                    Rectangle {
+                        x: 1px; y: 1px; width: 78px; height: 38px;
+                        background: root.face;
+                        Text {
+                            text: nd;
+                            color: PixelTheme.text;
+                            font-size: 10px;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                    Text {
+                        text: i < root.edges.length ? "→" : "";
+                        color: PixelTheme.dim;
+                        font-size: 12px;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 思维导图 =====
+export component PixelMindMap inherits Rectangle {
+    in property <string> center: "SLINT";
+    in property <[string]> branches: [];
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    height: 120px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            HorizontalLayout {
+                spacing: 8px;
+                Rectangle {
+                    width: 80px; height: 40px;
+                    background: root.border;
+                    Text { text: root.center; color: #ffffff; font-size: 12px; font-weight: 700; }
+                }
+                for b[i] in root.branches : Rectangle {
+                    width: 90px; height: 36px;
+                    background: root.border;
+                    Rectangle {
+                        x: 1px; y: 1px; width: 88px; height: 34px;
+                        background: root.face;
+                        Text { text: b; color: PixelTheme.text; font-size: 10px; }
+                    }
+                    Text { text: "—"; color: PixelTheme.dim; }
+                }
+            }
+        }
+    }
+}
+
+// ===== 甘特图 =====
+export component PixelGantt inherits Rectangle {
+    in property <[string]> tasks: [];
+    in property <[int]> starts: [];
+    in property <[int]> durations: [];
+    in property <int> total-days: 30;
+    in property <color> face: PixelTheme.bg;
+    in property <color> bar: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    preferred-height: root.tasks.length * 32px + 4px;
+    min-height: root.tasks.length * 32px + 4px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 2px; spacing: 0px;
+                for t[i] in root.tasks : Rectangle {
+                    height: 32px;
+                    Text {
+                        x: 6px; width: 90px; height: parent.height;
+                        text: t;
+                        color: PixelTheme.text;
+                        font-size: 11px;
+                        vertical-alignment: center;
+                    }
+                    Rectangle {
+                        x: 100px;
+                        y: 8px;
+                        width: Math.max(4px, (parent.width - 110px) * root.durations[i] / Math.max(root.total-days, 1));
+                        height: 16px;
+                        background: root.shadow;
+                        Rectangle {
+                            x: 1px; y: 1px; width: parent.width - 2px; height: 14px;
+                            background: root.bar;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 地图 =====
+export component PixelMap inherits Rectangle {
+    in property <[string]> markers: [];
+    in property <[float]> marker-x: [];
+    in property <[float]> marker-y: [];
+    in property <color> face: #dce6f0;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> marker: PixelTheme.danger;
+    height: 160px;
+    width: 240px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            for m[i] in root.markers : Rectangle {
+                x: (parent.width - 12px) * root.marker-x[i] / 100.0;
+                y: (parent.height - 12px) * root.marker-y[i] / 100.0;
+                width: 12px; height: 12px;
+                background: root.marker;
+                Text {
+                    x: 14px; y: -2px;
+                    text: m;
+                    color: PixelTheme.text;
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+}
+
+// ===== 地理组件（Geo，同 Map 视觉） =====
+export component PixelGeo inherits PixelMap {
+}
+
+// ===== 视频播放器 =====
+export component PixelVideoPlayer inherits Rectangle {
+    in property <image> poster;
+    in-out property <bool> playing: false;
+    in property <float> progress: 0.0;
+    in property <color> face: #000000;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback play;
+    callback pause;
+    callback seek(progress: float);
+    width: 240px;
+    height: 150px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            Image {
+                source: root.poster;
+                width: 100%; height: 100%;
+                image-fit: contain;
+            }
+            Text {
+                text: root.playing ? "▶ PLAYING" : "⏸ PAUSED";
+                color: #ffffff;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            PixelButton {
+                x: 8px; y: parent.height - 34px; width: 30px; height: 26px;
+                text: root.playing ? "⏸" : "▶";
+                clicked => {
+                    root.playing = !root.playing;
+                    if root.playing { root.play(); } else { root.pause(); }
+                }
+            }
+            // 进度条
+            Rectangle {
+                x: 46px; y: parent.height - 30px; width: parent.width - 54px; height: 8px;
+                background: root.shadow;
+                Rectangle {
+                    x: 1px; y: 1px; width: (parent.width - 2px) * root.progress; height: 6px;
+                    background: #ffffff;
+                }
+            }
+        }
+    }
+}
+
+// ===== 音频播放器 =====
+export component PixelAudioPlayer inherits Rectangle {
+    in property <string> title: "";
+    in-out property <bool> playing: false;
+    in property <float> progress: 0.0;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback play;
+    callback pause;
+    callback seek(progress: float);
+    height: 48px;
+    width: 220px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            HorizontalLayout {
+                spacing: 6px;
+                PixelButton {
+                    text: root.playing ? "⏸" : "▶";
+                    width: 32px; height: 40px;
+                    clicked => {
+                        root.playing = !root.playing;
+                        if root.playing { root.play(); } else { root.pause(); }
+                    }
+                }
+                VerticalLayout {
+                    Text { text: root.title; color: PixelTheme.text; font-size: 11px; }
+                    Rectangle {
+                        height: 8px;
+                        background: root.shadow;
+                        Rectangle {
+                            x: 1px; y: 1px; width: (parent.width - 2px) * root.progress; height: 6px;
+                            background: PixelTheme.accent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== PDF 预览 =====
+export component PixelPDFViewer inherits Rectangle {
+    in property <string> file-name: "document.pdf";
+    in-out property <int> page: 1;
+    in property <int> total-pages: 1;
+    in property <color> face: #ffffff;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback page-changed(page: int);
+    width: 180px;
+    height: 220px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 8px; spacing: 8px;
+                Text { text: root.file-name; color: PixelTheme.text; font-size: 11px; }
+                Rectangle {
+                    height: 140px;
+                    background: #f0f0f0;
+                    Text { text: "第 " + root.page + " 页"; color: PixelTheme.dim; font-size: 12px; horizontal-alignment: center; vertical-alignment: center; }
+                }
+                HorizontalLayout {
+                    PixelButton { text: "‹"; width: 24px; clicked => { root.page = Math.max(1, root.page - 1); root.page-changed(root.page); } }
+                    Text { text: root.page + " / " + root.total-pages; color: PixelTheme.text; font-size: 11px; horizontal-alignment: center; vertical-alignment: center; }
+                    PixelButton { text: "›"; width: 24px; clicked => { root.page = Math.min(root.total-pages, root.page + 1); root.page-changed(root.page); } }
+                }
+            }
+        }
+    }
+}
+
+// ===== 打印预览 =====
+export component PixelPrintPreview inherits Rectangle {
+    in property <string> title: "打印预览";
+    in property <[string]> pages: [];
+    in property <color> face: #ffffff;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback print;
+    width: 200px;
+    height: 240px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 8px; spacing: 6px;
+                Text { text: root.title; color: PixelTheme.text; font-size: 12px; }
+                for p in root.pages : Rectangle {
+                    height: 80px;
+                    background: #f0f0f0;
+                    Text { text: p; color: PixelTheme.dim; font-size: 10px; horizontal-alignment: center; vertical-alignment: center; }
+                }
+                PixelButton { text: "打印"; clicked => { root.print(); } }
+            }
+        }
+    }
+}
+
+// ===== 条码 =====
+export component PixelBarcode inherits Rectangle {
+    in property <string> code: "1234567890";
+    in property <color> dark: #000000;
+    in property <color> light: #ffffff;
+    in property <length> bar-width: 2px;
+    width: 180px;
+    height: 50px;
+
+    HorizontalLayout {
+        spacing: 0px;
+        for idx in 24 : Rectangle {
+            width: root.bar-width;
+            height: 100%;
+            background: Math.mod(idx * 3 + (root.code == "" ? 0 : 1), 4) == 0 ? root.dark : root.light;
+        }
+    }
+}
+
+// ===== 图形验证码 =====
+export component PixelCaptcha inherits Rectangle {
+    in property <string> code: "A1B2";
+    in property <color> face: #f0f0f0;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback refresh;
+    height: 40px;
+    width: 110px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            Text {
+                text: root.code;
+                color: PixelTheme.text;
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: 4px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+        PixelButton {
+            x: parent.width - 30px; y: 4px; width: 26px; height: 26px;
+            text: "↻";
+            clicked => { root.refresh(); }
+        }
+    }
+}
