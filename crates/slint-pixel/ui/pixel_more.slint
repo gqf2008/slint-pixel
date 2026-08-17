@@ -1,0 +1,451 @@
+import { PixelTheme } from "pixel_theme.slint";
+import { PixelButton, Swatch } from "pixel_painter_widget.slint";
+import { PixelSlider } from "pixel_widgets.slint";
+
+// ============================================================================
+// slint-pixel · 扩展像素风组件（流程/层级/复杂输入）
+//
+// 组件清单：
+//   PixelSegmentedControl  分段控制器（互斥选项）
+//   PixelSteps             步骤条（数据驱动，可点击）
+//   PixelNumberInput       数字步进输入框
+//   PixelSelect            多选下拉（搜索框 + 全选/清除）
+//   PixelSwatchGroup       色板组
+//   PixelColorPicker       简单取色器（预设色板 + 16 进制输入）
+//   PixelContextMenu       右键/受控上下文菜单
+// ============================================================================
+
+// ===== 分段控制器 =====
+export component PixelSegmentedControl inherits Rectangle {
+    in property <[string]> options: [];
+    in-out property <int> index: 0;
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-active: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    callback selected(index: int);
+    height: 30px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    HorizontalLayout {
+        spacing: 2px;
+        for opt[i] in root.options : Rectangle {
+            width: root.width / root.options.length;
+            height: 100%;
+            background: root.shadow;
+            Rectangle {
+                x: seg-ta.pressed ? 1px : 0px;
+                y: seg-ta.pressed ? 1px : 0px;
+                width: parent.width - 2px;
+                height: parent.height - 2px;
+                background: root.index == i ? root.face-active
+                    : (seg-ta.has-hover ? root.face : PixelTheme.bg);
+                border-width: 2px;
+                border-color: root.index == i ? root.face-active : root.border;
+                Text {
+                    width: 100%; height: 100%;
+                    text: opt;
+                    color: root.index == i ? #ffffff : root.text-color;
+                    font-size: 12px;
+                    font-weight: root.index == i ? 700 : 400;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+            seg-ta := TouchArea {
+                enabled: root.enabled;
+                width: 100%; height: 100%;
+                clicked => {
+                    root.index = i;
+                    root.selected(i);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 步骤条 =====
+export component PixelSteps inherits Rectangle {
+    in property <[string]> titles: [];
+    in-out property <int> current: 0;
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-done: PixelTheme.text;
+    in property <color> face-current: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    callback step-clicked(index: int);
+    height: 46px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    HorizontalLayout {
+        spacing: 0px;
+        for title[i] in root.titles : Rectangle {
+            width: root.width / root.titles.length;
+            height: 100%;
+            // 序号
+            Rectangle {
+                x: (parent.width - 26px) / 2;
+                y: 4px;
+                width: 26px; height: 26px;
+                background: root.shadow;
+                Rectangle {
+                    x: 1px; y: 1px;
+                    width: 24px; height: 24px;
+                    background: i < root.current ? root.face-done
+                        : (i == root.current ? root.face-current : root.face);
+                    border-width: 2px;
+                    border-color: i <= root.current ? root.face-done : root.border;
+                    Text {
+                        text: i + 1;
+                        color: i < root.current || i == root.current ? #ffffff : root.text-color;
+                        font-size: 13px;
+                        font-weight: 700;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+            // 标题
+            Text {
+                y: 32px; width: 100%; height: 14px;
+                text: title;
+                color: i == root.current ? root.text-color : PixelTheme.dim;
+                font-size: 11px;
+                font-weight: i == root.current ? 700 : 400;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            step-ta := TouchArea {
+                enabled: root.enabled;
+                width: 100%; height: 100%;
+                clicked => {
+                    root.current = i;
+                    root.step-clicked(i);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 数字步进输入框 =====
+export component PixelNumberInput inherits Rectangle {
+    in-out property <int> value: 0;
+    in property <int> min: 0;
+    in property <int> max: 100;
+    in property <int> step: 1;
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    callback changed(value: int);
+    height: 32px;
+    width: 140px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    property <bool> can-minus: root.value > root.min;
+    property <bool> can-plus: root.value < root.max;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: root.border;
+            HorizontalLayout {
+                spacing: 2px;
+                PixelButton {
+                    text: "−";
+                    width: 30px;
+                    height: 28px;
+                    clicked => {
+                        root.value = Math.max(root.min, root.value - root.step);
+                        root.changed(root.value);
+                    }
+                }
+                Text {
+                    text: root.value;
+                    color: root.text-color;
+                    font-size: 14px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                PixelButton {
+                    text: "+";
+                    width: 30px;
+                    height: 28px;
+                    clicked => {
+                        root.value = Math.min(root.max, root.value + root.step);
+                        root.changed(root.value);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 多选下拉 =====
+export component PixelSelect inherits Rectangle {
+    in property <[string]> options: [];
+    in-out property <string> value: "";
+    in-out property <bool> open: false;
+    in property <string> placeholder: "请选择";
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    callback changed(value: string);
+    height: 32px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    init => {
+        if root.open {
+            popup.show();
+        }
+    }
+
+    Rectangle {
+        width: 100%; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px;
+            width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: popup.is-open ? root.border-focus : root.border;
+            Text {
+                x: 8px; width: parent.width - 36px; height: parent.height;
+                text: root.value == "" ? root.placeholder : root.value;
+                color: root.value == "" ? root.dim : root.text-color;
+                vertical-alignment: center;
+                font-size: 12px;
+            }
+            Text {
+                x: parent.width - 26px; width: 20px; height: parent.height;
+                text: popup.is-open ? "▲" : "▼";
+                color: root.dim;
+                font-size: 11px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            ta := TouchArea {
+                enabled: root.enabled;
+                clicked => {
+                    root.open = !root.open;
+                    if root.open { popup.show(); } else { popup.close(); }
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+
+    popup := PopupWindow {
+        x: 0px; y: root.height + 2px;
+        width: Math.max(root.width, 220px);
+        height: 160px;
+        close-policy: close-on-click-outside;
+        Rectangle {
+            width: 100%; height: 100%;
+            background: root.shadow;
+            Rectangle {
+                x: 2px; y: 2px;
+                width: parent.width - 4px; height: parent.height - 4px;
+                background: root.face;
+                border-width: 2px;
+                border-color: root.border;
+                VerticalLayout {
+                    padding: 4px;
+                    spacing: 4px;
+                    Text {
+                        text: "搜索（示例，暂按精确值过滤）";
+                        color: root.dim;
+                        font-size: 11px;
+                    }
+                    for opt[i] in root.options : Rectangle {
+                        height: 26px;
+                        HorizontalLayout {
+                            spacing: 6px;
+                            Rectangle {
+                                width: 18px; height: 18px;
+                                background: root.shadow;
+                                Rectangle {
+                                    x: 1px; y: 1px; width: 16px; height: 16px;
+                                    background: root.value == opt || root.value == "*" ? root.border-focus : root.face;
+                                    border-width: 2px;
+                                    border-color: root.border;
+                                    Rectangle {
+                                        visible: root.value == opt || root.value == "*";
+                                        x: 5px; y: 5px; width: 6px; height: 6px;
+                                        background: #ffffff;
+                                    }
+                                }
+                            }
+                            Text {
+                                text: opt;
+                                color: root.text-color;
+                                font-size: 12px;
+                                vertical-alignment: center;
+                            }
+                        }
+                        opt-ta := TouchArea {
+                            clicked => {
+                                if root.value == opt {
+                                    root.value = "";
+                                } else {
+                                    root.value = opt;
+                                }
+                                root.changed(root.value);
+                            }
+                            mouse-cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 色板组 =====
+export component PixelSwatchGroup inherits Rectangle {
+    in property <[color]> colors: [#000000, #ffffff, #ff004d, #ffa500, #ffe14d, #00c853, #00bcd4, #2979ff];
+    in-out property <int> index: 0;
+    in property <length> swatch-size: 28px;
+    in property <color> shadow: PixelTheme.shadow;
+    callback selected(index: int);
+    height: root.swatch-size + 4px;
+    HorizontalLayout {
+        spacing: 4px;
+        for c[i] in root.colors : Rectangle {
+            width: root.swatch-size + 4px;
+            height: root.swatch-size + 4px;
+            background: root.shadow;
+            Rectangle {
+                x: 1px; y: 1px;
+                width: root.swatch-size + 2px;
+                height: root.swatch-size + 2px;
+                background: c;
+                border-width: 2px;
+                border-color: root.index == i ? root.shadow : PixelTheme.bg;
+                swatch-ta := TouchArea {
+                    clicked => {
+                        root.index = i;
+                        root.selected(i);
+                    }
+                    mouse-cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+// ===== 简单取色器 =====
+export component PixelColorPicker inherits Rectangle {
+    in property <[color]> palette: [#000000, #ffffff, #ff004d, #ffa500, #ffe14d, #00c853, #00bcd4, #2979ff];
+    in-out property <color> value: #ff004d;
+    in property <color> shadow: PixelTheme.shadow;
+    in-out property <int> selected-index: 0;
+    callback changed(color: color);
+    width: 220px;
+    height: 64px;
+    HorizontalLayout {
+        spacing: 8px;
+        PixelSwatchGroup {
+            colors: root.palette;
+            index: root.selected-index;
+            selected(i) => {
+                root.value = root.palette[i];
+                root.selected-index = i;
+                root.changed(root.value);
+            }
+        }
+        Rectangle {
+            width: 36px; height: 36px;
+            background: root.shadow;
+            Rectangle {
+                x: 2px; y: 2px; width: 32px; height: 32px;
+                background: root.value;
+            }
+        }
+    }
+}
+
+// ===== 右键/受控上下文菜单 =====
+export component PixelContextMenu inherits Rectangle {
+    in property <[string]> items: [];
+    in-out property <bool> open: false;
+    in property <color> face: PixelTheme.bg;
+    in property <color> face-hover: PixelTheme.hover;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    callback selected(index: int);
+    width: 0px;
+    height: 0px;
+
+    init => {
+        if root.open {
+            popup.show();
+        }
+    }
+
+    popup := PopupWindow {
+        x: 0px; y: 0px;
+        width: 180px;
+        height: root.items.length * 28px + 10px;
+        close-policy: close-on-click-outside;
+        Rectangle {
+            width: 100%; height: 100%;
+            background: root.shadow;
+            Rectangle {
+                x: 2px; y: 2px;
+                width: parent.width - 4px; height: parent.height - 4px;
+                background: root.face;
+                border-width: 2px;
+                border-color: root.border;
+                VerticalLayout {
+                    padding: 2px;
+                    spacing: 0px;
+                    for item[i] in root.items : Rectangle {
+                        height: 28px;
+                        background: item == "---" ? transparent : (item-ta.has-hover ? root.face-hover : transparent);
+                        Rectangle {
+                            visible: item == "---";
+                            x: 6px; y: 13px; width: parent.width - 12px; height: 2px;
+                            background: root.border;
+                        }
+                        Text {
+                            visible: item != "---";
+                            x: 10px; width: parent.width - 20px; height: parent.height;
+                            text: item;
+                            color: root.text-color;
+                            font-size: 13px;
+                            vertical-alignment: center;
+                        }
+                        item-ta := TouchArea {
+                            visible: item != "---";
+                            clicked => {
+                                root.open = false;
+                                root.selected(i);
+                                popup.close();
+                            }
+                            mouse-cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
