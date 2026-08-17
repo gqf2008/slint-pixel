@@ -355,16 +355,25 @@ export component PixelDialog inherits Rectangle {
     in property <color> text-color: PixelTheme.text;
     in property <color> close-color: PixelTheme.text;
     in property <color> close-hover: PixelTheme.hover;
+    in-out property <length> drag-x: 0px;
+    in-out property <length> drag-y: 0px;
     callback accept;
     callback cancel;
     visible: root.open;
+
+    // 拖动标题栏的拖动状态
+    property <length> drag-start-x: 0px;
+    property <length> drag-start-y: 0px;
+    property <length> pointer-start-x: 0px;
+    property <length> pointer-start-y: 0px;
+    property <bool> dragging: false;
 
     Rectangle {
         width: 100%; height: 100%;
         background: root.overlay;
         Rectangle {
-            x: (parent.width - self.width) / 2;
-            y: (parent.height - self.height) / 2;
+            x: (parent.width - self.width) / 2 + root.drag-x;
+            y: (parent.height - self.height) / 2 + root.drag-y;
             width: 360px; height: 220px;
             background: root.shadow;
             Rectangle {
@@ -387,6 +396,26 @@ export component PixelDialog inherits Rectangle {
                             font-weight: 800;
                             letter-spacing: 1px;
                             vertical-alignment: center;
+                        }
+                        // 标题栏拖动热区（关闭按钮在上层，优先接收点击）
+                        drag-ta := TouchArea {
+                            width: 100%; height: 100%;
+                            pointer-event(ev) => {
+                                if ev.button != PointerEventButton.left { return; }
+                                if ev.kind == PointerEventKind.down {
+                                    root.pointer-start-x = self.mouse-x;
+                                    root.pointer-start-y = self.mouse-y;
+                                    root.drag-start-x = root.drag-x;
+                                    root.drag-start-y = root.drag-y;
+                                    root.dragging = true;
+                                } else if ev.kind == PointerEventKind.move && root.dragging {
+                                    root.drag-x = root.drag-start-x + (self.mouse-x - root.pointer-start-x);
+                                    root.drag-y = root.drag-start-y + (self.mouse-y - root.pointer-start-y);
+                                } else if ev.kind == PointerEventKind.up {
+                                    root.dragging = false;
+                                }
+                            }
+                            mouse-cursor: move;
                         }
                         Rectangle {
                             x: parent.width - 28px; y: 1px;
