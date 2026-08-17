@@ -1,0 +1,158 @@
+import {
+    PixelPainter, PixelTitleBar, Swatch, PixelButton,
+    PixelCheckBox, PixelSwitch, PixelSlider, PixelTextInput,
+    PixelProgressBar, PixelBadge, PixelPanel, PixelDialog,
+    PixelRadioButton, PixelRadioGroup, PixelComboBox, PixelMenu, PixelTableView,
+    PixelScrollPanel, PixelCollapsible, PixelAccordion, PixelSidebar,
+    PixelText, PixelTitle, PixelForm, PixelFormItem, PixelTextArea,
+    PixelIconButton, PixelTooltip, PixelBubble, PixelPopconfirm, PixelWindowResize,
+    PixelSegmentedControl, PixelSteps, PixelNumberInput, PixelSelect,
+    PixelSwatchGroup, PixelColorPicker, PixelContextMenu,
+    PixelRangeSlider, PixelTree, PixelTreeSelect, PixelTransfer,
+    PixelUpload, PixelTimeline, PixelCarousel, PixelSplitPane,
+    PixelDatePicker, PixelTimePicker, PixelCommandPalette,
+    PixelKanban, PixelOnboarding,
+    PixelImage, PixelImageViewer, PixelTagInput, PixelAutoComplete,
+    PixelCascader, PixelDateRangePicker, PixelRating,
+    PixelDescriptionList, PixelResult,
+    PixelAvatarGroup, PixelList, PixelVirtualList, PixelTreeTable,
+    PixelDataTable, PixelSearchBox, PixelNotificationCenter, PixelSubMenu,
+    PixelBackTop, PixelAffix, PixelSticky, PixelRichTextEditor, PixelCodeBlock,
+    PixelImageCrop, PixelQRCode, PixelWatermark, PixelCalendar,
+    PixelChart, PixelSparkline, PixelDataGrid, PixelProTable,
+    PixelVirtualScroll, PixelTreePro, PixelFormValidator,
+    PixelScheduler, PixelCalendarAgenda, PixelWizard, PixelMultiStepForm,
+    PixelTransferPro, PixelKanbanPro, PixelCommandPalettePro,
+    PixelColorPickerPro, PixelMention, PixelOTPInput, PixelSignature, PixelDrawerPro,
+    PixelOrgChart, PixelFlowChart, PixelMindMap, PixelGantt,
+    PixelMap, PixelGeo, PixelVideoPlayer, PixelAudioPlayer,
+    PixelPDFViewer, PixelPrintPreview, PixelBarcode, PixelCaptcha,
+    PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
+    PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelTheme,
+} from "@slint_pixel";
+
+export component UiSmoke inherits Window {
+    preferred-width: 900px;
+    preferred-height: 900px;
+    VerticalLayout {
+        PixelButton { text: "ok"; }
+        PixelCheckBox { checked: true; }
+        PixelSwitch { checked: true; }
+        PixelSlider { value: 50; }
+        PixelTextInput { text: "hi"; }
+        PixelProgressBar { progress: 0.5; }
+        PixelBadge { text: "1"; }
+        PixelPanel { title: "p"; }
+        PixelRadioButton { checked: true; }
+        PixelRadioGroup { options: ["a", "b"]; index: 0; }
+        PixelComboBox { model: ["a", "b"]; index: 0; }
+        PixelMenu { items: ["a", "b"]; }
+        PixelTableView { headers: ["a"]; rows: [["1"]]; }
+        PixelCollapsible { title: "c"; expanded: true; }
+        PixelAccordion { titles: ["a"]; contents: ["b"]; }
+        PixelSidebar { items: ["a"]; }
+        PixelText { text: "x"; }
+        PixelTitle { text: "T"; }
+        PixelForm { }
+        PixelFormItem { label: "L"; }
+        PixelTextArea { text: "x"; }
+        PixelIconButton { icon: "?"; }
+        PixelTooltip { text: "tip"; }
+        PixelBubble { }
+        PixelPopconfirm { }
+        PixelSegmentedControl { options: ["a", "b"]; index: 0; }
+        PixelSteps { titles: ["a", "b"]; current: 0; }
+        PixelNumberInput { value: 1; }
+        PixelSelect { options: ["a", "b"]; }
+        PixelSwatchGroup { }
+        PixelColorPicker { }
+        PixelContextMenu { items: ["a"]; }
+        PixelRangeSlider { }
+        PixelTree { items: ["a"]; levels: [0]; }
+        PixelTreeSelect { items: ["a"]; levels: [0]; }
+        PixelTransfer { }
+        PixelUpload { }
+        PixelTimeline { items: ["a"]; }
+        PixelCarousel { slides: ["a"]; }
+        PixelSplitPane { right-title: "r"; }
+        PixelDatePicker { }
+        PixelTimePicker { }
+        PixelCommandPalette { items: ["a"]; }
+        PixelKanban { columns: ["a"]; cards: [["x"]]; }
+        PixelOnboarding { titles: ["a"]; descriptions: ["b"]; }
+        PixelImage { source: @image-url("pixel.png"); }
+        PixelImageViewer { source: @image-url("pixel.png"); }
+        PixelTagInput { }
+        PixelAutoComplete { options: ["a"]; }
+        PixelCascader { level1: ["a"]; level2: [["b"]]; }
+        PixelDateRangePicker { }
+        PixelRating { value: 2; }
+        PixelDescriptionList { labels: ["a"]; values: ["b"]; }
+        PixelResult { }
+        PixelAvatarGroup { names: ["A"]; }
+        PixelList { items: ["a"]; }
+        PixelVirtualList { items: ["a"]; }
+        PixelTreeTable { headers: ["a"]; rows: [["b"]]; levels: [0]; }
+        PixelDataTable { headers: ["a"]; rows: [["b"]]; }
+        PixelSearchBox { }
+        PixelNotificationCenter { messages: ["m"]; }
+        PixelSubMenu { items: ["a"]; children: [["b"]]; }
+        PixelBackTop { }
+        PixelAffix { }
+        PixelSticky { }
+        PixelRichTextEditor { }
+        PixelCodeBlock { code: "x"; }
+        PixelImageCrop { source: @image-url("pixel.png"); }
+        PixelQRCode { }
+        PixelWatermark { }
+        PixelCalendar { }
+        PixelChart { data: [1.0, 2.0]; }
+        PixelSparkline { data: [1.0]; }
+        PixelDataGrid { headers: ["a"]; rows: [["b"]]; }
+        PixelProTable { headers: ["a"]; rows: [["b"]]; }
+        PixelVirtualScroll { items: ["a"]; }
+        PixelTreePro { items: ["a"]; levels: [0]; expanded: [true]; }
+        PixelFormValidator { fields: ["a"]; valid: [true]; errors: [""]; }
+        PixelScheduler { times: ["09:00"]; events: ["e"]; }
+        PixelCalendarAgenda { dates: ["d"]; events: ["e"]; }
+        PixelWizard { steps: ["a"]; }
+        PixelMultiStepForm { titles: ["a"]; descriptions: ["b"]; }
+        PixelTransferPro { left-items: ["a"]; right-items: ["b"]; }
+        PixelKanbanPro { columns: ["a"]; cards: [["x"]]; }
+        PixelCommandPalettePro { groups: ["g"]; commands: ["c"]; group-index: [0]; }
+        PixelColorPickerPro { }
+        PixelMention { options: ["a"]; }
+        PixelOTPInput { value: "1"; }
+        PixelSignature { }
+        PixelDrawerPro { }
+        PixelOrgChart { names: ["a"]; roles: ["r"]; levels: [0]; }
+        PixelFlowChart { nodes: ["a"]; edges: [""]; }
+        PixelMindMap { center-text: "c"; branches: ["b"]; }
+        PixelGantt { tasks: ["t"]; starts: [0]; durations: [1]; total-days: 5; }
+        PixelMap { markers: ["m"]; marker-x: [10.0]; marker-y: [10.0]; }
+        PixelGeo { markers: ["m"]; marker-x: [10.0]; marker-y: [10.0]; }
+        PixelVideoPlayer { poster: @image-url("pixel.png"); }
+        PixelAudioPlayer { title: "a"; }
+        PixelPDFViewer { }
+        PixelPrintPreview { pages: ["p"]; }
+        PixelBarcode { }
+        PixelCaptcha { }
+        PixelAlert { }
+        PixelToast { }
+        PixelSpinner { }
+        PixelSkeleton { }
+        PixelTabs { tabs: ["a"]; active: 0; }
+        PixelBreadcrumb { items: ["a"]; }
+        PixelPagination { page: 1; total: 3; }
+        PixelDrawer { open: false; }
+        PixelAvatar { text: "A"; }
+        PixelTag { text: "t"; }
+        PixelCard { }
+        PixelNavbar { brand: "B"; items: ["a"]; }
+        PixelEmpty { }
+        PixelDivider { }
+        PixelStat { label: "l"; value: "1"; }
+        Swatch { fill: #000000; }
+    }
+}

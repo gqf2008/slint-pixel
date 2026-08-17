@@ -64,6 +64,7 @@ export component GalleryWindow inherits Window {
     in-out property <bool> popconfirm-open: false;
     property <bool> bubble-open: false;
     property <string> action-status: "就绪";
+    in-out property <bool> dark-mode: false;
 
     // ---------- 回调（Rust 接线） ----------
     callback drag-start();
@@ -686,6 +687,13 @@ export component GalleryWindow inherits Window {
                         PixelButton {
                             text: "主题编辑器"; width: 100px; variant: "primary";
                             clicked => { root.open-theme-editor(); }
+                        }
+                        PixelButton {
+                            text: root.dark-mode ? "切回浅色" : "切到暗色"; width: 110px;
+                            clicked => {
+                                root.dark-mode = !root.dark-mode;
+                                PixelTheme.scheme = root.dark-mode ? "dark" : "light";
+                            }
                         }
                     }
                 }

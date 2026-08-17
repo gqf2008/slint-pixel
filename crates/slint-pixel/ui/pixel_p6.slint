@@ -87,6 +87,7 @@ export component PixelDataGrid inherits Rectangle {
     in property <[[string]]> rows: [];
     in-out property <int> selected-row: -1;
     in-out property <int> sort-column: -1;
+    in-out property <[length]> column-widths: [];
     in property <bool> enabled: true;
     in property <length> header-height: 28px;
     in property <length> row-height: 26px;
@@ -102,6 +103,7 @@ export component PixelDataGrid inherits Rectangle {
     in property <color> dim: PixelTheme.dim;
     callback row-clicked(row: int);
     callback sort-requested(column: int);
+    callback column-resize(column: int, width: length);
     height: root.viewport-height;
     opacity: root.enabled ? 1.0 : 0.5;
 
@@ -118,6 +120,7 @@ export component PixelDataGrid inherits Rectangle {
                 background: root.header-face;
                 HorizontalLayout {
                     for h[j] in root.headers : Rectangle {
+                        width: root.column-widths.length > j ? root.column-widths[j] : (parent.width / root.headers.length);
                         background: header-ta.has-hover ? root.row-odd : transparent;
                         Text {
                             text: h + (root.sort-column == j ? " ↕" : "");
@@ -133,6 +136,22 @@ export component PixelDataGrid inherits Rectangle {
                                 root.sort-requested(j);
                             }
                             mouse-cursor: pointer;
+                        }
+                        Rectangle {
+                            visible: j < root.headers.length - 1;
+                            x: parent.width - 4px;
+                            width: 4px; height: 100%;
+                            background: resize-ta.has-hover ? root.border : transparent;
+                            resize-ta := TouchArea {
+                                pointer-event(ev) => {
+                                    if ev.kind == PointerEventKind.move || ev.kind == PointerEventKind.down {
+                                        if ev.button == PointerEventButton.left {
+                                            root.column-resize(j, self.mouse-x);
+                                        }
+                                    }
+                                }
+                                mouse-cursor: ew-resize;
+                            }
                         }
                     }
                 }

@@ -20,6 +20,10 @@
 
 ![gallery](docs/gallery.png)
 
+## 文档
+
+- **[组件 API 文档与示例](docs/COMPONENTS.md)**：全部组件属性、回调与用法示例。
+
 ## 组件清单
 
 所有组件都是 `in`/`in-out` 属性 + 回调，宿主可覆盖主题色，无系统依赖、跨平台。

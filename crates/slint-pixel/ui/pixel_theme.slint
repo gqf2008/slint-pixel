@@ -1,15 +1,17 @@
 // ============================================================================
 // slint-pixel · 全局主题（所有组件默认色引用此 global，改一处全部生效）
 // 宿主可在 .slint 里覆盖：PixelTheme.bg = #...; 或在 Rust 侧用 slint::global!()。
+// 支持 light/dark：设置 PixelTheme.scheme = "dark" 后所有语义色自动切换。
 // ============================================================================
 export global PixelTheme {
-    in property <color> bg: #ffffff;      // 背景 / 页面 / 输入面 / 内容区
-    in property <color> panel: #ffffff;   // 面板 / 轨道 / 表头
-    in property <color> hover: #f2f2f2;   // 悬停 / 按钮面 / 浅灰
-    in property <color> edge: #1a1a1a;    // 边框 / 分隔线
-    in property <color> shadow: #000000;  // 阴影 / 深色块
-    in property <color> text: #000000;    // 主文字 / 图标
-    in property <color> dim: #525252;     // 次要文字
-    in property <color> accent: #000000;  // 强调 / 激活 / 选中底色
-    in property <color> danger: #ff004d;  // 危险
+    in property <string> scheme: "light";
+    in-out property <color> bg: root.scheme == "dark" ? #1a1a1a : #ffffff;      // 背景 / 页面 / 输入面 / 内容区
+    in-out property <color> panel: root.scheme == "dark" ? #242424 : #ffffff;   // 面板 / 轨道 / 表头
+    in-out property <color> hover: root.scheme == "dark" ? #3a3a3a : #f2f2f2;   // 悬停 / 按钮面 / 浅灰
+    in-out property <color> edge: root.scheme == "dark" ? #555555 : #1a1a1a;    // 边框 / 分隔线
+    in-out property <color> shadow: #000000;                                    // 阴影 / 深色块
+    in-out property <color> text: root.scheme == "dark" ? #f2f2f2 : #000000;    // 主文字 / 图标
+    in-out property <color> dim: root.scheme == "dark" ? #9a9a9a : #525252;     // 次要文字
+    in-out property <color> accent: root.scheme == "dark" ? #f2f2f2 : #000000;  // 强调 / 激活 / 选中底色
+    in-out property <color> danger: root.scheme == "dark" ? #ff4d6d : #ff004d;  // 危险
 }

@@ -110,6 +110,8 @@ export component PixelMultiStepForm inherits Rectangle {
 export component PixelTransferPro inherits Rectangle {
     in property <[string]> left-items: [];
     in property <[string]> right-items: [];
+    in-out property <string> left-query: "";
+    in-out property <string> right-query: "";
     in-out property <int> left-index: -1;
     in-out property <int> right-index: -1;
     in property <bool> enabled: true;
@@ -137,8 +139,9 @@ export component PixelTransferPro inherits Rectangle {
                 border-width: 2px; border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
-                    PixelTextInput { placeholder: "搜索"; height: 24px; }
+                    PixelTextInput { text <=> root.left-query; placeholder: "搜索"; height: 24px; }
                     for item[i] in root.left-items : Rectangle {
+                        visible: root.left-query == "" || item == root.left-query;
                         height: 24px;
                         background: root.left-index == i ? root.border : transparent;
                         Text { text: item; color: root.left-index == i ? #ffffff : root.text-color; font-size: 11px; vertical-alignment: center; }
@@ -165,8 +168,9 @@ export component PixelTransferPro inherits Rectangle {
                 border-width: 2px; border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
-                    PixelTextInput { placeholder: "搜索"; height: 24px; }
+                    PixelTextInput { text <=> root.right-query; placeholder: "搜索"; height: 24px; }
                     for item[i] in root.right-items : Rectangle {
+                        visible: root.right-query == "" || item == root.right-query;
                         height: 24px;
                         background: root.right-index == i ? root.border : transparent;
                         Text { text: item; color: root.right-index == i ? #ffffff : root.text-color; font-size: 11px; vertical-alignment: center; }
@@ -183,13 +187,18 @@ export component PixelKanbanPro inherits Rectangle {
     in property <[string]> columns: [];
     in property <[[string]]> cards: [];
     in-out property <int> active-column: 0;
+    in-out property <int> drag-column: -1;
+    in-out property <int> drag-card: -1;
+    in-out property <int> drop-column: -1;
     in property <bool> enabled: true;
     in property <color> face: PixelTheme.bg;
     in property <color> header-face: PixelTheme.panel;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
     callback card-clicked(column: int, card: int);
-    callback card-drop(column: int, card: int, target: int);
+    callback drag-start(column: int, card: int);
+    callback drag-over(column: int);
+    callback drop(column: int, card: int, target: int);
     height: 220px;
     opacity: root.enabled ? 1.0 : 0.5;
 
@@ -198,11 +207,11 @@ export component PixelKanbanPro inherits Rectangle {
         for col[j] in root.columns : Rectangle {
             width: root.width / root.columns.length;
             height: 100%;
-            background: root.shadow;
+            background: root.drop-column == j ? root.border : root.shadow;
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: 2px; border-color: root.border;
+                border-width: 2px; border-color: root.drop-column == j ? root.border : root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     Rectangle {
@@ -221,7 +230,17 @@ export component PixelKanbanPro inherits Rectangle {
                         card-ta := TouchArea {
                             pointer-event(ev) => {
                                 if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left {
-                                    root.card-drop(j, k, j);
+                                    root.drag-column = j;
+                                    root.drag-card = k;
+                                    root.drop-column = j;
+                                    root.drag-start(j, k);
+                                } else if ev.kind == PointerEventKind.move && root.drag-column >= 0 {
+                                    root.drop-column = Math.min(root.columns.length - 1, Math.max(0, Math.floor(self.mouse-x / Math.max(root.width / root.columns.length, 1px))));
+                                    root.drag-over(root.drop-column);
+                                } else if ev.kind == PointerEventKind.up && root.drag-column >= 0 {
+                                    root.drop(root.drag-column, root.drag-card, root.drop-column);
+                                    root.drag-column = -1;
+                                    root.drag-card = -1;
                                 }
                             }
                             clicked => { root.card-clicked(j, k); }
