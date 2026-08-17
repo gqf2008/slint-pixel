@@ -4397,7 +4397,7 @@ dependencies = [
 
 [[package]]
 name = "slint-pixel"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "image",
  "raw-window-handle",
@@ -4407,7 +4407,7 @@ dependencies = [
 
 [[package]]
 name = "slint-pixel-demo"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "slint",
  "slint-build",

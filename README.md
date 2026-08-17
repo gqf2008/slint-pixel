@@ -72,6 +72,65 @@
 | `PixelTheme` | 全局主题（bg/panel/hover/edge/shadow/text/dim/accent/danger 九色，改一处全部组件实时换肤） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
+
+### 扩展组件（ROUND 2）
+
+| 组件 | 说明 |
+| --- | --- |
+| `PixelSegmentedControl` | 分段控制器（互斥选项） |
+| `PixelSteps` | 步骤条（数据驱动，可点击） |
+| `PixelNumberInput` | 数字步进输入框 |
+| `PixelSelect` | 多选下拉 |
+| `PixelSwatchGroup` / `PixelColorPicker` | 色板组 / 简单取色器 |
+| `PixelContextMenu` | 右键/受控上下文菜单 |
+| `PixelRangeSlider` | 双滑块范围选择 |
+| `PixelTree` / `PixelTreeSelect` | 树 / 树形下拉 |
+| `PixelTransfer` | 双栏穿梭框 |
+| `PixelUpload` | 上传/文件选择视觉组件 |
+| `PixelTimeline` | 时间线 |
+| `PixelCarousel` | 轮播 |
+| `PixelSplitPane` | 可拖拽分栏 |
+| `PixelDatePicker` / `PixelTimePicker` | 日期 / 时间选择 |
+| `PixelCommandPalette` | 命令面板 |
+| `PixelKanban` | 看板 |
+| `PixelOnboarding` | 分步引导 |
+| `PixelImage` / `PixelImageViewer` | 像素图片 / 图片查看器 |
+| `PixelTagInput` | 标签输入 |
+| `PixelAutoComplete` | 自动补全 |
+| `PixelCascader` | 级联选择 |
+| `PixelDateRangePicker` | 日期范围选择 |
+| `PixelRating` | 评分 |
+| `PixelDescriptionList` | 描述列表 |
+| `PixelResult` | 结果页 |
+| `PixelAvatarGroup` / `PixelList` / `PixelVirtualList` | 头像组 / 列表 / 虚拟列表 |
+| `PixelTreeTable` / `PixelDataTable` | 树形表格 / 数据表格 |
+| `PixelSearchBox` / `PixelNotificationCenter` | 搜索框 / 通知中心 |
+| `PixelSubMenu` | 二级菜单 |
+| `PixelBackTop` / `PixelAffix` / `PixelSticky` | 回到顶部 / 固钉 / 吸顶 |
+| `PixelRichTextEditor` / `PixelCodeBlock` | 富文本编辑器 / 代码块 |
+| `PixelImageCrop` / `PixelQRCode` / `PixelWatermark` / `PixelCalendar` | 图片裁切 / 二维码 / 水印 / 日历 |
+
+### 高级组件（ROUND 3）
+
+| 组件 | 说明 |
+| --- | --- |
+| `PixelChart` / `PixelSparkline` | 柱状图 / 迷你趋势图 |
+| `PixelDataGrid` / `PixelProTable` | 专业数据表格 / Pro 表格 |
+| `PixelVirtualScroll` | 虚拟滚动列表 |
+| `PixelTreePro` | 树（levels + expanded 受控） |
+| `PixelFormValidator` | 表单校验器 |
+| `PixelScheduler` / `PixelCalendarAgenda` | 排期器 / 日历议程 |
+| `PixelWizard` / `PixelMultiStepForm` | 向导 / 多步表单 |
+| `PixelTransferPro` / `PixelKanbanPro` | 穿梭框 Pro / 看板 Pro |
+| `PixelCommandPalettePro` / `PixelColorPickerPro` | 命令面板 Pro / 取色器 Pro |
+| `PixelMention` / `PixelOTPInput` / `PixelSignature` | 提及 / 验证码 / 手写签名 |
+| `PixelDrawerPro` | 抽屉 Pro |
+| `PixelOrgChart` / `PixelFlowChart` / `PixelMindMap` | 组织架构 / 流程图 / 思维导图 |
+| `PixelGantt` / `PixelMap` / `PixelGeo` | 甘特图 / 地图 / 地理 |
+| `PixelVideoPlayer` / `PixelAudioPlayer` | 视频 / 音频播放器 |
+| `PixelPDFViewer` / `PixelPrintPreview` | PDF 预览 / 打印预览 |
+| `PixelBarcode` / `PixelCaptcha` | 条码 / 图形验证码 |
+
 > 主题：默认是 **纯白**（纯白底 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
 > **一键换肤**：所有组件默认色引用全局 `PixelTheme`（九色语义），改一处全部生效；
 > 画廊里点 **主题编辑器** 可调色/切预设，点 **一键生成样式** 直接产出 `.slint` 覆盖代码。
@@ -109,6 +168,15 @@ crates/
 │   ├── ui/pixel_extra.slint           # 表单/文本/输入/图标按钮/提示/气泡/确认
 │   ├── ui/pixel_tailwind.slint        # 对齐 Tailwind：警告/通知/加载/骨架/标签页/面包屑/分页/抽屉/头像/卡片/顶栏/空状态/统计
 │   ├── ui/pixel_painter_window.slint   # 成品窗口 PixelPainterWindow
+│   ├── ui/pixel_more.slint              # ROUND 2 扩展组件（分段/步骤/数字/选择/取色/上下文菜单）
+│   ├── ui/pixel_p1.slint                # ROUND 2 扩展组件（范围/树/穿梭/上传/时间线/轮播/分栏）
+│   ├── ui/pixel_p2.slint                # ROUND 2 扩展组件（日期/时间/命令/看板/引导）
+│   ├── ui/pixel_p3.slint                # ROUND 2 扩展组件（图片/标签/联想/级联/评分/描述/结果）
+│   ├── ui/pixel_p4.slint                # ROUND 2 扩展组件（列表/数据表格/搜索/通知/菜单/吸顶）
+│   ├── ui/pixel_p5.slint                # ROUND 2 扩展组件（富文本/代码/裁切/二维码/水印/日历）
+│   ├── ui/pixel_p6.slint                # ROUND 3 高级组件（图表/表格/虚拟滚动/树/校验/排期）
+│   ├── ui/pixel_p7.slint                # ROUND 3 高级组件（向导/穿梭/看板/命令/提及/签名）
+│   ├── ui/pixel_p8.slint                # ROUND 3 高级组件（架构/流程/甘特/地图/媒体/PDF/条码）
 │   └── src/
 │       ├── lib.rs                 # library_paths()、接线 trait/宏、install_painter() 等
 │       └── canvas.rs              # 画布数据、放大渲染、PNG 导出（含单元测试）
