@@ -20,6 +20,14 @@
 
 ![gallery](docs/gallery.png)
 
+## 最新特性（v0.2.1）
+
+- **暗色主题**：设置 `PixelTheme.scheme = "dark"` 即可一键切换全部组件配色；画廊里有“切到暗色 / 切回浅色”按钮。
+- **对话框可拖动**：`PixelDialog` 支持按住标题栏拖动。
+- **高级组件**：图表、专业表格、虚拟滚动、校验、排期、向导、看板、甘特、地图、媒体、PDF/条码/验证码等（详见组件清单）。
+- **交互增强**：`PixelTransferPro` 搜索、`PixelKanbanPro` 拖拽、`PixelDataGrid` 列宽拖拽。
+- **UI 组件测试**：新增 compile smoke 测试，覆盖 `@slint_pixel` 全部组件编译。
+
 ## 文档
 
 - **[组件 API 文档与示例](docs/COMPONENTS.md)**：全部组件属性、回调与用法示例。
