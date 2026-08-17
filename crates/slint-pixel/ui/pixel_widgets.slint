@@ -225,7 +225,7 @@ export component PixelTextInput inherits Rectangle {
                 color: root.text-color;
                 font-size: 13px;
                 single-line: true;
-                input-type: root.input-type == "password" ? password : text;
+                input-type: root.input-type == "password" ? InputType.password : InputType.text;
                 vertical-alignment: center;
                 accepted => { root.accepted(); }
                 edited => { root.edited(); }
