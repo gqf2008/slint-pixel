@@ -164,7 +164,7 @@ export component PixelButton inherits Rectangle {
     in property <color> shadow: PixelTheme.shadow;
     // variant 专用色（默认值随黑白主题）
     in property <color> primary-face: #ffffff;
-    in property <color> primary-text: PixelTheme.text;
+    in property <color> primary-text: #000000; // primary 面为白底，文字恒用深色，避免暗色主题白底白字
     in property <color> danger-face: PixelTheme.danger;
     in property <color> danger-text: #ffffff;
     in property <color> ghost-text: PixelTheme.text;
