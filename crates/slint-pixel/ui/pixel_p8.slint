@@ -108,7 +108,7 @@ export component PixelFlowChart inherits Rectangle {
 
 // ===== 思维导图 =====
 export component PixelMindMap inherits Rectangle {
-    in property <string> center: "SLINT";
+    in property <string> center-text: "SLINT";
     in property <[string]> branches: [];
     in property <color> face: PixelTheme.bg;
     in property <color> border: PixelTheme.edge;
@@ -127,7 +127,7 @@ export component PixelMindMap inherits Rectangle {
                 Rectangle {
                     width: 80px; height: 40px;
                     background: root.border;
-                    Text { text: root.center; color: #ffffff; font-size: 12px; font-weight: 700; }
+                    Text { text: root.center-text; color: #ffffff; font-size: 12px; font-weight: 700; horizontal-alignment: center; vertical-alignment: center; }
                 }
                 for b[i] in root.branches : Rectangle {
                     width: 90px; height: 36px;
@@ -135,7 +135,7 @@ export component PixelMindMap inherits Rectangle {
                     Rectangle {
                         x: 1px; y: 1px; width: 88px; height: 34px;
                         background: root.face;
-                        Text { text: b; color: PixelTheme.text; font-size: 10px; }
+                        Text { text: b; color: PixelTheme.text; font-size: 10px; horizontal-alignment: center; vertical-alignment: center; }
                     }
                     Text { text: "—"; color: PixelTheme.dim; }
                 }
@@ -317,7 +317,7 @@ export component PixelAudioPlayer inherits Rectangle {
                     }
                 }
                 VerticalLayout {
-                    Text { text: root.title; color: PixelTheme.text; font-size: 11px; }
+                    Text { text: root.title; color: PixelTheme.text; font-size: 11px; vertical-alignment: center; }
                     Rectangle {
                         height: 8px;
                         background: root.shadow;

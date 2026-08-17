@@ -141,7 +141,7 @@ export component PixelTransferPro inherits Rectangle {
                     for item[i] in root.left-items : Rectangle {
                         height: 24px;
                         background: root.left-index == i ? root.border : transparent;
-                        Text { text: item; color: root.left-index == i ? #ffffff : root.text-color; font-size: 11px; }
+                        Text { text: item; color: root.left-index == i ? #ffffff : root.text-color; font-size: 11px; vertical-alignment: center; }
                         left-ta := TouchArea { clicked => { root.left-index = i; } mouse-cursor: pointer; }
                     }
                 }
@@ -169,7 +169,7 @@ export component PixelTransferPro inherits Rectangle {
                     for item[i] in root.right-items : Rectangle {
                         height: 24px;
                         background: root.right-index == i ? root.border : transparent;
-                        Text { text: item; color: root.right-index == i ? #ffffff : root.text-color; font-size: 11px; }
+                        Text { text: item; color: root.right-index == i ? #ffffff : root.text-color; font-size: 11px; vertical-alignment: center; }
                         right-ta := TouchArea { clicked => { root.right-index = i; } mouse-cursor: pointer; }
                     }
                 }
