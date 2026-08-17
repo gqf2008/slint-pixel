@@ -1,0 +1,540 @@
+import { PixelTheme } from "pixel_theme.slint";
+import { PixelButton } from "pixel_painter_widget.slint";
+import { PixelDatePicker } from "pixel_p2.slint";
+
+// ============================================================================
+// slint-pixel · 第二轮补齐：媒体、组合输入、详情、结果
+// ============================================================================
+
+// ===== 通用像素图片 =====
+export component PixelImage inherits Rectangle {
+    in property <image> source;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback clicked;
+    width: 160px;
+    height: 120px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
+            background: #ffffff;
+            border-width: 2px; border-color: root.border;
+            Image {
+                source: root.source;
+                image-rendering: pixelated;
+                width: 100%; height: 100%;
+            }
+        }
+        ta := TouchArea {
+            clicked => { root.clicked(); }
+            mouse-cursor: pointer;
+        }
+    }
+}
+
+// ===== 图片查看器（缩放） =====
+export component PixelImageViewer inherits Rectangle {
+    in property <image> source;
+    in-out property <float> zoom: 1.0;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback zoom-changed(zoom: float);
+    width: 220px;
+    height: 180px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
+            background: #ffffff;
+            border-width: 2px; border-color: root.border;
+            clip: true;
+            Image {
+                source: root.source;
+                image-rendering: pixelated;
+                width: (parent.width - 8px) * root.zoom;
+                height: (parent.height - 8px) * root.zoom;
+            }
+        }
+        HorizontalLayout {
+            x: 4px; y: parent.height - 26px;
+            width: parent.width - 8px; height: 22px;
+            PixelButton { text: "-"; width: 24px; clicked => { root.zoom = Math.max(0.25, root.zoom - 0.25); root.zoom-changed(root.zoom); } }
+            PixelButton { text: "+"; width: 24px; clicked => { root.zoom = Math.min(4.0, root.zoom + 0.25); root.zoom-changed(root.zoom); } }
+            Text {
+                text: root.zoom;
+                color: PixelTheme.text;
+                font-size: 11px;
+                vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+    }
+}
+
+// ===== 标签输入 =====
+export component PixelTagInput inherits Rectangle {
+    in property <[string]> tags: [];
+    in-out property <string> input-text: "";
+    in property <string> placeholder: "输入后回车添加";
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    callback add-tag(tag: string);
+    callback remove-tag(index: int);
+    height: 60px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 4px; spacing: 4px;
+                HorizontalLayout {
+                    spacing: 4px;
+                    for tag[i] in root.tags : Rectangle {
+                        height: 20px;
+                        background: root.border;
+                        Text {
+                            text: tag;
+                            color: #ffffff;
+                            font-size: 11px;
+                            vertical-alignment: center;
+                        }
+                        tag-ta := TouchArea {
+                            clicked => { root.remove-tag(i); }
+                            mouse-cursor: pointer;
+                        }
+                    }
+                }
+                Rectangle {
+                    height: 22px;
+                    TextInput {
+                        text <=> root.input-text;
+                        width: 100%; height: 100%;
+                        accepted => {
+                            if root.input-text != "" {
+                                root.add-tag(root.input-text);
+                                root.input-text = "";
+                            }
+                        }
+                    }
+                    Text {
+                        visible: root.input-text == "";
+                        x: 6px; width: parent.width - 12px; height: parent.height;
+                        text: root.placeholder;
+                        color: root.dim;
+                        font-size: 12px;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 自动补全 =====
+export component PixelAutoComplete inherits Rectangle {
+    in property <[string]> options: [];
+    in-out property <string> query: "";
+    in-out property <bool> open: false;
+    in property <string> placeholder: "输入搜索";
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    callback selected(value: string);
+    height: 32px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    init => {
+        if root.open { popup.show(); }
+    }
+
+    Rectangle {
+        width: 100%; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: popup.is-open ? root.border-focus : root.border;
+            TextInput {
+                x: 6px; width: parent.width - 12px; height: parent.height;
+                text <=> root.query;
+                accepted => { root.open = true; popup.show(); }
+            }
+            Text {
+                visible: root.query == "";
+                x: 8px; width: parent.width - 16px; height: parent.height;
+                text: root.placeholder;
+                color: root.dim;
+                font-size: 12px;
+                vertical-alignment: center;
+            }
+        }
+    }
+
+    popup := PopupWindow {
+        x: 0px; y: root.height + 2px;
+        width: 200px;
+        height: root.options.length * 28px + 10px;
+        close-policy: close-on-click-outside;
+        Rectangle {
+            width: 100%; height: 100%;
+            background: root.shadow;
+            Rectangle {
+                x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
+                background: root.face;
+                border-width: 2px; border-color: root.border;
+                VerticalLayout {
+                    padding: 2px; spacing: 0px;
+                    for opt in root.options : Rectangle {
+                        visible: root.query == "" || opt == root.query;
+                        height: 28px;
+                        Text {
+                            x: 8px; width: parent.width - 16px; height: parent.height;
+                            text: opt;
+                            color: root.text-color;
+                            font-size: 12px;
+                            vertical-alignment: center;
+                        }
+                        ac-ta := TouchArea {
+                            clicked => {
+                                root.query = opt;
+                                root.open = false;
+                                root.selected(opt);
+                                popup.close();
+                            }
+                            mouse-cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 级联选择 =====
+export component PixelCascader inherits Rectangle {
+    in property <[string]> level1: [];
+    in property <[[string]]> level2: [];
+    in-out property <int> index1: -1;
+    in-out property <int> index2: -1;
+    in-out property <bool> open: false;
+    in property <string> placeholder: "请选择";
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> border-focus: PixelTheme.accent;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    callback selected(index1: int, index2: int);
+    height: 32px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    init => {
+        if root.open { popup.show(); }
+    }
+
+    property <string> label: root.index1 >= 0 && root.index1 < root.level1.length && root.index2 >= 0
+        ? root.level1[root.index1] + " / " + root.level2[root.index1][root.index2]
+        : root.placeholder;
+
+    Rectangle {
+        width: 100%; height: root.height;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px;
+            border-color: popup.is-open ? root.border-focus : root.border;
+            Text {
+                x: 8px; width: parent.width - 36px; height: parent.height;
+                text: root.label;
+                color: root.index1 >= 0 && root.index2 >= 0 ? root.text-color : root.dim;
+                font-size: 12px;
+                vertical-alignment: center;
+            }
+            Text {
+                x: parent.width - 26px; width: 20px; height: parent.height;
+                text: popup.is-open ? "▲" : "▼";
+                color: root.dim;
+                font-size: 11px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            ta := TouchArea {
+                enabled: root.enabled;
+                clicked => {
+                    root.open = !root.open;
+                    if root.open { popup.show(); } else { popup.close(); }
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+
+    popup := PopupWindow {
+        x: 0px; y: root.height + 2px;
+        width: 320px;
+        height: 160px;
+        close-policy: close-on-click-outside;
+        Rectangle {
+            width: 100%; height: 100%;
+            background: root.shadow;
+            Rectangle {
+                x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
+                background: root.face;
+                border-width: 2px; border-color: root.border;
+                HorizontalLayout {
+                    spacing: 2px;
+                    // 第一级
+                    VerticalLayout {
+                        width: 50%;
+                        for item1[i] in root.level1 : Rectangle {
+                            height: 28px;
+                            background: root.index1 == i ? root.border : transparent;
+                            Text {
+                                text: item1;
+                                color: root.index1 == i ? #ffffff : root.text-color;
+                                font-size: 12px;
+                                vertical-alignment: center;
+                            }
+                            c1-ta := TouchArea {
+                                clicked => {
+                                    root.index1 = i;
+                                    root.index2 = -1;
+                                }
+                                mouse-cursor: pointer;
+                            }
+                        }
+                    }
+                    // 第二级
+                    VerticalLayout {
+                        width: 50%;
+                        if root.index1 >= 0 && root.index1 < root.level2.length : VerticalLayout {
+                            for item2[j] in root.level2[root.index1] : Rectangle {
+                                height: 28px;
+                                background: root.index2 == j ? root.border : transparent;
+                                Text {
+                                    text: item2;
+                                    color: root.index2 == j ? #ffffff : root.text-color;
+                                    font-size: 12px;
+                                    vertical-alignment: center;
+                                }
+                                c2-ta := TouchArea {
+                                    clicked => {
+                                        root.index2 = j;
+                                        root.open = false;
+                                        root.selected(root.index1, root.index2);
+                                        popup.close();
+                                    }
+                                    mouse-cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 日期范围选择 =====
+export component PixelDateRangePicker inherits Rectangle {
+    in-out property <int> start-year: 2026;
+    in-out property <int> start-month: 1;
+    in-out property <int> start-day: 1;
+    in-out property <int> end-year: 2026;
+    in-out property <int> end-month: 1;
+    in-out property <int> end-day: 1;
+    in property <bool> enabled: true;
+    callback changed(start-year: int, start-month: int, start-day: int, end-year: int, end-month: int, end-day: int);
+    width: 500px;
+    height: 220px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    HorizontalLayout {
+        spacing: 6px;
+        PixelDatePicker {
+            width: 240px; height: 220px;
+            year: root.start-year; month: root.start-month; day: root.start-day;
+            enabled: root.enabled;
+            changed(y, m, d) => {
+                root.start-year = y; root.start-month = m; root.start-day = d;
+                root.changed(root.start-year, root.start-month, root.start-day, root.end-year, root.end-month, root.end-day);
+            }
+        }
+        PixelDatePicker {
+            width: 240px; height: 220px;
+            year: root.end-year; month: root.end-month; day: root.end-day;
+            enabled: root.enabled;
+            changed(y, m, d) => {
+                root.end-year = y; root.end-month = m; root.end-day = d;
+                root.changed(root.start-year, root.start-month, root.start-day, root.end-year, root.end-month, root.end-day);
+            }
+        }
+    }
+}
+
+// ===== 评分 =====
+export component PixelRating inherits Rectangle {
+    in-out property <int> value: 0;
+    in property <int> max: 5;
+    in property <bool> enabled: true;
+    in property <color> face: PixelTheme.hover;
+    in property <color> face-active: PixelTheme.accent;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    callback changed(value: int);
+    height: 26px;
+    opacity: root.enabled ? 1.0 : 0.5;
+
+    HorizontalLayout {
+        spacing: 4px;
+        for idx in root.max : Rectangle {
+            width: 24px; height: 24px;
+            background: root.shadow;
+            Rectangle {
+                x: rate-ta.pressed ? 1px : 0px;
+                y: rate-ta.pressed ? 1px : 0px;
+                width: 24px; height: 24px;
+                background: root.value >= idx + 1 ? root.face-active : root.face;
+                border-width: 2px;
+                border-color: root.value >= idx + 1 ? root.face-active : root.border;
+                Text {
+                    text: root.value >= idx + 1 ? "★" : "☆";
+                    color: root.value >= idx + 1 ? #ffffff : PixelTheme.text;
+                    font-size: 14px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+            rate-ta := TouchArea {
+                enabled: root.enabled;
+                clicked => {
+                    root.value = idx + 1;
+                    root.changed(root.value);
+                }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// ===== 描述列表 =====
+export component PixelDescriptionList inherits Rectangle {
+    in property <[string]> labels: [];
+    in property <[string]> values: [];
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    preferred-height: root.labels.length * 30px + 4px;
+    min-height: root.labels.length * 30px + 4px;
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 2px; spacing: 0px;
+                for label[i] in root.labels : Rectangle {
+                    height: 30px;
+                    HorizontalLayout {
+                        Text {
+                            width: 120px;
+                            text: label;
+                            color: root.dim;
+                            font-size: 12px;
+                            vertical-alignment: center;
+                        }
+                        Text {
+                            text: root.values.length > i ? root.values[i] : "";
+                            color: root.text-color;
+                            font-size: 12px;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===== 结果页 =====
+export component PixelResult inherits Rectangle {
+    in property <string> status: "success"; // success | warning | error | info
+    in property <string> title: "";
+    in property <string> description: "";
+    in property <string> action-text: "知道了";
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <color> shadow: PixelTheme.shadow;
+    in property <color> text-color: PixelTheme.text;
+    in property <color> dim: PixelTheme.dim;
+    callback action;
+    width: 280px;
+    height: 140px;
+
+    property <string> icon: root.status == "success" ? "✓"
+        : (root.status == "warning" ? "!" : (root.status == "error" ? "×" : "i"));
+
+    Rectangle {
+        width: 100%; height: 100%;
+        background: root.shadow;
+        Rectangle {
+            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            background: root.face;
+            border-width: 2px; border-color: root.border;
+            VerticalLayout {
+                padding: 12px; spacing: 6px;
+                Text {
+                    text: root.icon;
+                    color: root.status == "error" ? PixelTheme.danger : root.border;
+                    font-size: 30px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                }
+                Text {
+                    text: root.title;
+                    color: root.text-color;
+                    font-weight: 700;
+                    font-size: 14px;
+                    horizontal-alignment: center;
+                }
+                Text {
+                    text: root.description;
+                    color: root.dim;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                    horizontal-alignment: center;
+                }
+                PixelButton {
+                    text: root.action-text;
+                    clicked => { root.action(); }
+                }
+            }
+        }
+    }
+}
