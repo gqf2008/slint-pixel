@@ -62,8 +62,9 @@ component TitleButton inherits Rectangle {
 // ===== 像素标题栏（可复用：暴露 drag-start / minimize / toggle-maximize / close-window） =====
 export component PixelTitleBar inherits Rectangle {
     in property <string> title: "";
-    // 自定义 logo（ABB 等宿主传入应用图标）；空 = 内置黑块占位
-    in property <image> logo: "";
+    // 自定义 logo（ABB 等宿主传入应用图标）；has-logo=true 显示 logo，false 内置黑块
+    in property <image> logo;
+    in property <bool> has-logo: false;
     in property <color> bg: PixelTheme.bg;
     in property <color> text-color: PixelTheme.dim;
     in property <color> accent: PixelTheme.accent;
@@ -92,13 +93,13 @@ export component PixelTitleBar inherits Rectangle {
     // 左侧 logo：宿主传 logo image 则显示（26×26 缩放），否则内置黑块占位。
     // （visible 互斥代替 if/else 元素——slint 1.17 的 else 元素解析有坑）
     Image {
-        visible: root.logo.image-size.width > 0;
+        visible: root.has-logo;
         x: 6px; y: 4px; width: 26px; height: 26px;
         source: root.logo;
         image-fit: contain;
     }
     Rectangle {
-        visible: root.logo.image-size.width <= 0;
+        visible: !root.has-logo;
         x: 6px; y: 4px; width: 26px; height: 26px;
         background: root.divider;
         Rectangle {
