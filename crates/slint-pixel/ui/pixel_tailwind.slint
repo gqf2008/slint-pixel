@@ -215,7 +215,9 @@ export component PixelTabs inherits Rectangle {
         HorizontalLayout {
             spacing: 0px;
             for t[i] in root.tabs : Rectangle {
-                width: root.width / Math.max(root.tabs.length, 1);
+                // stretch 均分（原 root.width/len 在宿主 stretch 布局下与 root.width
+                // 绑定循环——stretch 均分是标准做法，无循环）
+                horizontal-stretch: 1;
                 height: 36px;
                 background: tab-ta.has-hover ? #f2f2f2 : transparent;
                 Text {
