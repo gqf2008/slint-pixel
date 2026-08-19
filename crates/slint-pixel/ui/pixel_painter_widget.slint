@@ -198,13 +198,17 @@ export component PixelButton inherits Rectangle {
 
     // 根即按钮面：无内部 width/height 依赖，保证布局里显式 width 生效
     height: root.eff-height;
+    // 自然宽（未显式 width 时生效）：文字自然宽 + 左右内边距。
+    // 缺这个时 preferred-width=0（子元素全是 width:100%，不贡献 preferred），
+    // HorizontalBox 里 stretch:0 → 宽度塌缩成 0：按钮不渲染、点不到（ABB 环境配置页实测）。
+    preferred-width: btn-text.preferred-width + 20px;
     horizontal-stretch: 0;
     vertical-stretch: 0;
     opacity: root.enabled ? 1.0 : 0.5;
     background: root.eff-face;
     border-width: root.variant == "primary" ? 3px : 2px;
     border-color: root.active ? root.border-active : root.border;
-    Text {
+    btn-text := Text {
         x: ta.pressed ? 2px : 0px;
         y: ta.pressed ? 2px : 0px;
         width: 100%; height: 100%;
