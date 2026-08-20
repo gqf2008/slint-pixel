@@ -73,6 +73,9 @@ export component PixelTitleBar inherits Rectangle {
     in property <color> btn-icon: PixelTheme.text;
     in property <color> close-hover: PixelTheme.danger;
     in property <color> divider: PixelTheme.shadow;
+    // 固定尺寸窗口（宿主设了显式 width/height、不可缩放）应隐藏最大化按钮——
+    // set_maximized 会与固定尺寸绑定冲突（最大化后被 size 拉回原尺寸，视觉是"缩小"）。
+    in property <bool> show-maximize: true;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -117,16 +120,17 @@ export component PixelTitleBar inherits Rectangle {
         font-size: 13px;
     }
 
-    // 右侧按钮（锚定右端：3×30 + 2×6 + 右内边距 4 = 106px）
+    // 右侧按钮（锚定右端：3×30 + 2×6 + 右内边距 4 = 106px；隐藏最大化 = 2×30 + 6 + 4 = 70px）
     HorizontalLayout {
-        x: parent.width - 106px;
-        y: 4px; width: 102px; height: 26px;
+        x: parent.width - (root.show-maximize ? 106px : 70px);
+        y: 4px; width: root.show-maximize ? 102px : 66px; height: 26px;
         spacing: 6px;
         TitleButton {
             kind: "min"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
             clicked => { root.minimize(); }
         }
         TitleButton {
+            visible: root.show-maximize;
             kind: "max"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
             clicked => { root.toggle-maximize(); }
         }
