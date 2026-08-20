@@ -90,7 +90,9 @@ export component PixelTitleBar inherits Rectangle {
                 root.drag-start();
             }
         }
-        double-clicked => { root.toggle-maximize(); }
+        // 双击最大化：固定尺寸窗口（show-maximize=false）不该有最大化语义——若仍触发
+        // set_maximized 会与尺寸绑定冲突（视觉是"缩小"）。随 show-maximize 一起禁用。
+        double-clicked => { if (root.show-maximize) { root.toggle-maximize(); } }
     }
 
     // 左侧 logo：宿主传 logo image 则显示（26×26 缩放），否则内置黑块占位。
@@ -120,11 +122,14 @@ export component PixelTitleBar inherits Rectangle {
         font-size: 13px;
     }
 
-    // 右侧按钮（锚定右端：3×30 + 2×6 + 右内边距 4 = 106px；隐藏最大化 = 2×30 + 6 + 4 = 70px）
+    // 右侧按钮：固定 106px 区（3×30 + 2×6 + 右边距 4）。max 隐藏时不改区宽——
+    // 布局里 visible:false 元素不占位，alignment: end 让剩余按钮靠右（min 与 close
+    // 紧挨着贴右缘），避免按算术改区宽后按钮被挤没（8-20 ABB 实测 close 消失）。
     HorizontalLayout {
-        x: parent.width - (root.show-maximize ? 106px : 70px);
-        y: 4px; width: root.show-maximize ? 102px : 66px; height: 26px;
+        x: parent.width - 106px;
+        y: 4px; width: 102px; height: 26px;
         spacing: 6px;
+        alignment: end;
         TitleButton {
             kind: "min"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
             clicked => { root.minimize(); }
