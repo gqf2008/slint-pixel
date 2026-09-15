@@ -4,6 +4,13 @@ version.workspace = true
 edition.workspace = true
 build = "build.rs"
 description = "可复用像素风 Slint 1.17 组件库：16×16 像素画板 widget + 像素标题栏（跨平台）"
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+documentation = "https://docs.rs/slint-pixel"
+keywords = ["slint", "ui", "pixel-art", "components", "widgets"]
+categories = ["gui"]
 
 [dependencies]
 slint = { version = "1.17", features = ["unstable-winit-030"] }

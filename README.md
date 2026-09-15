@@ -203,7 +203,19 @@ crates/
 
 ### 1. 添加依赖
 
-从 GitHub 直接引入（推荐）：
+从 crates.io 引入（推荐）：
+
+```toml
+[dependencies]
+slint = "1.17"
+slint-pixel = "0.2.1"
+
+[build-dependencies]
+slint-build = "1.17"
+slint-pixel = "0.2.1"
+```
+
+也可以直接从 GitHub 引入：
 
 ```toml
 [dependencies]

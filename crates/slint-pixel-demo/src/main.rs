@@ -210,7 +210,7 @@ fn place_window_before_show<C: slint::ComponentHandle, O: slint::ComponentHandle
     let x = owner_pos.x + (owner_size.width as i32 - child_width) / 2;
     let y = owner_pos.y + (owner_size.height as i32 - child_height) / 2;
 
-    let _ = child.window().set_position(slint::WindowPosition::Physical(
+    child.window().set_position(slint::WindowPosition::Physical(
         slint::PhysicalPosition::new(x, y),
     ));
 }
