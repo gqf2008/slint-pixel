@@ -22,8 +22,11 @@
 
 ![gallery](docs/gallery.png)
 
-## 最新特性（v0.2.2）
+## 最新特性（v0.2.3）
 
+- **可统一配置的控件描边**：`PixelTheme.border-width`（默认 2px）和
+  `PixelTheme.primary-border-width`（默认 3px）。宿主统一设成 1px 可消除卡片、按钮、
+  输入框之间“有粗有细”的混搭；不设置时保持原有像素风外观。
 - **Slint 1.18**：依赖升到 slint / slint-build 1.18.0（上游生成代码更瘦 —— 编译更快、二进制更小），
   并适配 1.18 的兼容性变更（`Flickable/ScrollView` 的 `viewport-*` 更名为 `content-*`）。
 - **可选原生窗口移动**：`PixelTitleBar { native-move: true; }`（成品窗口用
@@ -89,7 +92,7 @@
 | `PixelDivider` | 分隔线（可带文字） |
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
-| `PixelTheme` | 全局主题（bg/panel/hover/edge/shadow/text/dim/accent/danger 九色，改一处全部组件实时换肤） |
+| `PixelTheme` | 全局主题（bg/panel/hover/edge/shadow/text/dim/accent/danger 九色 + `border-width` / `primary-border-width` 两种描边宽度，改一处全部组件实时换肤） |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
 
@@ -216,11 +219,11 @@ crates/
 ```toml
 [dependencies]
 slint = "1.18"
-slint-pixel = "0.2.2"
+slint-pixel = "0.2.3"
 
 [build-dependencies]
 slint-build = "1.18"
-slint-pixel = "0.2.2"
+slint-pixel = "0.2.3"
 ```
 
 也可以直接从 GitHub 引入：
@@ -336,6 +339,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ```
 
 ### 自定义主题
+
+控件描边默认沿用 `PixelTheme.border-width = 2px` / `primary-border-width = 3px`；
+如果宿主希望全部控件统一为细边框，可在根组件初始化时设为 `1px`，避免卡片、按钮、
+输入框之间出现粗细混搭。
 
 所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /
 shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的

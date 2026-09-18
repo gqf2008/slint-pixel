@@ -515,7 +515,7 @@ export component PixelCard inherits Rectangle {
         x: 3px; y: 3px;
         width: parent.width - 6px; height: parent.height - 6px;
         background: root.bg;
-        border-width: root.bordered ? 2px : 0px;
+        border-width: root.bordered ? PixelTheme.border-width : 0px;
         border-color: root.border;
         VerticalLayout {
             padding: 14px;
