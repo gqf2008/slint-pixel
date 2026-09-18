@@ -10,11 +10,22 @@
   `walgit --config ~/.walgit/walgit.toml collab <ls|thread|pr|board|report>` 读、
   `walgit --config ~/.walgit/walgit.toml collab entry ...` 写（key 传 `~/.walgit/keys/<principal>.ed25519` **路径**）。
   只开分支不记账 = 没有协作记录。
-- **去中心化 CI**：任务随代码走，声明在 `.walgit/ci.toml`（被测提交里的那一版才算数）；
-  runner 客户端 `walgit ci run --repo . --remote origin --actor ci-runner --key ~/.walgit/keys/ci-runner.ed25519`
-  认领执行并回传签名结果，用 `walgit ci status` / `collab board` 查看。看板泳道由 `.walgit/board.toml` 声明。
+- **去中心化 CI**：任务随代码走，声明在 `.walgit/ci.toml`（被测提交里的那一版才算数）。runner 为每个任务在
+  `$TMPDIR` 下建临时 worktree 执行，所以**必须把 `TMPDIR` 与 `CARGO_TARGET_DIR` 钉到数据卷**，否则检出与
+  cargo 产物会落 228 GiB 内盘（链接期 `errno 28`）：
+
+  ```sh
+  TMPDIR=/Volumes/DataExt/tmp \
+  CARGO_TARGET_DIR=/Volumes/DataExt/tmp/slint-pixel-ci-target \
+    walgit ci run --repo /Volumes/DataExt/GitHub/slint-pixel --remote origin \
+      --actor ci-runner --key ~/.walgit/keys/ci-runner.ed25519
+  ```
+
+  加 `--once` 跑单轮。结果用 `walgit ci status` / `collab board` 查看；看板泳道由 `.walgit/board.toml` 声明。
+  `--key` 传密钥**路径**，不要传密钥内容。
 - **发版流程**：`cargo publish`（crates.io）→ 打 tag → `git push origin vX.Y.Z` → 镜像循环同步 GitHub →
-  `gh release create vX.Y.Z --generate-notes`。发布前本地门禁必须全绿。
+  `gh release create vX.Y.Z --generate-notes`（`gh release create` 是唯一一次对 GitHub 的写操作，镜像本身只读）。
+  发布前本地门禁必须全绿。
 - **worktree**：开发用 `<repo>/.worktrees/<name>`（已 gitignore），合并后当轮清理。
 
 ## Project Structure & Module Organization

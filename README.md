@@ -6,7 +6,8 @@
 基于 **Rust + Slint 1.17** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
-- **仓库**：<https://github.com/gqf2008/slint-pixel>
+- **主仓**：自托管 walgit（本机 `http://127.0.0.1:8081/gqf2008/slint-pixel.git`，remote `origin`）
+- **镜像 / 发版**：<https://github.com/gqf2008/slint-pixel>（remote `github`，由 walgit 自动单向同步，只读）
 - **许可证**：MIT
 
 - **可复用**：所有组件通过 `@slint_pixel` 导入到任意 Slint 项目（见下方组件清单）。

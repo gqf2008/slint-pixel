@@ -3,7 +3,9 @@
 # 与 AGENTS.md 的本地门禁保持一致：fmt / clippy / test。
 version = 1
 
-claim_ttl = "20m"
+# claim_ttl 必须 ≥ 同名任务的最长 timeout：runner 只在认领时写一次 TTL，没有续期机制，
+# TTL 过期就等于允许别的 runner 重认领同一任务（结果收敛正确，但白烧算力）。
+claim_ttl = "30m"
 timeout = "30m"
 max_attempts = 1
 
