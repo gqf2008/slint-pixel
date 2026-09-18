@@ -485,7 +485,8 @@ export component PixelScrollPanel inherits Rectangle {
         x: 2px; y: 2px;
         width: parent.width - 4px;
         height: parent.height - 4px;
-        viewport-y: -root.initial-scroll-y;
+        // Slint 1.18 起 Flickable/ScrollView 的 viewport-* 更名为 content-*（旧名仅作 deprecated 别名）
+        content-y: -root.initial-scroll-y;
         // 内容直接放入 ScrollView（fluent 同款：ScrollView 自身包 Flickable）
         @children
     }

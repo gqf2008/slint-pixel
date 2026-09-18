@@ -6,11 +6,11 @@ build = "build.rs"
 description = "slint-pixel 演示：作为下游消费者，用 @slint_pixel 库组装像素风窗口"
 
 [dependencies]
-slint = { version = "1.17", features = ["unstable-winit-030"] }
+slint = { version = "1.18", features = ["unstable-winit-030"] }
 slint-pixel = { path = "../slint-pixel" }
 
 [build-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"
 slint-pixel = { path = "../slint-pixel" }
 
 [lints]

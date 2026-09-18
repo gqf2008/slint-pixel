@@ -510,7 +510,7 @@ export component PixelCarousel inherits Rectangle {
 }
 
 // ===== 可拖拽分栏 =====
-// Slint 1.17 不向用户组件暴露 component-factory/ComponentContainer，
+// Slint 1.18 仍不向用户组件暴露 component-factory/ComponentContainer，
 // 因此这里提供轻量分栏：左侧放 @children，右侧为可选的标题/说明文字。
 export component PixelSplitPane inherits Rectangle {
     in-out property <float> ratio: 0.5;

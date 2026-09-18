@@ -3,7 +3,7 @@ name = "slint-pixel"
 version.workspace = true
 edition.workspace = true
 build = "build.rs"
-description = "可复用像素风 Slint 1.17 组件库：16×16 像素画板 widget + 像素标题栏（跨平台）"
+description = "可复用像素风 Slint 1.18 组件库：16×16 像素画板 widget + 像素标题栏（跨平台）"
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
@@ -13,14 +13,14 @@ keywords = ["slint", "ui", "pixel-art", "components", "widgets"]
 categories = ["gui"]
 
 [dependencies]
-slint = { version = "1.17", features = ["unstable-winit-030"] }
+slint = { version = "1.18", features = ["unstable-winit-030"] }
 image = { version = "0.25", default-features = false, features = ["png"] }
 raw-window-handle = "0.6"
 
 [build-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"
 
 [lints]
 workspace = true
 [dev-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"

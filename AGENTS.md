@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-`slint-pixel` is a Rust + Slint 1.17 reusable pixel-art component library with a demo consumer.
+`slint-pixel` is a Rust + Slint 1.18 reusable pixel-art component library with a demo consumer.
 
 ## 协同拓扑（walgit 主仓 + GitHub 镜像）
 

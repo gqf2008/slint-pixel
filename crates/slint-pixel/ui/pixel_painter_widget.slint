@@ -1,6 +1,6 @@
 import { PixelTheme } from "pixel_theme.slint";
 // ============================================================================
-// slint-pixel · 可复用像素风组件库（Slint 1.17）
+// slint-pixel · 可复用像素风组件库（Slint 1.18）
 //
 // 本文件是 `@slint_pixel` 库的唯一入口（file-based library）。
 // 其他 Slint 项目可在 build.rs 注册 library path 后，用
@@ -96,7 +96,7 @@ export component PixelTitleBar inherits Rectangle {
     }
 
     // 左侧 logo：宿主传 logo image 则显示（26×26 缩放），否则内置黑块占位。
-    // （visible 互斥代替 if/else 元素——slint 1.17 的 else 元素解析有坑）
+    // （visible 互斥代替 if/else 元素——Slint 1.17 实测 else 元素解析有坑；1.18 升级未复测，写法保留）
     Image {
         visible: root.has-logo;
         x: 6px; y: 4px; width: 26px; height: 26px;

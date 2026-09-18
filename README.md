@@ -1,9 +1,9 @@
 # slint-pixel
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Slint](https://img.shields.io/badge/Slint-1.17-blue.svg)](https://slint.dev)
+[![Slint](https://img.shields.io/badge/Slint-1.18-blue.svg)](https://slint.dev)
 
-基于 **Rust + Slint 1.17** 的像素风可复用组件库：16×16 像素画板 widget、
+基于 **Rust + Slint 1.18** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
 - **主仓**：自托管 walgit（本机 `http://127.0.0.1:8081/gqf2008/slint-pixel.git`，remote `origin`）
@@ -208,11 +208,11 @@ crates/
 
 ```toml
 [dependencies]
-slint = "1.17"
+slint = "1.18"
 slint-pixel = "0.2.1"
 
 [build-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"
 slint-pixel = "0.2.1"
 ```
 
@@ -220,11 +220,11 @@ slint-pixel = "0.2.1"
 
 ```toml
 [dependencies]
-slint = "1.17"
+slint = "1.18"
 slint-pixel = { git = "https://github.com/gqf2008/slint-pixel" }
 
 [build-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"
 slint-pixel = { git = "https://github.com/gqf2008/slint-pixel" }
 ```
 
@@ -232,11 +232,11 @@ slint-pixel = { git = "https://github.com/gqf2008/slint-pixel" }
 
 ```toml
 [dependencies]
-slint = "1.17"
+slint = "1.18"
 slint-pixel = { path = "path/to/slint-pixel/crates/slint-pixel" }
 
 [build-dependencies]
-slint-build = "1.17"
+slint-build = "1.18"
 slint-pixel = { path = "path/to/slint-pixel/crates/slint-pixel" }
 ```
 
@@ -351,7 +351,7 @@ shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` �
 
 ## 说明
 
-- Slint 在 crates.io 上最新稳定版为 1.17（无 0.17 版本线）。
+- Slint 在 crates.io 上最新稳定版为 1.18（无 0.18 版本线）。
 - Linux Wayland 下合成器可能强制保留系统装饰，`no-frame` 效果取决于合成器。
 - 高 DPI（150%）显示器下按物理像素渲染，画布仍保持像素锐利。
 - `install_painter` 导出的 PNG 保存在进程当前工作目录。

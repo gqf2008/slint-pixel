@@ -1,4 +1,4 @@
-//! slint-pixel：可复用像素风 Slint 1.17 组件库。
+//! slint-pixel：可复用像素风 Slint 1.18 组件库。
 //!
 //! 提供：
 //! - Slint 组件（经 `@slint_pixel` 导入，嵌入你自己的 `.slint`）：
@@ -17,11 +17,11 @@
 //!
 //! ```toml
 //! [dependencies]
-//! slint = "1.17"
+//! slint = "1.18"
 //! slint-pixel = { path = "../slint-pixel" }
 //!
 //! [build-dependencies]
-//! slint-build = "1.17"
+//! slint-build = "1.18"
 //! slint-pixel = { path = "../slint-pixel" }
 //! ```
 //!
