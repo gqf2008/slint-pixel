@@ -1,2 +1,4 @@
 /target
 pixel-art-*.png
+# 工程内 git worktree 容器（见 RULE_worktree必须建在当前工程子目录下）
+.worktrees/

@@ -1,0 +1,41 @@
+# walgit 看板定义：卡片是 refs/collab/* 里的线程，本文件只声明确定性投影。
+# 移动卡片 = 追加一条签名 `status` 条目，不是改这个文件。
+# 规范：walgit 仓库 docs/D1_COLLAB_DESIGN.md §8。
+
+version = 1
+
+[sort]
+by = "ts"
+direction = "desc"
+
+[[column]]
+name = "open"
+status = "open"
+
+[[column]]
+name = "in-progress"
+status = "in-progress"
+
+[[column]]
+name = "needs-review"
+status = "needs-review"
+
+[[column]]
+name = "blocked"
+status = "blocked"
+
+[[column]]
+name = "needs-human"
+status = "needs-human"
+
+[[column]]
+name = "merged"
+status = "merged"
+
+[[column]]
+name = "closed"
+status = "closed"
+
+# 兜底列：任何本文件还没声明过的状态都不至于从看板上消失。
+[[column]]
+name = "other"

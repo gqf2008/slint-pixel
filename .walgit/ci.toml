@@ -1,0 +1,29 @@
+# walgit 去中心化 CI 任务声明（规范见 walgit 仓库 docs/D1_CI_PROTOCOL.md）。
+# 任务随代码走：被测提交里存在本文件才触发，runner 客户端认领执行并回传签名结果。
+# 与 AGENTS.md 的本地门禁保持一致：fmt / clippy / test。
+version = 1
+
+claim_ttl = "20m"
+timeout = "30m"
+max_attempts = 1
+
+[[task]]
+name = "fmt"
+refs = ["refs/heads/*", "refs/tags/v*"]
+command = "cargo fmt --all -- --check"
+timeout = "10m"
+env_allow = ["CARGO_HOME", "RUSTUP_HOME", "CARGO_TARGET_DIR"]
+
+[[task]]
+name = "clippy"
+refs = ["refs/heads/*", "refs/tags/v*"]
+command = "cargo clippy --workspace --all-targets -- -D warnings"
+timeout = "30m"
+env_allow = ["CARGO_HOME", "RUSTUP_HOME", "RUSTFLAGS", "CARGO_TARGET_DIR"]
+
+[[task]]
+name = "test"
+refs = ["refs/heads/*", "refs/tags/v*"]
+command = "cargo test --workspace"
+timeout = "30m"
+env_allow = ["CARGO_HOME", "RUSTUP_HOME", "RUSTFLAGS", "CARGO_TARGET_DIR"]

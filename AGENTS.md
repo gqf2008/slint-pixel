@@ -2,6 +2,21 @@
 
 `slint-pixel` is a Rust + Slint 1.17 reusable pixel-art component library with a demo consumer.
 
+## 协同拓扑（walgit 主仓 + GitHub 镜像）
+
+- **主仓 / 权威事实源**：walgit `http://127.0.0.1:8081/gqf2008/slint-pixel.git`，remote 名 `origin`。日常分支、提交、合并、tag 一律推 `origin`。
+- **镜像 + 发布**：GitHub `https://github.com/gqf2008/slint-pixel.git`，remote 名 `github`，只读镜像；由 `~/.walgit/sync-to-github.sh` 的常驻循环（screen `walgit-sync-github`，60s）自动同步 heads+tags。不要手推 GitHub，不要双推（双事实源会漂移）。
+- **协作记账**：issue / PR / 评审 / 合并 / CI 都是 `refs/collab/*` 上的签名条目，用
+  `walgit --config ~/.walgit/walgit.toml collab <ls|thread|pr|board|report>` 读、
+  `walgit --config ~/.walgit/walgit.toml collab entry ...` 写（key 传 `~/.walgit/keys/<principal>.ed25519` **路径**）。
+  只开分支不记账 = 没有协作记录。
+- **去中心化 CI**：任务随代码走，声明在 `.walgit/ci.toml`（被测提交里的那一版才算数）；
+  runner 客户端 `walgit ci run --repo . --remote origin --actor ci-runner --key ~/.walgit/keys/ci-runner.ed25519`
+  认领执行并回传签名结果，用 `walgit ci status` / `collab board` 查看。看板泳道由 `.walgit/board.toml` 声明。
+- **发版流程**：`cargo publish`（crates.io）→ 打 tag → `git push origin vX.Y.Z` → 镜像循环同步 GitHub →
+  `gh release create vX.Y.Z --generate-notes`。发布前本地门禁必须全绿。
+- **worktree**：开发用 `<repo>/.worktrees/<name>`（已 gitignore），合并后当轮清理。
+
 ## Project Structure & Module Organization
 - `crates/slint-pixel/` — reusable library. `src/lib.rs` exposes wiring macros and `install_*` helpers; `src/canvas.rs` owns canvas data, rendering, PNG export, and unit tests; `ui/*.slint` holds the Slint components (`lib.slint` is the `@slint_pixel` entry point); `build.rs` compiles the UI and registers the library path.
 - `crates/slint-pixel-demo/` — binary demo and gallery. `ui/*.slint` assembles windows; `src/main.rs` wires the components.
@@ -15,7 +30,8 @@
 - `cargo fmt --all -- --check` / `cargo fmt --all` — check or apply formatting.
 - `cargo clippy --workspace --all-targets -- -D warnings` — lint gate.
 
-No CI workflow is configured; run the fmt, clippy, and test commands locally before submitting changes.
+GitHub Actions 已不用于日常门禁；fmt / clippy / test 由 walgit 去中心化 CI（`.walgit/ci.toml`）执行，
+提交前在本地跑同一组命令（注意 `CARGO_TARGET_DIR` 指到数据卷 `/Volumes/DataExt/tmp`）。
 
 ## Coding Style & Naming Conventions
 - Rust 2021 edition, standard 4-space indentation via `cargo fmt`; there is no custom `rustfmt.toml`.
@@ -30,7 +46,7 @@ No CI workflow is configured; run the fmt, clippy, and test commands locally bef
 
 ## Commit & Pull Request Guidelines
 - Use Conventional Commits: `feat(scope):`, `fix(scope):`, `docs(scope):`, `refactor(scope):`, `style(scope):`, `test(scope):`, `perf(scope):`, `chore(scope):`. Keep one logical change per commit.
-- Open PRs against `master`, link the issue, and include a summary, verification commands, and screenshots for UI changes.
+- Open PRs against `master` on the walgit remote, link the collab issue thread (`cc-ai-*`), and include a summary, verification commands, and screenshots for UI changes.
 
 ## Security & Configuration Tips
 - Do not commit `target/` or exported `pixel-art-*.png`; both are gitignored.
