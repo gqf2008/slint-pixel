@@ -4001,7 +4001,7 @@ dependencies = [
 
 [[package]]
 name = "slint-pixel"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "i-slint-backend-testing",
  "image",
@@ -4012,7 +4012,7 @@ dependencies = [
 
 [[package]]
 name = "slint-pixel-demo"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "slint",
  "slint-build",

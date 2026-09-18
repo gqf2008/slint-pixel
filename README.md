@@ -22,13 +22,19 @@
 
 ![gallery](docs/gallery.png)
 
-## 最新特性（v0.2.1）
+## 最新特性（v0.2.2）
 
+- **Slint 1.18**：依赖升到 slint / slint-build 1.18.0（上游生成代码更瘦 —— 编译更快、二进制更小），
+  并适配 1.18 的兼容性变更（`Flickable/ScrollView` 的 `viewport-*` 更名为 `content-*`）。
+- **可选原生窗口移动**：`PixelTitleBar { native-move: true; }`（成品窗口用
+  `PixelPainterWindow::set_native_move(true)`）改用 Slint 1.18 的 `WindowMoveArea` 把拖动交给平台——
+  拖动超过阈值才启动、单击不移动，宿主无需 Rust 接线。**默认关闭**，既有宿主行为不变。
 - **暗色主题**：设置 `PixelTheme.scheme = "dark"` 即可一键切换全部组件配色；画廊里有“切到暗色 / 切回浅色”按钮。
 - **对话框可拖动**：`PixelDialog` 支持按住标题栏拖动。
 - **高级组件**：图表、专业表格、虚拟滚动、校验、排期、向导、看板、甘特、地图、媒体、PDF/条码/验证码等（详见组件清单）。
 - **交互增强**：`PixelTransferPro` 搜索、`PixelKanbanPro` 拖拽、`PixelDataGrid` 列宽拖拽。
-- **UI 组件测试**：新增 compile smoke 测试，覆盖 `@slint_pixel` 全部组件编译。
+- **UI 组件测试**：compile smoke 覆盖 `@slint_pixel` 全部组件编译，另有标题栏拖动的契约/行为守卫
+  （`cargo test -p slint-pixel`）。
 
 ## 文档
 
@@ -210,11 +216,11 @@ crates/
 ```toml
 [dependencies]
 slint = "1.18"
-slint-pixel = "0.2.1"
+slint-pixel = "0.2.2"
 
 [build-dependencies]
 slint-build = "1.18"
-slint-pixel = "0.2.1"
+slint-pixel = "0.2.2"
 ```
 
 也可以直接从 GitHub 引入：
