@@ -356,8 +356,16 @@ PixelTitleBar {
 开启后**不要**再依赖 `drag-start`：同一次拖动若既走平台移动又调用 `drag_window()`，会重复发起。
 
 平台支持：winit 后端（Windows / macOS / X11 / Wayland）与 Qt；其它后端下该元素是空操作。
-真机检查（无头环境断言不了"窗口真的跟着鼠标动"）：`cargo run` 起 demo，按住标题栏拖动看窗口是否移动，
-且单击标题栏不应移动窗口。
+
+实现细节：`WindowMoveArea` 必须**包住**标题栏内容（容器形态）。同层兄弟形态下，全宽 `TouchArea` 的鼠标抓取会
+抢先中止同层派发，表现为"配了 `native-move` 但窗口纹丝不动"；仓库内用结构守卫 + 事件路由断言防回归
+（`cargo test -p slint-pixel --test title_bar_native_move`）。副作用：从右侧按钮上按下并拖过阈值也会移动窗口
+（上游容器语义）。
+
+验证口径：`start_window_move()` 只在 Slint 内核内部 trait 上，公开 API 断言不了"平台移动是否被发起"
+（testing backend 的计数入口仅在 `internal` feature 下公开），该项在本仓由审查方用本地补丁版 backend 实测
+（兄弟形态计数 0 / 容器形态拖动 40px 后计数 1）。建议升级后跑一次真机检查：`cargo run` 起 demo，
+按住标题栏拖动看窗口是否移动，且单击标题栏不应移动窗口。
 
 ## 操作（画板）
 

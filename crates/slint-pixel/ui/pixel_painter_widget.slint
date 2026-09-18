@@ -88,73 +88,76 @@ export component PixelTitleBar inherits Rectangle {
     height: 34px;
     background: root.bg;
 
-    // 平台级窗口移动层：声明在最底层；WindowMoveArea 在子元素之前过滤事件，故按钮仍优先接收点击。
+    // 平台级窗口移动：必须**包住**标题栏内容。上游语义是同层兄弟按声明逆序派发、任一子树 grab 即中止：
+    // 把 WindowMoveArea 放成与全宽 TouchArea 同层的兄弟时，TouchArea 的 GrabMouse 会先吃掉按下，
+    // WindowMoveArea 永远不会被武装 —— 表现为 native-move 配了却纹丝不动。
+    // 容器写法下子元素绝对坐标不用改（WindowMoveArea 撑满父元素）。
     WindowMoveArea {
         enabled: root.native-move;
-    }
 
-    // 底层：全宽拖拽热区（声明在最前位于底层，按钮在上层优先接收点击）
-    TouchArea {
-        pointer-event(ev) => {
-            if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left {
-                // native-move 打开时移动由 WindowMoveArea 负责，这里不再回调（否则同一次拖动会发起两遍）。
-                if (!root.native-move) {
-                    root.drag-start();
+        // 底层：全宽拖拽热区（声明在最前位于底层，按钮在上层优先接收点击）
+        TouchArea {
+            pointer-event(ev) => {
+                if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left {
+                    // native-move 打开时移动由 WindowMoveArea 负责，这里不再回调（否则同一次拖动会发起两遍）。
+                    if (!root.native-move) {
+                        root.drag-start();
+                    }
                 }
             }
+            // 双击最大化：固定尺寸窗口（show-maximize=false）不该有最大化语义——若仍触发
+            // set_maximized 会与尺寸绑定冲突（视觉是"缩小"）。随 show-maximize 一起禁用。
+            double-clicked => { if (root.show-maximize) { root.toggle-maximize(); } }
         }
-        // 双击最大化：固定尺寸窗口（show-maximize=false）不该有最大化语义——若仍触发
-        // set_maximized 会与尺寸绑定冲突（视觉是"缩小"）。随 show-maximize 一起禁用。
-        double-clicked => { if (root.show-maximize) { root.toggle-maximize(); } }
-    }
 
-    // 左侧 logo：宿主传 logo image 则显示（26×26 缩放），否则内置黑块占位。
-    // （visible 互斥代替 if/else 元素——Slint 1.17 实测 else 元素解析有坑；1.18 升级未复测，写法保留）
-    Image {
-        visible: root.has-logo;
-        x: 6px; y: 4px; width: 26px; height: 26px;
-        source: root.logo;
-        image-fit: contain;
-    }
-    Rectangle {
-        visible: !root.has-logo;
-        x: 6px; y: 4px; width: 26px; height: 26px;
-        background: root.divider;
+        // 左侧 logo：宿主传 logo image 则显示（26×26 缩放），否则内置黑块占位。
+        // （visible 互斥代替 if/else 元素——Slint 1.17 实测 else 元素解析有坑；1.18 升级未复测，写法保留）
+        Image {
+            visible: root.has-logo;
+            x: 6px; y: 4px; width: 26px; height: 26px;
+            source: root.logo;
+            image-fit: contain;
+        }
         Rectangle {
-            x: 2px; y: 2px; width: 22px; height: 22px;
-            background: root.accent;
+            visible: !root.has-logo;
+            x: 6px; y: 4px; width: 26px; height: 26px;
+            background: root.divider;
+            Rectangle {
+                x: 2px; y: 2px; width: 22px; height: 22px;
+                background: root.accent;
+            }
         }
-    }
-    // 标题文字
-    Text {
-        x: 40px; y: 0px; height: 34px;
-        text: root.title;
-        color: root.text-color;
-        vertical-alignment: center;
-        font-weight: 700;
-        font-size: 13px;
-    }
+        // 标题文字
+        Text {
+            x: 40px; y: 0px; height: 34px;
+            text: root.title;
+            color: root.text-color;
+            vertical-alignment: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
 
-    // 右侧按钮：固定 106px 区（3×30 + 2×6 + 右边距 4）。max 隐藏时不改区宽——
-    // 布局里 visible:false 元素不占位，alignment: end 让剩余按钮靠右（min 与 close
-    // 紧挨着贴右缘），避免按算术改区宽后按钮被挤没（8-20 ABB 实测 close 消失）。
-    HorizontalLayout {
-        x: parent.width - 106px;
-        y: 4px; width: 102px; height: 26px;
-        spacing: 6px;
-        alignment: end;
-        TitleButton {
-            kind: "min"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
-            clicked => { root.minimize(); }
-        }
-        TitleButton {
-            visible: root.show-maximize;
-            kind: "max"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
-            clicked => { root.toggle-maximize(); }
-        }
-        TitleButton {
-            kind: "close"; face: root.btn-face; hover-face: root.close-hover; icon: root.btn-icon;
-            clicked => { root.close-window(); }
+        // 右侧按钮：固定 106px 区（3×30 + 2×6 + 右边距 4）。max 隐藏时不改区宽——
+        // 布局里 visible:false 元素不占位，alignment: end 让剩余按钮靠右（min 与 close
+        // 紧挨着贴右缘），避免按算术改区宽后按钮被挤没（8-20 ABB 实测 close 消失）。
+        HorizontalLayout {
+            x: parent.width - 106px;
+            y: 4px; width: 102px; height: 26px;
+            spacing: 6px;
+            alignment: end;
+            TitleButton {
+                kind: "min"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
+                clicked => { root.minimize(); }
+            }
+            TitleButton {
+                visible: root.show-maximize;
+                kind: "max"; face: root.btn-face; hover-face: root.btn-hover; icon: root.btn-icon;
+                clicked => { root.toggle-maximize(); }
+            }
+            TitleButton {
+                kind: "close"; face: root.btn-face; hover-face: root.close-hover; icon: root.btn-icon;
+                clicked => { root.close-window(); }
+            }
         }
     }
 }
