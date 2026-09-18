@@ -7,12 +7,15 @@
 //!    而 `drag-start` 守卫同样不触发，所以"事件路由"类断言锁不住它（2026-09-18 独立审查实测）。
 //! 2. **事件路由断言**（`native_move_contract`）：默认路径按下标题栏仍触发 `drag-start`；
 //!    `native-move: true` 时不再触发；右侧关闭按钮在两种模式下都可用。
+//! 3. **行为守卫**（`native_move_arms_platform_move_intercept`）：`native-move: true` 时"两次越阈值
+//!    拖拽"不该被算作双击（越阈值会被平台移动层 `Intercept`，给已 grab 的子 `TouchArea` 发 `Exit`），
+//!    而"原地双击"仍应最大化。结构守卫只能盯住源码形状，这一条盯住**行为**：退回同层兄弟形态时它会报红。
 //!
-//! 已知验证缺口：**"平台移动真的被发起"无法用公开 API 断言**——`WindowAdapter` 的公开 trait
-//! 没有 `start_window_move()`（它在内核内部 trait 上，靠 `internal(InternalToken)` 暴露），
-//! Slint testing backend 的 `window_move_request_count()` 又只在 `internal` feature 下公开，
-//! 而该 feature 在 crates.io 包里编不过。该点由审查方用本地补丁版 testing backend 实测
-//! （同级形态计数 0；容器形态拖动 40px 后计数 1），仓库内以结构守卫防回归。
+//! 验证强度说明：**"平台移动真的被发起"本身没有公开 API 可直接断言**——`WindowAdapter` 的公开
+//! trait 没有 `start_window_move()`（它在内核内部 trait 上，靠 `internal(InternalToken)` 暴露），
+//! 而 Slint testing backend 的 `window_move_request_count()` 需要 `internal` feature，该 feature
+//! 在 crates.io 包里编不过。因此仓库内用上面第 3 条行为守卫做**间接**证据（拖拽不再算双击），
+//! 直接计数由审查方用本地补丁版 testing backend 实测（同层兄弟形态恒为 0；容器形态拖动后为 1）。
 
 use std::cell::Cell;
 use std::rc::Rc;
@@ -109,6 +112,55 @@ fn native_move_contract() {
         "关回 native-move 后应恢复 drag-start 回调"
     );
     release(&ui, BAR_X, BAR_Y);
+}
+
+/// 行为守卫：`native-move: true` 时平台移动必须**真的被武装**。
+///
+/// 判据是公开 API 可观测的：越过阈值时 `WindowMoveArea` 返回 `Intercept`，会给已持有 grab 的子
+/// `TouchArea` 发 `Exit`，于是"按下→拖过阈值→松开"不再被计入点击序列。同一段手势在两种模式下结果
+/// 不同（2026-09-18 实测）：`native-move: false` 时子 `TouchArea` 一直持有 grab，两次拖拽累计成一次
+/// 双击 → `toggle-maximize` 触发 1 次；`native-move: true` 时 0 次。退回同层兄弟形态（或删掉
+/// `WindowMoveArea`）会变回 1 次，本测试即报红——这正是结构守卫盯不住的回归。
+#[test]
+fn native_move_arms_platform_move_intercept() {
+    i_slint_backend_testing::init_no_event_loop();
+
+    let ui = slint_pixel::PixelPainterWindow::new().expect("构造 PixelPainterWindow 实例");
+    ui.window()
+        .set_size(WindowSize::Logical(LogicalSize::new(720.0, 560.0)));
+
+    let toggles = Rc::new(Cell::new(0usize));
+    {
+        let counter = toggles.clone();
+        ui.on_toggle_maximize(move || counter.set(counter.get() + 1));
+    }
+
+    ui.set_native_move(true);
+
+    // 两次"按下 → 拖过阈值（8px）→ 松开"
+    for _ in 0..2 {
+        press(&ui, BAR_X, BAR_Y);
+        moved(&ui, BAR_X + 60.0, BAR_Y);
+        moved(&ui, BAR_X + 220.0, BAR_Y);
+        release(&ui, BAR_X + 220.0, BAR_Y);
+    }
+    assert_eq!(
+        toggles.get(),
+        0,
+        "native-move 打开时，越阈值的拖拽应被平台移动层拦下（子 TouchArea 收到 Exit），不该算作双击；\
+         这里变成 1 说明 WindowMoveArea 没有被武装（例如退回同层兄弟形态）"
+    );
+
+    // 对照：原地双击仍应最大化（双击语义没有被这次改动改坏）
+    for _ in 0..2 {
+        press(&ui, BAR_X, BAR_Y);
+        release(&ui, BAR_X, BAR_Y);
+    }
+    assert_eq!(
+        toggles.get(),
+        1,
+        "native-move 打开时，原地双击标题栏仍应触发 toggle-maximize"
+    );
 }
 
 /// 结构守卫：`PixelTitleBar` 里 `WindowMoveArea` 必须**包住** `TouchArea`（祖先而非同层兄弟）。
