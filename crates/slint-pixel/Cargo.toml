@@ -24,3 +24,4 @@ slint-build = "1.18"
 workspace = true
 [dev-dependencies]
 slint-build = "1.18"
+i-slint-backend-testing = "1.18"

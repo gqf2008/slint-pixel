@@ -13,7 +13,8 @@
 - **可复用**：所有组件通过 `@slint_pixel` 导入到任意 Slint 项目（见下方组件清单）。
 - **一键接线**：Rust 侧调用 `install_painter()` / `install_title_bar_controls()`，
   画/擦、清空、导出 PNG、窗口控制全部自动接好。
-- **自绘像素标题栏**：无系统边框（`no-frame`），可拖拽、双击最大化，右侧最小化/最大化/关闭。
+- **自绘像素标题栏**：无系统边框（`no-frame`），可拖拽、双击最大化，右侧最小化/最大化/关闭；
+  Slint 1.18 起可设 `native-move: true` 把移动交给平台（拖动超过阈值才启动、单击不移动，宿主无需 Rust 接线）。
 - **像素画布**：16×16 网格，格子放大 24px 显示（棋盘格 + 网格线 + 立体像素块）。
 - **PICO-8 色板**：16 色，点击选色；画笔 1×1 / 2×2 / 3×3；左键画、右键擦除。
 - **导出**：一键保存为网格分辨率 PNG（透明背景），存到当前工作目录。
@@ -40,7 +41,7 @@
 | 组件 | 说明 |
 | --- | --- |
 | `PixelPainter` | 16×16 像素画板 widget（画布 + 色板 + 工具栏 + 状态栏） |
-| `PixelTitleBar` | 可拖拽像素标题栏（拖拽/最小化/最大化/关闭回调） |
+| `PixelTitleBar` | 可拖拽像素标题栏（拖拽/最小化/最大化/关闭回调；可选 `native-move` 由平台负责移动） |
 | `PixelButton` | 像素按压按钮（按下下沉效果） |
 | `PixelCheckBox` | 复选框（像素勾选 + 文字标签） |
 | `PixelSwitch` | 开关（滑块滑动动画） |
@@ -333,6 +334,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /
 shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的
 `track / fill / thumb / border / shadow` 等），宿主可在 `.slint` 里直接覆盖。
+
+### 窗口拖动的两种接法（`native-move`）
+
+默认（`native-move: false`）沿用老契约：标题栏按下 → `drag-start` 回调 → 宿主调用
+`install_title_bar_controls()`（内部是 winit `drag_window()`）。**已有宿主不用改**。
+
+宿主只写 `.slint`、不想接 Rust 时，可以把移动交给 Slint 1.18 的 `WindowMoveArea`：
+
+```slint
+PixelTitleBar {
+    title: "我的像素窗口";
+    native-move: true;   // 移动由平台完成（拖动超过阈值才启动、单击不移动）；此时 drag-start 不再触发
+    minimize => { root.minimize(); }
+    toggle-maximize => { root.toggle-maximize(); }
+    close-window => { root.close-window(); }
+}
+```
+
+成品窗口同样支持 `ui.set_native_move(true)`（`PixelPainterWindow` 已直通该属性）。
+开启后**不要**再依赖 `drag-start`：同一次拖动若既走平台移动又调用 `drag_window()`，会重复发起。
+
+平台支持：winit 后端（Windows / macOS / X11 / Wayland）与 Qt；其它后端下该元素是空操作。
+真机检查（无头环境断言不了"窗口真的跟着鼠标动"）：`cargo run` 起 demo，按住标题栏拖动看窗口是否移动，
+且单击标题栏不应移动窗口。
 
 ## 操作（画板）
 

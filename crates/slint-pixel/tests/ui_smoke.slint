@@ -36,6 +36,11 @@ export component UiSmoke inherits Window {
     preferred-width: 900px;
     preferred-height: 900px;
     VerticalLayout {
+        // native-move（Slint 1.18 WindowMoveArea）编译覆盖：默认 false 的老路径与新路径都要能编
+        HorizontalLayout {
+            PixelTitleBar { title: "native-move off（默认，走 drag-start 回调）"; }
+            PixelTitleBar { title: "native-move on（平台移动）"; native-move: true; }
+        }
         PixelButton { text: "ok"; }
         PixelCheckBox { checked: true; }
         PixelSwitch { checked: true; }

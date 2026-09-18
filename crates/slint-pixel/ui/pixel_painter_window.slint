@@ -31,6 +31,9 @@ export component PixelPainterWindow inherits Window {
     in-out property <int> brush-size: 1;
     in-out property <image> canvas-image;
     in-out property <string> status-text: "就绪 —— 左键画 / 右键擦除，点击色板选色";
+    // 直通 PixelTitleBar.native-move（Slint 1.18 WindowMoveArea）：默认 false = 旧的 drag-start 接线路径；
+    // 置 true 则窗口移动由平台完成，宿主不需要 install_title_bar_controls 的拖拽接线。
+    in property <bool> native-move: false;
 
     // ---------- 转发回调（Rust 侧用 install_painter / install_title_bar_controls 接线） ----------
     callback paint(length, length, bool);
@@ -49,6 +52,7 @@ export component PixelPainterWindow inherits Window {
         // ===== 自绘像素标题栏 =====
         PixelTitleBar {
             title: "SLINT PIXEL PAINTER · 像素画板";
+            native-move: root.native-move;
             bg: c-bg;
             text-color: c-dim;
             accent: c-highlight;

@@ -76,6 +76,11 @@ export component PixelTitleBar inherits Rectangle {
     // 固定尺寸窗口（宿主设了显式 width/height、不可缩放）应隐藏最大化按钮——
     // set_maximized 会与固定尺寸绑定冲突（最大化后被 size 拉回原尺寸，视觉是"缩小"）。
     in property <bool> show-maximize: true;
+    // Slint 1.18 起可用 WindowMoveArea：窗口移动交给平台完成——拖动超过阈值才启动、单击不移动、
+    // 子元素（按钮/双击最大化）仍可交互，而且宿主**不需要**写 Rust 接线。
+    // 默认 false = 完全保持旧行为（走 drag-start 回调，宿主自行 drag_window）；
+    // 置 true 后 drag-start 不再触发，避免与平台移动重复发起同一次拖动。
+    in property <bool> native-move: false;
     callback drag-start;
     callback minimize;
     callback toggle-maximize;
@@ -83,11 +88,19 @@ export component PixelTitleBar inherits Rectangle {
     height: 34px;
     background: root.bg;
 
+    // 平台级窗口移动层：声明在最底层；WindowMoveArea 在子元素之前过滤事件，故按钮仍优先接收点击。
+    WindowMoveArea {
+        enabled: root.native-move;
+    }
+
     // 底层：全宽拖拽热区（声明在最前位于底层，按钮在上层优先接收点击）
     TouchArea {
         pointer-event(ev) => {
             if ev.kind == PointerEventKind.down && ev.button == PointerEventButton.left {
-                root.drag-start();
+                // native-move 打开时移动由 WindowMoveArea 负责，这里不再回调（否则同一次拖动会发起两遍）。
+                if (!root.native-move) {
+                    root.drag-start();
+                }
             }
         }
         // 双击最大化：固定尺寸窗口（show-maximize=false）不该有最大化语义——若仍触发

@@ -4003,6 +4003,7 @@ dependencies = [
 name = "slint-pixel"
 version = "0.2.1"
 dependencies = [
+ "i-slint-backend-testing",
  "image",
  "raw-window-handle",
  "slint",
