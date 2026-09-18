@@ -24,7 +24,7 @@ export component PixelOrgChart inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for n[i] in root.names : Rectangle {
@@ -77,7 +77,7 @@ export component PixelFlowChart inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             HorizontalLayout {
                 for nd[i] in root.nodes : Rectangle {
                     width: 80px; height: 40px;
@@ -121,7 +121,7 @@ export component PixelMindMap inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             HorizontalLayout {
                 spacing: 8px;
                 Rectangle {
@@ -163,7 +163,7 @@ export component PixelGantt inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for t[i] in root.tasks : Rectangle {
@@ -210,7 +210,7 @@ export component PixelMap inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             for m[i] in root.markers : Rectangle {
                 x: (parent.width - 12px) * root.marker-x[i] / 100.0;
                 y: (parent.height - 12px) * root.marker-y[i] / 100.0;
@@ -251,7 +251,7 @@ export component PixelVideoPlayer inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Image {
                 source: root.poster;
                 width: 100%; height: 100%;
@@ -305,7 +305,7 @@ export component PixelAudioPlayer inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             HorizontalLayout {
                 spacing: 6px;
                 PixelButton {
@@ -350,7 +350,7 @@ export component PixelPDFViewer inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 8px; spacing: 8px;
                 Text { text: root.file-name; color: PixelTheme.text; font-size: 11px; }
@@ -386,7 +386,7 @@ export component PixelPrintPreview inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 8px; spacing: 6px;
                 Text { text: root.title; color: PixelTheme.text; font-size: 12px; }
@@ -436,7 +436,7 @@ export component PixelCaptcha inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 text: root.code;
                 color: PixelTheme.text;

@@ -36,7 +36,7 @@ component PixelPopupList inherits Rectangle {
             x: 2px; y: 2px;
             width: parent.width - 4px; height: parent.height - 4px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.edge;
             VerticalLayout {
                 padding: 2px;
@@ -99,7 +99,7 @@ export component PixelRadioButton inherits Rectangle {
                 y: ta.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.checked ? root.face-checked : root.border;
                 Rectangle {
                     visible: root.checked;
@@ -153,7 +153,7 @@ export component PixelRadioGroup inherits Rectangle {
                         y: item-ta.pressed ? 1px : 0px;
                         width: 22px; height: 22px;
                         background: root.index == i ? root.face-checked : root.face;
-                        border-width: 2px;
+                        border-width: PixelTheme.border-width;
                         border-color: root.index == i ? root.face-checked : root.border;
                         Rectangle {
                             visible: root.index == i;
@@ -218,7 +218,7 @@ export component PixelComboBox inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
                 x: 8px; y: 0px;
@@ -312,7 +312,7 @@ export component PixelMenu inherits Rectangle {
             y: ta.pressed ? 1px : 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             Text {
                 x: 10px; y: 0px;
@@ -403,7 +403,7 @@ export component PixelTableView inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             clip: true;
 
@@ -477,7 +477,7 @@ export component PixelScrollPanel inherits Rectangle {
     in property <color> edge: PixelTheme.edge;
     in property <length> initial-scroll-y: 0px;
     background: root.panel-bg;
-    border-width: 2px;
+    border-width: PixelTheme.border-width;
     border-color: root.edge;
     clip: true;
 
@@ -518,7 +518,7 @@ export component PixelCollapsible inherits VerticalLayout {
             y: header-ta.pressed ? 1px : 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: header-ta.has-hover ? root.header-hover : root.header-face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.edge;
             Text {
                 x: 10px; y: 0px;
@@ -555,7 +555,7 @@ export component PixelCollapsible inherits VerticalLayout {
         width: 100%;
         height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
         background: root.body;
-        border-width: 2px;
+        border-width: PixelTheme.border-width;
         border-color: root.edge;
         clip: true;
         animate height { duration: 160ms; easing: ease-out; }
@@ -598,7 +598,7 @@ export component PixelAccordion inherits VerticalLayout {
                 y: panel-ta.pressed ? 1px : 0px;
                 width: parent.width - 2px; height: parent.height - 2px;
                 background: panel-ta.has-hover ? root.header-hover : root.header-face;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.edge;
                 Text {
                     x: 10px; y: 0px;
@@ -635,7 +635,7 @@ export component PixelAccordion inherits VerticalLayout {
             width: 100%;
             height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
             background: root.body;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.edge;
             clip: true;
             animate height { duration: 160ms; easing: ease-out; }

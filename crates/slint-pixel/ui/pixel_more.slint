@@ -42,7 +42,7 @@ export component PixelSegmentedControl inherits Rectangle {
                 height: parent.height - 2px;
                 background: root.index == i ? root.face-active
                     : (seg-ta.has-hover ? root.face : PixelTheme.bg);
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.index == i ? root.face-active : root.border;
                 Text {
                     width: 100%; height: 100%;
@@ -98,7 +98,7 @@ export component PixelSteps inherits Rectangle {
                     width: 24px; height: 24px;
                     background: i < root.current ? root.face-done
                         : (i == root.current ? root.face-current : root.face);
-                    border-width: 2px;
+                    border-width: PixelTheme.border-width;
                     border-color: i <= root.current ? root.face-done : root.border;
                     Text {
                         text: i + 1;
@@ -159,7 +159,7 @@ export component PixelNumberInput inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             HorizontalLayout {
                 spacing: 2px;
@@ -224,7 +224,7 @@ export component PixelSelect inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
                 x: 8px; width: parent.width - 36px; height: parent.height;
@@ -264,7 +264,7 @@ export component PixelSelect inherits Rectangle {
                 x: 2px; y: 2px;
                 width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.border;
                 VerticalLayout {
                     padding: 4px;
@@ -284,7 +284,7 @@ export component PixelSelect inherits Rectangle {
                                 Rectangle {
                                     x: 1px; y: 1px; width: 16px; height: 16px;
                                     background: root.value == opt || root.value == "*" ? root.border-focus : root.face;
-                                    border-width: 2px;
+                                    border-width: PixelTheme.border-width;
                                     border-color: root.border;
                                     Rectangle {
                                         visible: root.value == opt || root.value == "*";
@@ -337,7 +337,7 @@ export component PixelSwatchGroup inherits Rectangle {
                 width: root.swatch-size + 2px;
                 height: root.swatch-size + 2px;
                 background: c;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.index == i ? root.shadow : PixelTheme.bg;
                 swatch-ta := TouchArea {
                     clicked => {
@@ -413,7 +413,7 @@ export component PixelContextMenu inherits Rectangle {
                 x: 2px; y: 2px;
                 width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.border;
                 VerticalLayout {
                     padding: 2px;

@@ -14,4 +14,8 @@ export global PixelTheme {
     in-out property <color> dim: root.scheme == "dark" ? #9a9a9a : #525252;     // 次要文字
     in-out property <color> accent: root.scheme == "dark" ? #f2f2f2 : #000000;  // 强调 / 激活 / 选中底色
     in-out property <color> danger: root.scheme == "dark" ? #ff4d6d : #ff004d;  // 危险
+    // 控件描边宽度。默认保持 2px 像素风；宿主可统一调成 1px 获得更细、一致的控件边框。
+    in-out property <length> border-width: 2px;
+    // primary 按钮描边。默认 3px；宿主通常与普通按钮统一，避免“有粗有细”。
+    in-out property <length> primary-border-width: 3px;
 }

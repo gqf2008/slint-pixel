@@ -63,7 +63,7 @@ export component PixelRangeSlider inherits Rectangle {
             y: lower-ta.pressed ? 1px : 0px;
             width: 18px; height: 26px;
             background: root.thumb;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
         }
     }
@@ -95,7 +95,7 @@ export component PixelRangeSlider inherits Rectangle {
             y: upper-ta.pressed ? 1px : 0px;
             width: 18px; height: 26px;
             background: root.thumb;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
         }
     }
@@ -152,7 +152,7 @@ export component PixelTree inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px;
@@ -212,7 +212,7 @@ export component PixelTreeSelect inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
                 x: 8px; width: parent.width - 36px; height: parent.height;
@@ -286,7 +286,7 @@ export component PixelTransfer inherits Rectangle {
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: 2px; border-color: root.border;
+                border-width: PixelTheme.border-width; border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     for item[i] in root.left-items : Rectangle {
@@ -319,7 +319,7 @@ export component PixelTransfer inherits Rectangle {
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: 2px; border-color: root.border;
+                border-width: PixelTheme.border-width; border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     for item[i] in root.right-items : Rectangle {
@@ -362,7 +362,7 @@ export component PixelUpload inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: upload-ta.has-hover ? root.face-hover : root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 y: 20px; width: 100%; height: 20px;
                 text: root.file-name == "" ? root.hint : root.file-name;
@@ -415,7 +415,7 @@ export component PixelTimeline inherits Rectangle {
                 Rectangle {
                     x: 1px; y: 1px; width: 10px; height: 10px;
                     background: root.current == i ? root.dot : root.face;
-                    border-width: 2px; border-color: root.line;
+                    border-width: PixelTheme.border-width; border-color: root.line;
                 }
             }
             // 连接线
@@ -464,7 +464,7 @@ export component PixelCarousel inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 x: 40px; y: 10px; width: parent.width - 80px; height: 60px;
                 text: root.current-text;
@@ -501,7 +501,7 @@ export component PixelCarousel inherits Rectangle {
                     Rectangle {
                         x: 1px; y: 1px; width: 8px; height: 8px;
                         background: root.index == i ? root.border : root.face;
-                        border-width: 2px; border-color: root.border;
+                        border-width: PixelTheme.border-width; border-color: root.border;
                     }
                 }
             }
@@ -533,7 +533,7 @@ export component PixelSplitPane inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             @children
         }
     }
@@ -571,7 +571,7 @@ export component PixelSplitPane inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 y: 12px; width: 100%; height: 20px;
                 text: root.right-title;

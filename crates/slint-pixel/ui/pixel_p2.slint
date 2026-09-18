@@ -40,7 +40,7 @@ export component PixelDatePicker inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 4px; spacing: 2px;
                 // 月份切换
@@ -194,7 +194,7 @@ export component PixelCommandPalette inherits Rectangle {
             Rectangle {
                 x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: 2px; border-color: root.border;
+                border-width: PixelTheme.border-width; border-color: root.border;
                 VerticalLayout {
                     padding: 6px; spacing: 4px;
                     Rectangle {
@@ -267,7 +267,7 @@ export component PixelKanban inherits Rectangle {
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: 2px; border-color: root.border;
+                border-width: PixelTheme.border-width; border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     Rectangle {
@@ -333,7 +333,7 @@ export component PixelOnboarding inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 10px; spacing: 6px;
                 Text {

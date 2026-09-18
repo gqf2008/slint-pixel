@@ -23,7 +23,7 @@ export component PixelAvatarGroup inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 text: name;
                 color: root.text-color;
@@ -57,7 +57,7 @@ export component PixelList inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -107,7 +107,7 @@ export component PixelVirtualList inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -163,7 +163,7 @@ export component PixelTreeTable inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             clip: true;
             // 表头
             Rectangle {
@@ -238,7 +238,7 @@ export component PixelDataTable inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             clip: true;
             Rectangle {
                 height: root.header-height;
@@ -314,7 +314,7 @@ export component PixelSearchBox inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: search-input.has-focus ? root.border-focus : root.border;
             search-input := TextInput {
                 x: 6px; width: parent.width - 40px; height: parent.height;
@@ -361,7 +361,7 @@ export component PixelNotificationCenter inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for msg[i] in root.messages : Rectangle {
@@ -441,7 +441,7 @@ export component PixelSubMenu inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             VerticalLayout {
                 for child[j] in root.children[root.parent-index] : Rectangle {
                     height: 28px;
@@ -478,7 +478,7 @@ export component PixelBackTop inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px; border-color: root.border;
+            border-width: PixelTheme.border-width; border-color: root.border;
             Text {
                 text: "↑";
                 color: PixelTheme.text;

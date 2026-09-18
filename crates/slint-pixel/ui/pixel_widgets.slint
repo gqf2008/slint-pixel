@@ -43,7 +43,7 @@ export component PixelCheckBox inherits Rectangle {
                 y: box.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.checked ? root.face-checked : root.border;
                 // 选中标记与单选框 PixelRadioButton 保持一致：白色实心方块
                 Rectangle {
@@ -91,14 +91,14 @@ export component PixelSwitch inherits Rectangle {
             x: 0px; y: 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.checked ? root.track-on : root.track-off;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             Rectangle {
                 x: root.checked ? parent.width - 22px : 2px;
                 y: 2px; width: 18px; height: 18px;
                 // 滑块恒白，只有轨道随状态变色（开=accent 黑，关=浅灰），语义更直观
                 background: root.thumb;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.border;
                 animate x { duration: 120ms; easing: ease-out; }
             }
@@ -162,7 +162,7 @@ export component PixelSlider inherits Rectangle {
             y: knob.pressed ? 1px : 0px;
             width: 18px; height: 24px;
             background: root.thumb;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
         }
     }
@@ -215,7 +215,7 @@ export component PixelTextInput inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {
                 enabled: root.enabled;
@@ -263,7 +263,7 @@ export component PixelProgressBar inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.track;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             Rectangle {
                 x: 2px; y: 2px;
@@ -304,7 +304,7 @@ export component PixelBadge inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 2px;
+            border-width: PixelTheme.border-width;
             border-color: root.border;
             Text {
                 text: root.text;
@@ -328,7 +328,7 @@ export component PixelPanel inherits Rectangle {
     in property <color> title-color: PixelTheme.text;
 
     background: root.panel;
-    border-width: 2px;
+    border-width: PixelTheme.border-width;
     border-color: root.edge;
     VerticalLayout {
         padding: 10px;
@@ -383,7 +383,7 @@ export component PixelDialog inherits Rectangle {
                 x: 4px; y: 4px;
                 width: parent.width - 8px; height: parent.height - 8px;
                 background: root.panel;
-                border-width: 2px;
+                border-width: PixelTheme.border-width;
                 border-color: root.edge;
                 VerticalLayout {
                     padding: 14px;
