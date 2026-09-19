@@ -247,8 +247,8 @@ export component PixelButton inherits Rectangle {
     // 底部高亮条（active 标记）
     Rectangle {
         visible: root.active;
-        x: 3px; y: parent.height - 4px;
-        width: parent.width - 6px; height: 3px;
+        x: 3px; y: parent.height - PixelTheme.primary-border-width - 1px;
+        width: parent.width - 6px; height: PixelTheme.primary-border-width;
         background: root.border-active;
     }
     ta := TouchArea {
@@ -376,7 +376,7 @@ export component PixelPainter inherits Rectangle {
                             }
                         }
 
-                        Rectangle { height: 2px; background: root.edge; }
+                        Rectangle { height: PixelTheme.border-width; background: root.edge; }
 
                         Text { text: "画笔尺寸 BRUSH"; color: root.text-color; font-weight: 800; letter-spacing: 1px; }
                         HorizontalLayout {
@@ -427,7 +427,7 @@ export component PixelPainter inherits Rectangle {
                             }
                         }
 
-                        Rectangle { height: 2px; background: root.edge; }
+                        Rectangle { height: PixelTheme.border-width; background: root.edge; }
 
                         HorizontalLayout {
                             spacing: 8px;

@@ -423,7 +423,7 @@ export component PixelContextMenu inherits Rectangle {
                         background: item == "---" ? transparent : (item-ta.has-hover ? root.face-hover : transparent);
                         Rectangle {
                             visible: item == "---";
-                            x: 6px; y: 13px; width: parent.width - 12px; height: 2px;
+                            x: 6px; y: 13px; width: parent.width - 12px; height: PixelTheme.border-width;
                             background: root.border;
                         }
                         Text {

@@ -340,7 +340,7 @@ export component PixelPanel inherits Rectangle {
             font-size: 12px;
             letter-spacing: 1px;
         }
-        Rectangle { height: 2px; background: root.edge; }
+        Rectangle { height: PixelTheme.border-width; background: root.edge; }
         @children
     }
 }
@@ -443,7 +443,7 @@ export component PixelDialog inherits Rectangle {
                             }
                         }
                     }
-                    Rectangle { height: 2px; background: root.edge; }
+                    Rectangle { height: PixelTheme.border-width; background: root.edge; }
                     @children
                     HorizontalLayout {
                         alignment: end;

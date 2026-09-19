@@ -208,8 +208,8 @@ export component PixelTabs inherits Rectangle {
         background: root.face;
 
         Rectangle {
-            x: 0px; y: parent.height - 2px;
-            width: parent.width; height: 2px;
+            x: 0px; y: parent.height - PixelTheme.border-width;
+            width: parent.width; height: PixelTheme.border-width;
             background: root.edge;
         }
         HorizontalLayout {
@@ -231,8 +231,8 @@ export component PixelTabs inherits Rectangle {
                 // 激活下划线
                 Rectangle {
                     visible: root.active == i;
-                    x: 6px; y: 32px;
-                    width: parent.width - 12px; height: 3px;
+                    x: 6px; y: parent.height - PixelTheme.primary-border-width;
+                    width: parent.width - 12px; height: PixelTheme.primary-border-width;
                     background: root.active-bar;
                 }
                 tab-ta := TouchArea {
@@ -404,7 +404,7 @@ export component PixelDrawer inherits Rectangle {
 
             Rectangle {
                 x: 0px; y: 0px;
-                width: 2px; height: parent.height;
+                width: PixelTheme.border-width; height: parent.height;
                 background: root.edge;
             }
             VerticalLayout {
@@ -420,7 +420,7 @@ export component PixelDrawer inherits Rectangle {
                     }
                     Rectangle { height: 0px; }
                 }
-                Rectangle { height: 2px; background: root.edge; }
+                Rectangle { height: PixelTheme.border-width; background: root.edge; }
                 @children
             }
         }
@@ -550,8 +550,8 @@ export component PixelNavbar inherits Rectangle {
         background: root.bg;
         border-width: 0px;
         Rectangle {
-            x: 0px; y: parent.height - 2px;
-            width: parent.width; height: 2px;
+            x: 0px; y: parent.height - PixelTheme.border-width;
+            width: parent.width; height: PixelTheme.border-width;
             background: root.edge;
         }
         HorizontalLayout {
@@ -575,8 +575,8 @@ export component PixelNavbar inherits Rectangle {
                 }
                 Rectangle {
                     visible: root.active == i;
-                    x: 0px; y: 44px;
-                    width: parent.width; height: 3px;
+                    x: 0px; y: parent.height - PixelTheme.primary-border-width;
+                    width: parent.width; height: PixelTheme.primary-border-width;
                     background: root.text-active;
                 }
                 nav-ta := TouchArea {
@@ -643,7 +643,7 @@ export component PixelDivider inherits Rectangle {
         spacing: 8px;
         Rectangle {
             visible: root.text != "";
-            width: 12px; height: 2px;
+            width: 12px; height: PixelTheme.border-width;
             background: root.edge;
         }
         Text {
@@ -655,15 +655,15 @@ export component PixelDivider inherits Rectangle {
         }
         Rectangle {
             visible: root.text == "";
-            width: 100%; height: 2px;
+            width: 100%; height: PixelTheme.border-width;
             background: root.edge;
-            y: (parent.height - 2px) / 2;
+            y: (parent.height - PixelTheme.border-width) / 2;
         }
         Rectangle {
             visible: root.text != "";
-            width: 100%; height: 2px;
+            width: 100%; height: PixelTheme.border-width;
             background: root.edge;
-            y: (parent.height - 2px) / 2;
+            y: (parent.height - PixelTheme.border-width) / 2;
         }
     }
 }
