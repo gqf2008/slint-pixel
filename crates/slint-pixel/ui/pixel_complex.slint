@@ -46,7 +46,7 @@ component PixelPopupList inherits Rectangle {
                     Rectangle {
                         visible: item == "---";
                         x: 6px; y: 13px;
-                        width: parent.width - 12px; height: PixelTheme.border-width;
+                        width: parent.width - 12px; height: 2px;
                         background: root.edge;
                     }
                     Rectangle {
@@ -413,8 +413,8 @@ export component PixelTableView inherits Rectangle {
                 width: parent.width; height: root.header-height;
                 background: root.header-face;
                 Rectangle {
-                    x: 0px; y: parent.height - PixelTheme.border-width;
-                    width: parent.width; height: PixelTheme.border-width;
+                    x: 0px; y: parent.height - 2px;
+                    width: parent.width; height: 2px;
                     background: root.border;
                 }
                 HorizontalLayout {
@@ -682,8 +682,8 @@ export component PixelSidebar inherits Rectangle {
             width: root.sidebar-width;
             background: root.sidebar-bg;
             Rectangle {
-                x: parent.width - PixelTheme.border-width; y: 0px;
-                width: PixelTheme.border-width; height: parent.height;
+                x: parent.width - 2px; y: 0px;
+                width: 2px; height: parent.height;
                 background: root.shadow;
             }
             VerticalLayout {
@@ -696,7 +696,7 @@ export component PixelSidebar inherits Rectangle {
                     letter-spacing: 1px;
                     font-size: 13px;
                 }
-                Rectangle { height: PixelTheme.border-width; background: root.edge; }
+                Rectangle { height: 2px; background: root.edge; }
                 for item[i] in root.items : Rectangle {
                     height: 32px;
                     background: root.active == i ? root.item-active
@@ -705,7 +705,7 @@ export component PixelSidebar inherits Rectangle {
                     Rectangle {
                         visible: root.active == i;
                         x: 0px; y: 0px;
-                        width: PixelTheme.primary-border-width; height: 32px;
+                        width: 3px; height: 32px;
                         background: root.highlight;
                     }
                     Text {
