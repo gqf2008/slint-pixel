@@ -221,36 +221,53 @@ export component PixelButton inherits Rectangle {
     property <length> eff-height: root.size == "small" ? 24px
         : (root.size == "large" ? 42px : 30px);
 
-    // 根即按钮面：无内部 width/height 依赖，保证布局里显式 width 生效
+    // 经典像素键：面层向右下让出 2px 深色阴影；按压时面层落回阴影位（下沉反馈）。
+    // 根尺寸仍是既定的 eff-height / 显式宽度，不改变布局占位，避免历史上
+    // 「内部 width 依赖 → 布局挤压」的问题复发。
     height: root.eff-height;
     // 自然宽（未显式 width 时生效）：文字自然宽 + 左右内边距。
     // 缺这个时 preferred-width=0（子元素全是 width:100%，不贡献 preferred），
     // HorizontalBox 里 stretch:0 → 宽度塌缩成 0：按钮不渲染、点不到（ABB 环境配置页实测）。
-    preferred-width: btn-text.preferred-width + 20px;
+    preferred-width: btn-text.preferred-width + 22px;
     horizontal-stretch: 0;
     vertical-stretch: 0;
     opacity: root.enabled ? 1.0 : 0.5;
-    background: root.eff-face;
-    border-width: root.variant == "primary" ? PixelTheme.primary-border-width : PixelTheme.border-width;
-    border-color: root.active ? root.border-active : root.border;
-    btn-text := Text {
+    background: transparent;
+
+    // 阴影层（ghost 不显示，避免黑底透出）
+    Rectangle {
+        visible: !root.active && root.variant != "ghost";
+        x: 2px; y: 2px;
+        width: parent.width; height: parent.height;
+        background: root.shadow;
+    }
+
+    // 面层：常态左上对齐、按下时右下落到阴影位
+    btn-face := Rectangle {
         x: ta.pressed ? 2px : 0px;
         y: ta.pressed ? 2px : 0px;
-        width: 100%; height: 100%;
-        text: root.text;
-        color: root.eff-text;
-        font-weight: 700;
-        font-size: root.size == "small" ? 11px : (root.size == "large" ? 15px : 13px);
-        horizontal-alignment: center;
-        vertical-alignment: center;
+        width: parent.width; height: parent.height;
+        background: root.eff-face;
+        border-width: root.variant == "primary" ? PixelTheme.primary-border-width : PixelTheme.border-width;
+        border-color: root.active ? root.border-active : root.border;
+        btn-text := Text {
+            width: 100%; height: 100%;
+            text: root.text;
+            color: root.eff-text;
+            font-weight: 700;
+            font-size: root.size == "small" ? 11px : (root.size == "large" ? 15px : 13px);
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        // 底部高亮条（active 标记）
+        Rectangle {
+            visible: root.active;
+            x: 3px; y: parent.height - 4px;
+            width: parent.width - 6px; height: 3px;
+            background: root.border-active;
+        }
     }
-    // 底部高亮条（active 标记）
-    Rectangle {
-        visible: root.active;
-        x: 3px; y: parent.height - 4px;
-        width: parent.width - 6px; height: 3px;
-        background: root.border-active;
-    }
+
     ta := TouchArea {
         enabled: root.enabled;
         width: 100%; height: 100%;
