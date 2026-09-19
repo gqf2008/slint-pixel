@@ -66,7 +66,7 @@ export component PixelTextArea inherits Rectangle {
     in property <bool> enabled: true;
     in property <length> frame-height: 96px;
     in property <color> face: PixelTheme.bg;
-    in property <color> border: PixelTheme.edge;
+    in property <color> border: PixelTheme.border-soft;
     in property <color> border-focus: PixelTheme.accent;
     in property <color> shadow: PixelTheme.shadow;
     in property <color> text-color: PixelTheme.text;
@@ -83,7 +83,7 @@ export component PixelTextArea inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: 0.5px; // 发丝描边：输入/文本域用半像素，避免 1px 在 2x 屏上偏粗
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {
                 enabled: root.enabled;

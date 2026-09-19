@@ -36,7 +36,7 @@ component PixelPopupList inherits Rectangle {
             x: 2px; y: 2px;
             width: parent.width - 4px; height: parent.height - 4px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: 0.5px; // 下拉列表描边：发丝，与输入框一致
             border-color: root.edge;
             VerticalLayout {
                 padding: 2px;
@@ -190,7 +190,7 @@ export component PixelComboBox inherits Rectangle {
     in property <string> placeholder: "请选择";
     in property <bool> enabled: true;
     in property <color> face: PixelTheme.bg;
-    in property <color> border: PixelTheme.edge;
+    in property <color> border: PixelTheme.border-soft;
     in property <color> border-focus: PixelTheme.accent;
     in property <color> shadow: PixelTheme.shadow;
     in property <color> text-color: PixelTheme.text;
@@ -218,7 +218,7 @@ export component PixelComboBox inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: 0.5px; // 下拉框描边：发丝，与输入框一致
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
                 x: 8px; y: 0px;
