@@ -125,11 +125,11 @@ export component App inherits Window {
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | **外框**：卡片 / 面板 / 对话框 / 表格 / 按钮 / 提示条等容器与控件 |
+| `border-width` | `2px` | **容器/覆盖层**：`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / 圆角窗身 |
 | `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
-| `border-thin` | `1px` | **内框**：输入类（`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect`…）、小件控件（复选/开关/标签/徽章/评分/色块/分页/步骤…）与组件内部线框 |
+| `border-thin` | `1px` | **其余全部组件**：按钮、输入类、小件（复选/开关/标签/徽章/评分/色块/分页/步骤…）、以及表格 / 列表 / 树 / 日历 / 看板 / 编辑器 / 图表 / 地图 / 媒体等所有可放置组件与它们的内部线框 |
 
-两级是**有意**的：外框给容器定形，内框不抢视觉。要让全库完全同宽就设成同一个值：
+两级是**有意**的：容器/覆盖层给页面定形（重），放进内容里的组件与内框都轻，避免"组件比容器还抢眼"。要让全库完全同宽就设成同一个值：
 
 ```slint
 PixelTheme.border-width = 1px;

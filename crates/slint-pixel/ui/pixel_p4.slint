@@ -24,7 +24,7 @@ export component PixelAvatarGroup inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             Text {
                 text: name;
@@ -60,7 +60,7 @@ export component PixelList inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
@@ -113,7 +113,7 @@ export component PixelVirtualList inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
@@ -172,7 +172,7 @@ export component PixelTreeTable inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             // 表头
@@ -250,7 +250,7 @@ export component PixelDataTable inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             Rectangle {
@@ -378,7 +378,7 @@ export component PixelNotificationCenter inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
@@ -461,7 +461,7 @@ export component PixelSubMenu inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 for child[j] in root.children[root.parent-index] : Rectangle {

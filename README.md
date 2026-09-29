@@ -30,9 +30,10 @@
 - **圆角窗口（可选）**：`PixelTheme.window-radius`（默认 `0px` = 直角窗口）+ 库组件 `PixelWindowBody`
   （透明边距 + 圆角 + 描边 + 把内容 clip 在圆角内），Rust 侧一行 `slint_pixel::transparent_window()`
   打开透明窗口即可，见下方「圆角窗口（可选，三步）」。
-- **描边分成两级（外框 / 内框）**：`border-width: 2px`（卡片/面板/按钮等外框）+ `border-thin: 1px`
-  （输入类、复选/开关/标签/徽章等小件、以及扩展与高级组件的内部线框）；`primary-border-width` 默认改为 2px，
-  不再比普通按钮粗一档。组件里**不再有任何硬编码描边宽度**（有守卫盯着）。
+- **描边分成两级（容器 / 组件）**：`border-width: 2px` 只留给容器与覆盖层（面板/卡片/对话框/顶栏/统计卡/
+  警告条/气泡/抽屉/滚动面板/圆角窗身）；**其余所有组件**（按钮、输入类、小件、表格、列表、树、日历、看板、编辑器、
+  图表、地图、媒体…）连同它们的内部线框统一走 `border-thin: 1px`。`primary-border-width` 默认 2px（不再比普通按钮粗）。
+  组件里**不再有任何硬编码描边宽度**（有守卫盯着）。
 - **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
   ```slint
   import { PixelPresets } from "@slint_pixel";
@@ -409,9 +410,9 @@ shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` �
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | 外框：卡片 / 面板 / 对话框 / 表格 / 按钮 / 提示条 |
+| `border-width` | `2px` | 容器/覆盖层：面板 / 卡片 / 对话框 / 顶栏 / 统计卡 / 警告条 / 通知 / 提示气泡 / 抽屉 / 滚动面板 |
 | `primary-border-width` | `2px` | primary 按钮（0.2.4 起与普通按钮同宽） |
-| `border-thin` | `1px` | 内框：输入类、复选/开关/标签/徽章/评分/色块等小件、扩展与高级组件的内部线框 |
+| `border-thin` | `1px` | 其余全部组件：按钮、输入类、小件控件，以及表格/列表/树/日历/看板/编辑器/图表/地图/媒体等与它们的内部线框 |
 
 觉得"有粗有细"就把三档设成同一个值（全 1px 最轻、全 2px 保留像素分量感）：
 

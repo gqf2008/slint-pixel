@@ -24,7 +24,7 @@ export component PixelChart inherits Rectangle {
         Rectangle {
             x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
             background: #ffffff;
-            border-width: PixelTheme.border-width; border-color: root.grid;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             HorizontalLayout {
                 padding: 8px;
@@ -117,7 +117,7 @@ export component PixelDataGrid inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             Rectangle {
@@ -221,7 +221,7 @@ export component PixelVirtualScroll inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             ScrollView {
@@ -280,7 +280,7 @@ export component PixelTreePro inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
@@ -344,7 +344,7 @@ export component PixelFormValidator inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 4px; spacing: 0px;
@@ -396,7 +396,7 @@ export component PixelScheduler inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
@@ -451,7 +451,7 @@ export component PixelCalendarAgenda inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
