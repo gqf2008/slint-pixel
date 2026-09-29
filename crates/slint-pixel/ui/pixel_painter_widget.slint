@@ -252,7 +252,7 @@ export component PixelButton inherits Rectangle {
         y: ta.pressed ? 2px : 0px;
         width: parent.width; height: parent.height;
         background: root.eff-face;
-        border-width: root.variant == "primary" ? PixelTheme.primary-border-width : PixelTheme.border-thin;
+        border-width: root.variant == "primary" ? PixelTheme.primary-border-width : PixelTheme.border-width;
         border-radius: PixelTheme.radius;
         border-color: root.active ? root.border-active : root.border;
         btn-text := Text {
