@@ -125,9 +125,9 @@ export component App inherits Window {
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | **容器/覆盖层**：`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / 圆角窗身 |
+| `border-width` | `2px` | **只有容器与覆盖层**：`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / 圆角窗身 |
 | `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
-| `border-thin` | `1px` | **其余全部组件**：按钮、输入类、小件（复选/开关/标签/徽章/评分/色块/分页/步骤…）、以及表格 / 列表 / 树 / 日历 / 看板 / 编辑器 / 图表 / 地图 / 媒体等所有可放置组件与它们的内部线框 |
+| `border-thin` | `1px` | **其余一切**：按钮、输入类、小件（复选/开关/标签/徽章/评分/色块/分页/步骤…）、菜单 / 表格 / 手风琴 / 折叠 / 列表 / 树 / 日历 / 看板 / 向导 / 编辑器 / 图表 / 地图 / 媒体…以及它们的内部线框 |
 
 两级是**有意**的：容器/覆盖层给页面定形（重），放进内容里的组件与内框都轻，避免"组件比容器还抢眼"。要让全库完全同宽就设成同一个值：
 
