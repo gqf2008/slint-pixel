@@ -1,9 +1,9 @@
 # slint-pixel
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Slint](https://img.shields.io/badge/Slint-1.18-blue.svg)](https://slint.dev)
+[![Slint](https://img.shields.io/badge/Slint-1.18.1-blue.svg)](https://slint.dev)
 
-基于 **Rust + Slint 1.18** 的像素风可复用组件库：16×16 像素画板 widget、
+基于 **Rust + Slint 1.18.1** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
 - **主仓**：自托管 walgit（本机 `http://127.0.0.1:8081/gqf2008/slint-pixel.git`，remote `origin`）
@@ -34,6 +34,9 @@
   统计卡/警告条/通知/提示气泡/抽屉/滚动面板/圆角窗身）；**其余所有组件**——按钮、输入类、小件、菜单、表格、
   手风琴、折叠、列表、树、日历、看板、向导、编辑器、图表、地图、媒体…连同它们的内部线框——统一走
   `border-thin: 1px`。组件里**不再有任何硬编码描边宽度**（有守卫盯着）。
+- **Slint 1.18.1**：依赖锁到 slint / slint-build / i-slint-* 1.18.1（patch 版：修了嵌套 repeater 的编译期 panic、
+  嵌套布局最小高度丢失、嵌套 `Flickable` 触控板滚动、软件渲染启动白屏等）。升级后三个预设的渲染截图
+  与 1.18.0 **逐字节一致**，无视觉回归。
 - **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
   ```slint
   import { PixelPresets } from "@slint_pixel";
