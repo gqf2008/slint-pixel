@@ -30,6 +30,9 @@ export global PixelTheme {
     in-out property <length> border-width: 2px;
     // primary 按钮描边。默认 3px；宿主通常与普通按钮统一，避免“有粗有细”。
     in-out property <length> primary-border-width: 3px;
+    // 输入类控件（文本输入 / 文本域 / 下拉 / 选择框）的“发丝档”描边。默认 0.5px。
+    // 想让全库描边完全一致，把它设成与 border-width 相同（PixelPresets.soft() 就是 1px/1px/1px）。
+    in-out property <length> border-thin: 0.5px;
     // 圆角：默认 0px = 直角像素风（既有宿主升级零变化）。
     // 容器 / 卡片 / 输入 / 对话框等可见表面用 radius；复选框、开关、标签、滑块等小件用 radius-sm。
     in-out property <length> radius: 0px;

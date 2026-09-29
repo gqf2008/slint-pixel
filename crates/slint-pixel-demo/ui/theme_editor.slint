@@ -87,6 +87,9 @@ export component ThemeEditorWindow inherits Window {
     in-out property <length> t-radius: PixelTheme.radius;
     in-out property <length> t-radius-sm: PixelTheme.radius-sm;
     in-out property <length> t-window-radius: PixelTheme.window-radius;
+    in-out property <length> t-border-width: PixelTheme.border-width;
+    in-out property <length> t-primary-border-width: PixelTheme.primary-border-width;
+    in-out property <length> t-border-thin: PixelTheme.border-thin;
 
     // ---------- 主题预设 ----------
     function preset-white() {
@@ -201,11 +204,46 @@ export component ThemeEditorWindow inherits Window {
                             vertical-alignment: center;
                         }
                         // 只设 radius：radius-sm 绑定 radius / 2，会自动跟随（宿主显式覆盖过才会断开）
-                        PixelButton { text: "直角"; width: 56px; clicked => { PixelTheme.radius = 0px; } }
+                    PixelButton { text: "直角"; width: 56px; clicked => { PixelTheme.radius = 0px; } }
                     PixelButton { text: "微圆"; width: 56px; clicked => { PixelTheme.radius = 4px; } }
                     PixelButton { text: "圆角"; width: 56px; clicked => { PixelTheme.radius = 8px; } }
                     PixelButton { text: "大圆角"; width: 66px; clicked => { PixelTheme.radius = 14px; } }
+                }
+                // 描边：三档全库同宽（容器 / primary 按钮 / 输入类发丝档），避免“有粗有细”
+                HorizontalLayout {
+                    spacing: 8px;
+                    Text {
+                        width: 110px;
+                        text: "描边 border";
+                        color: PixelTheme.text;
+                        font-size: 12px;
+                        vertical-alignment: center;
                     }
+                    PixelButton {
+                        text: "细 1px"; width: 66px;
+                        clicked => {
+                            PixelTheme.border-width = 1px;
+                            PixelTheme.primary-border-width = 1px;
+                            PixelTheme.border-thin = 1px;
+                        }
+                    }
+                    PixelButton {
+                        text: "中 2px"; width: 66px;
+                        clicked => {
+                            PixelTheme.border-width = 2px;
+                            PixelTheme.primary-border-width = 2px;
+                            PixelTheme.border-thin = 2px;
+                        }
+                    }
+                    PixelButton {
+                        text: "粗 3px"; width: 66px;
+                        clicked => {
+                            PixelTheme.border-width = 3px;
+                            PixelTheme.primary-border-width = 3px;
+                            PixelTheme.border-thin = 3px;
+                        }
+                    }
+                }
                 }
             }
 

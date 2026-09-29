@@ -37,7 +37,7 @@ component PixelPopupList inherits Rectangle {
             x: 2px; y: 2px;
             width: parent.width - 4px; height: parent.height - 4px;
             background: root.face;
-            border-width: 0.5px; // 下拉列表描边：发丝，与输入框一致
+            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
             border-radius: PixelTheme.radius;
             border-color: root.edge;
             VerticalLayout {
@@ -226,7 +226,7 @@ export component PixelComboBox inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 0.5px; // 下拉框描边：发丝，与输入框一致
+            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {

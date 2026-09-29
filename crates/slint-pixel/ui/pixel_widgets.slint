@@ -225,7 +225,7 @@ export component PixelTextInput inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 0.5px; // 发丝描边：输入/文本域用半像素，避免 1px 在 2x 屏上偏粗
+            border-width: PixelTheme.border-thin; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
             border-radius: PixelTheme.radius;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {

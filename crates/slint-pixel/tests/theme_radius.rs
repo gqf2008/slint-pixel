@@ -260,6 +260,70 @@ fn every_bordered_surface_follows_theme_radius() {
     );
 }
 
+/// 描边宽度守卫：`ui/*.slint` 里不许再出现硬编码宽度（必须走 PixelTheme token），
+/// 否则又会回到"卡片 2px / primary 3px / 输入框 0.5px"那种宿主改不动的混档。
+///
+/// 例外只有"字形框/轨道内部细节"这两类，它们的宽度与控件描边档位无关，逐条列明。
+#[test]
+fn every_border_width_is_theme_driven() {
+    /// (文件, 该行内容, 理由)
+    const EXEMPT: [(&str, &str, &str); 3] = [
+        (
+            "pixel_painter_widget.slint",
+            "border-width: 1px;",
+            "TitleButton 面：border-color 复用 face，纯字形内缩",
+        ),
+        (
+            "pixel_p1.slint",
+            "border-width: 1px;",
+            "PixelRangeSlider 轨道内部细节",
+        ),
+        (
+            "pixel_widgets.slint",
+            "border-width: 1px;",
+            "PixelSlider 轨道内部细节",
+        ),
+    ];
+
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let mut offenders = Vec::new();
+    let mut checked = 0usize;
+
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        if path.extension().and_then(|e| e.to_str()) != Some("slint") || name == "pixel_theme.slint"
+        {
+            continue;
+        }
+        let source = std::fs::read_to_string(&path).expect("读取 .slint 源文件");
+        for (i, line) in source.lines().enumerate() {
+            let trimmed = line.trim();
+            if !trimmed.starts_with("border-width:") {
+                continue;
+            }
+            checked += 1;
+            let exempt = EXEMPT
+                .iter()
+                .any(|(f, l, _)| *f == name && trimmed.starts_with(l));
+            if exempt || trimmed.contains("PixelTheme.") || trimmed.ends_with("0px;") {
+                continue;
+            }
+            offenders.push(format!("{name}:{} {}", i + 1, trimmed));
+        }
+    }
+
+    assert!(
+        checked > 100,
+        "覆盖面异常：只检查到 {checked} 处 border-width"
+    );
+    assert!(
+        offenders.is_empty(),
+        "以下描边宽度是硬编码的（宿主改不动，且容易和主题档位混档）：\n{}",
+        offenders.join("\n")
+    );
+}
+
 /// 给每一行标注它所属元素的起始行号（取当前最内层未闭合的 `{` 所在行）。
 fn enclosing_block(lines: &[&str]) -> Vec<usize> {
     let mut stack: Vec<usize> = Vec::new();

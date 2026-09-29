@@ -231,7 +231,7 @@ export component PixelSelect inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: 0.5px; // 选择框描边：发丝，与输入框一致
+            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {

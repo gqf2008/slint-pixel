@@ -179,6 +179,9 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
                 ("radius", px(g.get_t_radius())),
                 ("radius-sm", px(g.get_t_radius_sm())),
                 ("window-radius", px(g.get_t_window_radius())),
+                ("border-width", px(g.get_t_border_width())),
+                ("primary-border-width", px(g.get_t_primary_border_width())),
+                ("border-thin", px(g.get_t_border_thin())),
             ],
         );
         g.set_generated_theme(code.into());
@@ -261,6 +264,9 @@ fn wire_generate_theme(editor: &ThemeEditorWindow) {
                 ("radius", px(ui.get_t_radius())),
                 ("radius-sm", px(ui.get_t_radius_sm())),
                 ("window-radius", px(ui.get_t_window_radius())),
+                ("border-width", px(ui.get_t_border_width())),
+                ("primary-border-width", px(ui.get_t_primary_border_width())),
+                ("border-thin", px(ui.get_t_border_thin())),
             ],
         );
         ui.set_generated_theme(code.into());
