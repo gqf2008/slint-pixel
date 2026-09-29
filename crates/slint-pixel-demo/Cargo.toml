@@ -15,3 +15,7 @@ slint-pixel = { path = "../slint-pixel" }
 
 [lints]
 workspace = true
+
+[dev-dependencies]
+# examples/render_gallery.rs 用它把无头渲染结果写成 PNG
+image = { version = "0.25", default-features = false, features = ["png"] }

@@ -32,11 +32,13 @@ component PixelPopupList inherits Rectangle {
     Rectangle {
         width: 100%; height: root.height;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 2px; y: 2px;
             width: parent.width - 4px; height: parent.height - 4px;
             background: root.face;
             border-width: 0.5px; // 下拉列表描边：发丝，与输入框一致
+            border-radius: PixelTheme.radius;
             border-color: root.edge;
             VerticalLayout {
                 padding: 2px;
@@ -53,11 +55,12 @@ component PixelPopupList inherits Rectangle {
                         visible: item != "---";
                         background: root.current == i ? root.face-current
                             : (item-ta.has-hover ? root.face-hover : transparent);
+                        border-radius: PixelTheme.radius-sm;
                         Text {
                             x: 10px; y: 0px;
                             width: parent.width - 20px; height: parent.height;
                             text: item;
-                            color: root.current == i ? #ffffff : root.text-color;
+                            color: root.current == i ? PixelTheme.on-accent : root.text-color;
                             font-size: 13px;
                             vertical-alignment: center;
                         }
@@ -94,17 +97,19 @@ export component PixelRadioButton inherits Rectangle {
         Rectangle {
             width: 22px; height: 22px;
             background: root.shadow;
+            border-radius: PixelTheme.radius-sm;
             Rectangle {
                 x: ta.pressed ? 1px : 0px;
                 y: ta.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
                 border-width: PixelTheme.border-width;
+                border-radius: PixelTheme.radius-sm;
                 border-color: root.checked ? root.face-checked : root.border;
                 Rectangle {
                     visible: root.checked;
                     x: 7px; y: 7px; width: 8px; height: 8px;
-                    background: root.checked ? #ffffff : root.dot-color;
+                    background: root.checked ? PixelTheme.on-accent : root.dot-color;
                 }
                 ta := TouchArea {
                     enabled: root.enabled;
@@ -148,17 +153,19 @@ export component PixelRadioGroup inherits Rectangle {
                 Rectangle {
                     width: 22px; height: 22px;
                     background: root.shadow;
+                    border-radius: PixelTheme.radius-sm;
                     Rectangle {
                         x: item-ta.pressed ? 1px : 0px;
                         y: item-ta.pressed ? 1px : 0px;
                         width: 22px; height: 22px;
                         background: root.index == i ? root.face-checked : root.face;
                         border-width: PixelTheme.border-width;
+                        border-radius: PixelTheme.radius-sm;
                         border-color: root.index == i ? root.face-checked : root.border;
                         Rectangle {
                             visible: root.index == i;
                             x: 7px; y: 7px; width: 8px; height: 8px;
-                            background: root.index == i ? #ffffff : root.dot-color;
+                            background: root.index == i ? PixelTheme.on-accent : root.dot-color;
                         }
                     }
                 }
@@ -214,11 +221,13 @@ export component PixelComboBox inherits Rectangle {
     Rectangle {
         width: 100%; height: root.height;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: 0.5px; // 下拉框描边：发丝，与输入框一致
+            border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
                 x: 8px; y: 0px;
@@ -307,12 +316,14 @@ export component PixelMenu inherits Rectangle {
     Rectangle {
         width: 100%; height: root.height;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: ta.pressed ? 1px : 0px;
             y: ta.pressed ? 1px : 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.border;
             Text {
                 x: 10px; y: 0px;
@@ -399,11 +410,13 @@ export component PixelTableView inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.border;
             clip: true;
 
@@ -440,12 +453,13 @@ export component PixelTableView inherits Rectangle {
                     height: root.row-height;
                     background: root.selected-row == i ? root.row-selected
                         : (Math.mod(i, 2) == 0 ? root.row-even : root.row-odd);
+                    border-radius: PixelTheme.radius-sm;
                     HorizontalLayout {
                         padding: 6px;
                         spacing: 4px;
                         for cell in r : Text {
                             text: cell;
-                            color: root.selected-row == i ? #ffffff : root.text-color;
+                            color: root.selected-row == i ? PixelTheme.on-accent : root.text-color;
                             font-size: 12px;
                             vertical-alignment: center;
                             horizontal-alignment: center;
@@ -478,6 +492,7 @@ export component PixelScrollPanel inherits Rectangle {
     in property <length> initial-scroll-y: 0px;
     background: root.panel-bg;
     border-width: PixelTheme.border-width;
+    border-radius: PixelTheme.radius;
     border-color: root.edge;
     clip: true;
 
@@ -513,12 +528,14 @@ export component PixelCollapsible inherits VerticalLayout {
         width: 100%;
         height: 32px;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: header-ta.pressed ? 1px : 0px;
             y: header-ta.pressed ? 1px : 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: header-ta.has-hover ? root.header-hover : root.header-face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.edge;
             Text {
                 x: 10px; y: 0px;
@@ -556,6 +573,7 @@ export component PixelCollapsible inherits VerticalLayout {
         height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
         background: root.body;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
         border-color: root.edge;
         clip: true;
         animate height { duration: 160ms; easing: ease-out; }
@@ -593,12 +611,14 @@ export component PixelAccordion inherits VerticalLayout {
             width: 100%;
             height: 32px;
             background: root.shadow;
+            border-radius: PixelTheme.radius;
             Rectangle {
                 x: panel-ta.pressed ? 1px : 0px;
                 y: panel-ta.pressed ? 1px : 0px;
                 width: parent.width - 2px; height: parent.height - 2px;
                 background: panel-ta.has-hover ? root.header-hover : root.header-face;
                 border-width: PixelTheme.border-width;
+                border-radius: PixelTheme.radius;
                 border-color: root.edge;
                 Text {
                     x: 10px; y: 0px;
@@ -636,6 +656,7 @@ export component PixelAccordion inherits VerticalLayout {
             height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
             background: root.body;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.edge;
             clip: true;
             animate height { duration: 160ms; easing: ease-out; }
@@ -685,6 +706,7 @@ export component PixelSidebar inherits Rectangle {
                 x: parent.width - 2px; y: 0px;
                 width: 2px; height: parent.height;
                 background: root.shadow;
+                border-radius: PixelTheme.radius;
             }
             VerticalLayout {
                 padding: 10px;
@@ -701,18 +723,20 @@ export component PixelSidebar inherits Rectangle {
                     height: 32px;
                     background: root.active == i ? root.item-active
                         : (item-ta.has-hover ? root.item-hover : transparent);
+                    border-radius: PixelTheme.radius-sm;
                     // 选中指示条
                     Rectangle {
                         visible: root.active == i;
                         x: 0px; y: 0px;
                         width: 3px; height: 32px;
                         background: root.highlight;
+                        border-radius: PixelTheme.radius-sm;
                     }
                     Text {
                         x: 12px; y: 0px;
                         width: parent.width - 20px; height: parent.height;
                         text: item;
-                        color: root.active == i ? #ffffff : root.text-color;
+                        color: root.active == i ? PixelTheme.on-accent : root.text-color;
                         font-size: 13px;
                         vertical-alignment: center;
                     }

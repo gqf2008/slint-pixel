@@ -1,5 +1,5 @@
 // slint-pixel · 主题编辑器（独立窗口）：实时换肤 + 一键生成样式代码
-import { PixelTitleBar, PixelButton, PixelText, PixelWindowResize, PixelTheme } from "@slint_pixel";
+import { PixelTitleBar, PixelButton, PixelText, PixelWindowResize, PixelTheme, PixelPresets } from "@slint_pixel";
 
 // ===== 主题色行（标签 + 当前色 + 候选色） =====
 component ThemeColorRow inherits Rectangle {
@@ -64,27 +64,47 @@ export component ThemeEditorWindow inherits Window {
     in-out property <color> t-dim: PixelTheme.dim;
     in-out property <color> t-accent: PixelTheme.accent;
     in-out property <color> t-danger: PixelTheme.danger;
+    in-out property <color> t-success: PixelTheme.success;
+    in-out property <color> t-warning: PixelTheme.warning;
+    in-out property <color> t-info: PixelTheme.info;
+    in-out property <color> t-on-accent: PixelTheme.on-accent;
+    in-out property <color> t-primary-face: PixelTheme.primary-face;
+    in-out property <color> t-primary-text: PixelTheme.primary-text;
+    in-out property <length> t-radius: PixelTheme.radius;
+    in-out property <length> t-radius-sm: PixelTheme.radius-sm;
 
     // ---------- 主题预设 ----------
     function preset-white() {
         PixelTheme.bg = #ffffff; PixelTheme.panel = #ffffff; PixelTheme.hover = #f2f2f2;
         PixelTheme.edge = #1a1a1a; PixelTheme.shadow = #000000; PixelTheme.text = #000000;
         PixelTheme.dim = #525252; PixelTheme.accent = #000000; PixelTheme.danger = #ff004d;
+        PixelTheme.success = #16a34a; PixelTheme.warning = #d97706; PixelTheme.info = #0284c7;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #ffffff; PixelTheme.primary-text = #000000;
     }
     function preset-gray() {
         PixelTheme.bg = #f7f7f7; PixelTheme.panel = #f0f0f0; PixelTheme.hover = #e5e5e5;
         PixelTheme.edge = #1a1a1a; PixelTheme.shadow = #000000; PixelTheme.text = #000000;
         PixelTheme.dim = #6b6b6b; PixelTheme.accent = #000000; PixelTheme.danger = #dc2626;
+        PixelTheme.success = #16a34a; PixelTheme.warning = #d97706; PixelTheme.info = #0284c7;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #ffffff; PixelTheme.primary-text = #000000;
     }
     function preset-dark() {
         PixelTheme.bg = #141414; PixelTheme.panel = #1c1c1c; PixelTheme.hover = #2a2a2a;
         PixelTheme.edge = #3d3d3d; PixelTheme.shadow = #000000; PixelTheme.text = #f5f5f5;
         PixelTheme.dim = #9a9a9a; PixelTheme.accent = #f5b301; PixelTheme.danger = #ff004d;
+        PixelTheme.success = #4ade80; PixelTheme.warning = #fbbf24; PixelTheme.info = #38bdf8;
+        PixelTheme.on-accent = #141414;
+        PixelTheme.primary-face = #ffffff; PixelTheme.primary-text = #000000;
     }
     function preset-blue() {
         PixelTheme.bg = #ffffff; PixelTheme.panel = #eef4ff; PixelTheme.hover = #dfeaff;
         PixelTheme.edge = #2563eb; PixelTheme.shadow = #1e3a8a; PixelTheme.text = #0f172a;
         PixelTheme.dim = #64748b; PixelTheme.accent = #2563eb; PixelTheme.danger = #dc2626;
+        PixelTheme.success = #15803d; PixelTheme.warning = #b45309; PixelTheme.info = #0284c7;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #2563eb; PixelTheme.primary-text = #ffffff;
     }
 
     VerticalLayout {
@@ -123,6 +143,12 @@ export component ThemeEditorWindow inherits Window {
                     PixelButton { text: "黑金"; width: 70px; clicked => { root.preset-dark(); } }
                     PixelButton { text: "蓝白"; width: 70px; clicked => { root.preset-blue(); } }
                 }
+                HorizontalLayout {
+                    spacing: 8px;
+                    PixelButton { text: "柔彩圆角"; width: 90px; variant: "primary"; clicked => { PixelPresets.soft(); } }
+                    PixelButton { text: "经典像素"; width: 90px; clicked => { PixelPresets.classic(); } }
+                    PixelText { text: "一键切整套观感（色 + 圆角）"; color: PixelTheme.dim; font-size: 11px; vertical-alignment: center; }
+                }
             }
         }
 
@@ -144,6 +170,24 @@ export component ThemeEditorWindow inherits Window {
                 ThemeColorRow { label: "次要 dim"; value: PixelTheme.dim; options: [#525252, #6b6b6b, #64748b, #9a9a9a]; select(c) => { PixelTheme.dim = c; } }
                 ThemeColorRow { label: "强调 accent"; value: PixelTheme.accent; options: [#000000, #2563eb, #16a34a, #7c3aed, #f5b301]; select(c) => { PixelTheme.accent = c; } }
                 ThemeColorRow { label: "危险 danger"; value: PixelTheme.danger; options: [#ff004d, #dc2626, #e11d48]; select(c) => { PixelTheme.danger = c; } }
+                ThemeColorRow { label: "成功 success"; value: PixelTheme.success; options: [#16a34a, #22c55e, #15803d]; select(c) => { PixelTheme.success = c; } }
+                ThemeColorRow { label: "警告 warning"; value: PixelTheme.warning; options: [#d97706, #f59e0b, #b45309]; select(c) => { PixelTheme.warning = c; } }
+                ThemeColorRow { label: "信息 info"; value: PixelTheme.info; options: [#0284c7, #2aa9c4, #2563eb]; select(c) => { PixelTheme.info = c; } }
+                // 圆角：直角 = 经典像素风；圆角越大越柔和。小件按一半跟随（-sm）。
+                HorizontalLayout {
+                    spacing: 8px;
+                    Text {
+                        width: 110px;
+                        text: "圆角 radius";
+                        color: PixelTheme.text;
+                        font-size: 12px;
+                        vertical-alignment: center;
+                    }
+                    PixelButton { text: "直角"; width: 56px; clicked => { PixelTheme.radius = 0px; PixelTheme.radius-sm = 0px; } }
+                    PixelButton { text: "微圆"; width: 56px; clicked => { PixelTheme.radius = 6px; PixelTheme.radius-sm = 3px; } }
+                    PixelButton { text: "圆角"; width: 56px; clicked => { PixelTheme.radius = 12px; PixelTheme.radius-sm = 6px; } }
+                    PixelButton { text: "大圆角"; width: 66px; clicked => { PixelTheme.radius = 18px; PixelTheme.radius-sm = 9px; } }
+                }
             }
         }
 

@@ -20,10 +20,12 @@ export component PixelAvatarGroup inherits Rectangle {
         x: i * (root.size - 10px);
         y: 0px; width: root.size; height: root.size;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             Text {
                 text: name;
                 color: root.text-color;
@@ -54,10 +56,12 @@ export component PixelList inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -65,10 +69,11 @@ export component PixelList inherits Rectangle {
                     height: 30px;
                     background: root.selected == i ? root.face-selected
                         : (list-ta.has-hover ? root.face-hover : transparent);
+                    border-radius: PixelTheme.radius-sm;
                     Text {
                         x: 10px; width: parent.width - 20px; height: parent.height;
                         text: item;
-                        color: root.selected == i ? #ffffff : root.text-color;
+                        color: root.selected == i ? PixelTheme.on-accent : root.text-color;
                         font-size: 12px;
                         vertical-alignment: center;
                     }
@@ -104,10 +109,12 @@ export component PixelVirtualList inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -115,10 +122,11 @@ export component PixelVirtualList inherits Rectangle {
                     height: 30px;
                     background: root.selected == i ? root.face-selected
                         : (virt-ta.has-hover ? root.face-hover : transparent);
+                    border-radius: PixelTheme.radius-sm;
                     Text {
                         x: 10px; width: parent.width - 20px; height: parent.height;
                         text: item;
-                        color: root.selected == i ? #ffffff : root.text-color;
+                        color: root.selected == i ? PixelTheme.on-accent : root.text-color;
                         font-size: 12px;
                         vertical-alignment: center;
                     }
@@ -160,10 +168,12 @@ export component PixelTreeTable inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             clip: true;
             // 表头
             Rectangle {
@@ -186,10 +196,11 @@ export component PixelTreeTable inherits Rectangle {
                 for r[i] in root.rows : Rectangle {
                     height: root.row-height;
                     background: root.selected-row == i ? root.row-selected : transparent;
+                    border-radius: PixelTheme.radius-sm;
                     HorizontalLayout {
                         for cell in r : Text {
                             text: cell;
-                            color: root.selected-row == i ? #ffffff : root.text-color;
+                            color: root.selected-row == i ? PixelTheme.on-accent : root.text-color;
                             font-size: 12px;
                             vertical-alignment: center;
                             horizontal-alignment: center;
@@ -235,10 +246,12 @@ export component PixelDataTable inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             clip: true;
             Rectangle {
                 height: root.header-height;
@@ -270,10 +283,11 @@ export component PixelDataTable inherits Rectangle {
                     height: root.row-height;
                     background: root.selected-row == i ? root.row-selected
                         : (Math.mod(i, 2) == 0 ? root.row-even : root.row-odd);
+                    border-radius: PixelTheme.radius-sm;
                     HorizontalLayout {
                         for cell in r : Text {
                             text: cell;
-                            color: root.selected-row == i ? #ffffff : root.text-color;
+                            color: root.selected-row == i ? PixelTheme.on-accent : root.text-color;
                             font-size: 12px;
                             horizontal-alignment: center;
                             vertical-alignment: center;
@@ -311,10 +325,12 @@ export component PixelSearchBox inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: search-input.has-focus ? root.border-focus : root.border;
             search-input := TextInput {
                 x: 6px; width: parent.width - 40px; height: parent.height;
@@ -358,10 +374,12 @@ export component PixelNotificationCenter inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for msg[i] in root.messages : Rectangle {
@@ -417,9 +435,10 @@ export component PixelSubMenu inherits Rectangle {
         for item[i] in root.items : Rectangle {
             width: 90px; height: 100%;
             background: root.parent-index == i ? root.face-active : root.face-hover;
+            border-radius: PixelTheme.radius-sm;
             Text {
                 text: item;
-                color: root.parent-index == i ? #ffffff : root.text-color;
+                color: root.parent-index == i ? PixelTheme.on-accent : root.text-color;
                 font-size: 12px;
                 horizontal-alignment: center;
                 vertical-alignment: center;
@@ -438,17 +457,20 @@ export component PixelSubMenu inherits Rectangle {
         y: 40px;
         width: 180px; height: root.children[root.parent-index].length * 28px + 4px;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 for child[j] in root.children[root.parent-index] : Rectangle {
                     height: 28px;
                     background: root.child-index == j ? root.face-active : transparent;
+                    border-radius: PixelTheme.radius-sm;
                     Text {
                         text: child;
-                        color: root.child-index == j ? #ffffff : root.text-color;
+                        color: root.child-index == j ? PixelTheme.on-accent : root.text-color;
                         font-size: 12px;
                         vertical-alignment: center;
                     }
@@ -475,10 +497,12 @@ export component PixelBackTop inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius-sm;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius-sm;
             Text {
                 text: "↑";
                 color: PixelTheme.text;

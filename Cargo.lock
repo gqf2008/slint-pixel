@@ -4014,6 +4014,7 @@ dependencies = [
 name = "slint-pixel-demo"
 version = "0.2.3"
 dependencies = [
+ "image",
  "slint",
  "slint-build",
  "slint-pixel",

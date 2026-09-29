@@ -41,6 +41,49 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
     .set_scheme("dark".into());
 ```
 
+### 全部主题 token
+
+| token | 默认 | 说明 |
+| --- | --- | --- |
+| `bg` / `panel` / `hover` | `#ffffff` / `#ffffff` / `#f2f2f2` | 背景 / 面板 / 悬停面 |
+| `edge` / `border-soft` | `#1a1a1a` / `#525252` | 边框与分隔线 / 输入类更细的描边 |
+| `shadow` | `#000000` | 硬阴影层与深色块 |
+| `text` / `dim` | `#000000` / `#525252` | 主文字 / 次要文字 |
+| `accent` / `on-accent` | `#000000` / `#ffffff` | 强调、选中底色 / **accent 底之上的前景色**（选中行文字、勾选标记、开关滑块） |
+| `danger` / `success` / `warning` / `info` | 红 / 绿 / 琥珀 / 蓝 | 功能色；`PixelAlert` 按 `kind` 取用 |
+| `primary-face` / `primary-text` | `#ffffff` / `#000000` | `PixelButton variant="primary"` 的面与字 |
+| `border-width` / `primary-border-width` | `2px` / `3px` | 控件描边宽度 |
+| `radius` / `radius-sm` | `0px` / `radius / 2` | 容器圆角 / 小件圆角（默认直角像素风） |
+
+`radius` 是全库生效的：卡片、面板、按钮、输入框、下拉、表格、对话框、标签等可见表面都读它，
+复选框 / 开关 / 滑块 / 标签等小件读 `radius-sm`。**默认 0px，不设置就没有外观变化**。
+单个组件仍可用自己的 `border-radius` 属性覆盖。
+
+### 一键预设 `PixelPresets`
+
+```slint
+import { PixelPresets, PixelTheme } from "@slint_pixel";
+
+init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 12px 圆角
+// PixelPresets.classic();         // 经典黑白像素风（= 库默认值）
+// PixelPresets.dark();            // 深色 + 琥珀主色
+
+// 预设之后照样可以微调单个 token
+PixelTheme.radius = 8px;
+```
+
+预设只写 `PixelTheme`，不动任何组件属性；要纯黑白就把 `success` / `warning` / `info` 设回
+`PixelTheme.text` / `PixelTheme.edge`，或直接 `PixelPresets.classic()`。
+
+### 圆角的可验证性
+
+圆角是否"真的生效"由渲染级测试守住（不是只断言属性赋值）：
+
+```sh
+cargo test -p slint-pixel --test theme_radius          # 行为守卫 + 全库覆盖守卫
+cargo run -p slint-pixel-demo --example render_gallery -- /tmp/shots   # 无头导出各预设截图
+```
+
 ## 组件清单
 
 ### 基础控件

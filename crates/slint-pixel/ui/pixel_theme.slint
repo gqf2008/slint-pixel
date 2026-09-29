@@ -15,8 +15,23 @@ export global PixelTheme {
     in-out property <color> dim: root.scheme == "dark" ? #9a9a9a : #525252;     // 次要文字
     in-out property <color> accent: root.scheme == "dark" ? #f2f2f2 : #000000;  // 强调 / 激活 / 选中底色
     in-out property <color> danger: root.scheme == "dark" ? #ff4d6d : #ff004d;  // 危险
+    // 语义扩展色：与 danger 同族，都是「功能区分」色，默认已着色。
+    // 想要纯黑白像素风，把这四个设回 text/edge/dim（或用 PixelPresets.classic()）。
+    in-out property <color> success: root.scheme == "dark" ? #4ade80 : #16a34a; // 成功
+    in-out property <color> warning: root.scheme == "dark" ? #fbbf24 : #d97706; // 警告
+    in-out property <color> info: root.scheme == "dark" ? #38bdf8 : #0284c7;    // 信息
+    // accent 底之上的前景色（选中行文字 / 勾选标记 / 开关滑块）。
+    // 默认主题 accent 是黑（浅色）/近白（深色），所以浅色时用白、深色时用黑，保证对比度。
+    in-out property <color> on-accent: root.scheme == "dark" ? #000000 : #ffffff;
+    // primary 按钮配色（默认白面黑字，与 0.2.3 完全一致）；彩色主题可设成 accent/on-accent。
+    in-out property <color> primary-face: #ffffff;
+    in-out property <color> primary-text: #000000;
     // 控件描边宽度。默认保持 2px 像素风；宿主可统一调成 1px 获得更细、一致的控件边框。
     in-out property <length> border-width: 2px;
     // primary 按钮描边。默认 3px；宿主通常与普通按钮统一，避免“有粗有细”。
     in-out property <length> primary-border-width: 3px;
+    // 圆角：默认 0px = 直角像素风（既有宿主升级零变化）。
+    // 容器 / 卡片 / 输入 / 对话框等可见表面用 radius；复选框、开关、标签、滑块等小件用 radius-sm。
+    in-out property <length> radius: 0px;
+    in-out property <length> radius-sm: root.radius / 2;
 }

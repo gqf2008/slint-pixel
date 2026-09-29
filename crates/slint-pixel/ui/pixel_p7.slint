@@ -24,10 +24,12 @@ export component PixelWizard inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 8px; spacing: 8px;
                 Text {
@@ -63,10 +65,12 @@ export component PixelMultiStepForm inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 8px; spacing: 6px;
                 HorizontalLayout {
@@ -133,10 +137,12 @@ export component PixelTransferPro inherits Rectangle {
             width: (parent.width - 44px) / 2;
             height: 100%;
             background: root.shadow;
+            border-radius: PixelTheme.radius;
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
                 border-width: PixelTheme.border-width; border-color: root.border;
+                border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     PixelTextInput { text <=> root.left-query; placeholder: "搜索"; height: 24px; }
@@ -162,10 +168,12 @@ export component PixelTransferPro inherits Rectangle {
             width: (parent.width - 44px) / 2;
             height: 100%;
             background: root.shadow;
+            border-radius: PixelTheme.radius;
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
                 border-width: PixelTheme.border-width; border-color: root.border;
+                border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     PixelTextInput { text <=> root.right-query; placeholder: "搜索"; height: 24px; }
@@ -208,10 +216,12 @@ export component PixelKanbanPro inherits Rectangle {
             width: root.width / root.columns.length;
             height: 100%;
             background: root.drop-column == j ? root.border : root.shadow;
+            border-radius: PixelTheme.radius-sm;
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
                 border-width: PixelTheme.border-width; border-color: root.drop-column == j ? root.border : root.border;
+                border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     Rectangle {
@@ -280,10 +290,12 @@ export component PixelCommandPalettePro inherits Rectangle {
         Rectangle {
             width: 100%; height: 100%;
             background: root.shadow;
+            border-radius: PixelTheme.radius;
             Rectangle {
                 x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
                 border-width: PixelTheme.border-width; border-color: root.border;
+                border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 6px; spacing: 4px;
                     Rectangle {
@@ -306,6 +318,7 @@ export component PixelCommandPalettePro inherits Rectangle {
                     for cmd[i] in root.commands : Rectangle {
                         height: 28px;
                         background: cmd-ta.has-hover ? root.face-hover : transparent;
+                        border-radius: PixelTheme.radius-sm;
                         Text {
                             x: 8px; width: parent.width - 70px; height: parent.height;
                             text: cmd;
@@ -350,10 +363,12 @@ export component PixelColorPickerPro inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
             background: #ffffff;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.shadow;
             VerticalLayout {
                 padding: 6px; spacing: 6px;
@@ -362,6 +377,7 @@ export component PixelColorPickerPro inherits Rectangle {
                     Rectangle {
                         width: 40px; height: 40px;
                         background: root.shadow;
+                        border-radius: PixelTheme.radius;
                         Rectangle { x: 2px; y: 2px; width: 36px; height: 36px; background: root.value; }
                     }
                     PixelTextInput {
@@ -398,10 +414,12 @@ export component PixelMention inherits Rectangle {
     Rectangle {
         width: 100%; height: root.height;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             TextInput {
                 x: 6px; width: parent.width - 12px; height: parent.height;
                 text <=> root.query;
@@ -420,10 +438,12 @@ export component PixelMention inherits Rectangle {
         Rectangle {
             width: 100%; height: 100%;
             background: root.shadow;
+            border-radius: PixelTheme.radius;
             Rectangle {
                 x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
                 border-width: PixelTheme.border-width; border-color: root.border;
+                border-radius: PixelTheme.radius;
                 VerticalLayout {
                     for opt in root.options : Rectangle {
                         height: 28px;
@@ -470,10 +490,12 @@ export component PixelOTPInput inherits Rectangle {
             for idx in root.length : Rectangle {
                 width: 40px; height: 48px;
                 background: root.shadow;
+                border-radius: PixelTheme.radius-sm;
                 Rectangle {
                     x: 1px; y: 1px; width: 38px; height: 46px;
                     background: root.face;
                     border-width: PixelTheme.border-width; border-color: root.border;
+                    border-radius: PixelTheme.radius-sm;
                     Text {
                         text: idx == 0 ? root.value : "";
                         color: PixelTheme.text;
@@ -508,10 +530,12 @@ export component PixelSignature inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             sig-ta := TouchArea {
                 pointer-event(ev) => {
                     if ev.button != PointerEventButton.left { return; }
@@ -559,11 +583,13 @@ export component PixelDrawerPro inherits Rectangle {
         width: root.drawer-width;
         height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         animate x { duration: 160ms; easing: ease-out; }
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 6px; spacing: 6px;
                 Text {

@@ -28,7 +28,12 @@ export component PixelAlert inherits Rectangle {
     in property <color> bg: PixelTheme.bg;
     in property <color> border: PixelTheme.edge;
     in property <color> text-color: PixelTheme.text;
-    in property <color> icon-color: PixelTheme.text;
+    // kind 的语义色：左侧色条 + 图标取它，一眼看出是成功/警告/错误/信息。
+    // 想要纯黑白，把 PixelTheme.success/warning/info 设成 PixelTheme.text/edge 即可。
+    in property <color> tone: root.kind == "success" ? PixelTheme.success
+        : (root.kind == "warning" ? PixelTheme.warning
+        : (root.kind == "error" ? PixelTheme.danger : PixelTheme.info));
+    in property <color> icon-color: root.tone;
     callback closed;
 
     property <string> icon: root.kind == "success" ? "✓"
@@ -40,9 +45,12 @@ export component PixelAlert inherits Rectangle {
         width: root.width; height: root.height;
         background: root.bg;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
         border-color: root.border;
+        // 圆角下左侧色条要跟着内缩，否则方角色条会从圆角处探出去
+        clip: true;
         Rectangle {
-            x: 0px; y: 0px; width: 4px; height: root.height;
+            x: 0px; y: 0px; width: 4px; height: 100%;
             background: root.icon-color;
         }
         Text {
@@ -67,7 +75,7 @@ export component PixelAlert inherits Rectangle {
             visible: root.closable;
             x: parent.width - 30px; y: 5px;
             width: 24px; height: 24px;
-            background: close.has-hover ? #f2f2f2 : transparent;
+            background: close.has-hover ? PixelTheme.hover : transparent;
             Text {
                 x: 0px; y: 0px; width: 24px; height: 24px;
                 text: "×";
@@ -112,6 +120,7 @@ export component PixelToast inherits Rectangle {
         width: root.width; height: root.height;
         background: root.bg;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
         border-color: #000000;
         Text {
             x: 14px; y: 0px;
@@ -234,6 +243,7 @@ export component PixelTabs inherits Rectangle {
                     x: 6px; y: 32px;
                     width: parent.width - 12px; height: 3px;
                     background: root.active-bar;
+                border-radius: PixelTheme.radius-sm;
                 }
                 tab-ta := TouchArea {
                     width: 100%; height: 100%;
@@ -296,7 +306,7 @@ export component PixelPagination inherits Rectangle {
     in property <color> face-active: PixelTheme.accent;
     in property <color> border: PixelTheme.edge;
     in property <color> text-color: PixelTheme.text;
-    in property <color> text-active: #ffffff;
+    in property <color> text-active: PixelTheme.on-accent;
     in property <color> text-disabled: PixelTheme.dim;
     callback changed(page: int);
 
@@ -307,6 +317,7 @@ export component PixelPagination inherits Rectangle {
             width: 30px; height: 30px;
             background: prev-ta.has-hover && root.page > 1 ? root.face-hover : root.face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {
                 text: "‹";
@@ -332,6 +343,7 @@ export component PixelPagination inherits Rectangle {
             background: root.page == p ? root.face-active
                 : (page-ta.has-hover ? root.face-hover : root.face);
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {
                 text: p;
@@ -354,6 +366,7 @@ export component PixelPagination inherits Rectangle {
             width: 30px; height: 30px;
             background: next-ta.has-hover && root.page < root.total ? root.face-hover : root.face;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {
                 text: "›";
@@ -441,6 +454,7 @@ export component PixelAvatar inherits Rectangle {
         width: 100%; height: 100%;
         background: root.face;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius-sm;
         border-color: root.border;
         Text {
             text: root.text;
@@ -467,6 +481,7 @@ export component PixelTag inherits Rectangle {
         width: root.width; height: root.height;
         background: root.face;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius-sm;
         border-color: root.border;
         HorizontalLayout {
             padding: 6px;
@@ -506,16 +521,20 @@ export component PixelCard inherits Rectangle {
     in property <color> shadow: PixelTheme.shadow;
     in property <color> title-color: PixelTheme.text;
     background: root.bg;
+    // 根底色也要圆：硬阴影层被切掉的角上不能露出方角底色
+    border-radius: PixelTheme.radius;
 
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
     }
     Rectangle {
         x: 3px; y: 3px;
         width: parent.width - 6px; height: parent.height - 6px;
         background: root.bg;
         border-width: root.bordered ? PixelTheme.border-width : 0px;
+        border-radius: PixelTheme.radius;
         border-color: root.border;
         VerticalLayout {
             padding: 14px;
@@ -549,6 +568,7 @@ export component PixelNavbar inherits Rectangle {
         width: 100%; height: 100%;
         background: root.bg;
         border-width: 0px;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 0px; y: parent.height - 2px;
             width: parent.width; height: 2px;
@@ -686,6 +706,7 @@ export component PixelStat inherits Rectangle {
         width: 100%; height: 100%;
         background: root.bg;
         border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
         border-color: root.border;
         VerticalLayout {
             padding: 12px;

@@ -22,6 +22,25 @@
 
 ![gallery](docs/gallery.png)
 
+## 最新特性（0.2.4，未发布）
+
+- **圆角主题**：`PixelTheme.radius`（默认 `0px`）/ `radius-sm`（默认 = `radius / 2`）。
+  全库 130+ 个可见表面（卡片、面板、按钮、输入框、下拉、表格、对话框、标签…）都接了这两个 token，
+  **默认 0px，既有宿主升级零外观变化**；宿主要圆角只需一行。
+- **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
+  ```slint
+  import { PixelPresets } from "@slint_pixel";
+  init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 12px 圆角
+  ```
+- **语义色扩展**：新增 `success` / `warning` / `info` / `on-accent`（`accent` 面上的前景色）。
+  `PixelAlert` 现在按 `kind` 显示语义色（信息蓝 / 成功绿 / 警告琥珀 / 错误红）；
+  选中行、勾选标记、开关滑块统一走 `on-accent`，顺带修掉深色主题下"白字压白底"的选中态。
+- **可复现的视觉验证**：`cargo test -p slint-pixel --test theme_radius` 用软件渲染器把同一场景渲染两次，
+  断言圆角真的改变了四角像素（阳性对照：把组件改回不读主题即报红）；另有覆盖守卫防止新增组件漏接圆角。
+  `cargo run -p slint-pixel-demo --example render_gallery -- <目录>` 可无头导出各预设截图（docs 里的图就是这么来的）。
+
+![圆角 + 柔彩](docs/gallery-soft.png)
+
 ## 最新特性（v0.2.3）
 
 - **可统一配置的控件描边**：`PixelTheme.border-width`（默认 2px）和
@@ -92,7 +111,8 @@
 | `PixelDivider` | 分隔线（可带文字） |
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
-| `PixelTheme` | 全局主题（bg/panel/hover/edge/shadow/text/dim/accent/danger 九色 + `border-width` / `primary-border-width` 两种描边宽度，改一处全部组件实时换肤） |
+| `PixelTheme` | 全局主题（九色语义色 + `success`/`warning`/`info`/`on-accent` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`，改一处全部组件实时换肤） |
+| `PixelPresets` | 内置整套预设：`classic()`（经典黑白像素）/ `soft()`（柔彩圆角）/ `dark()`（深色琥珀），一行切换颜色 + 圆角 |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
 
@@ -154,7 +174,8 @@
 | `PixelPDFViewer` / `PixelPrintPreview` | PDF 预览 / 打印预览 |
 | `PixelBarcode` / `PixelCaptcha` | 条码 / 图形验证码 |
 
-> 主题：默认是 **纯白**（纯白底 + 近黑边框 + 纯黑文字，主色仅黑白，danger 保留红色做功能区分；PICO-8 绘画色板不变）。
+> 主题：默认是 **纯白 + 直角**（纯白底 + 近黑边框 + 纯黑文字，主色黑白，功能色保留 danger 红 /
+> success 绿 / warning 琥珀 / info 蓝；PICO-8 绘画色板不变）。想换柔和观感用 `PixelPresets.soft()`。
 > **一键换肤**：所有组件默认色引用全局 `PixelTheme`（九色语义），改一处全部生效；
 > 画廊里点 **主题编辑器** 可调色/切预设，点 **一键生成样式** 直接产出 `.slint` 覆盖代码。
 > `PixelButton` 支持 `variant`（default/primary/danger/ghost）与 `size`（small/medium/large），对齐 Tailwind 按钮语义。
@@ -184,7 +205,8 @@ cargo run
 crates/
 ├── slint-pixel/                  # 组件库（lib）
 │   ├── ui/lib.slint               # @slint_pixel 汇总入口（re-export 全部组件）
-│   ├── ui/pixel_theme.slint         # 全局主题 PixelTheme（九色语义）
+│   ├── ui/pixel_theme.slint         # 全局主题 PixelTheme（语义色 + 描边 + 圆角）
+│   ├── ui/pixel_presets.slint       # 内置预设 PixelPresets（classic / soft / dark）
 │   ├── ui/pixel_painter_widget.slint   # 画板 + 标题栏 + 按钮 + 色块
 │   ├── ui/pixel_widgets.slint          # 基础控件：复选/开关/滑块/输入/进度/徽章/面板/对话框
 │   ├── ui/pixel_complex.slint         # 进阶控件：单选/下拉/菜单/表格/滚动/手风琴/侧边栏
@@ -343,6 +365,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 控件描边默认沿用 `PixelTheme.border-width = 2px` / `primary-border-width = 3px`；
 如果宿主希望全部控件统一为细边框，可在根组件初始化时设为 `1px`，避免卡片、按钮、
 输入框之间出现粗细混搭。
+
+### 圆角 / 柔彩配色
+
+默认外观是直角像素风（`radius: 0px`），**不设置就没有任何变化**。想要柔和一点的观感，两选一：
+
+```slint
+import { PixelPresets, PixelTheme } from "@slint_pixel";
+
+init => {
+    // ① 一条命令切整套：颜色 + 圆角 + 描边
+    PixelPresets.soft();      // classic() / soft() / dark()
+
+    // ② 或者只调圆角，颜色保持自己的主题
+    PixelTheme.radius = 10px; // 卡片/面板/输入框/对话框等容器
+    // PixelTheme.radius-sm 默认自动 = radius / 2（复选框、开关、标签、滑块等小件）
+}
+```
+
+圆角是**主题级**的：`radius` 给容器与大面积表面，`radius-sm` 给小件；单个组件仍可用
+`border-radius` 属性单独覆盖。预设只写 `PixelTheme`，所以预设之后再覆盖个别 token 也没问题。
+
+配色上，除 `danger` 外又补了 `success` / `warning` / `info` 三个功能色（`PixelAlert` 按 `kind` 取用），
+以及 `on-accent` —— 它表示"`accent` 底之上的前景色"，选中行文字、勾选标记、开关滑块都用它，
+这样把 `accent` 换成暖黄之类的亮色时不会出现白字压白底。想回到纯黑白，把这几个色设回
+`PixelTheme.text` / `PixelTheme.edge` 即可（或直接 `PixelPresets.classic()`）。
 
 所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /
 shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的

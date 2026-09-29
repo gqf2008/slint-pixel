@@ -149,17 +149,27 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
     let weak = gallery.as_weak();
     gallery.on_generate_theme(move || {
         let Some(g) = weak.upgrade() else { return };
-        let code = format!(
-            "// slint-pixel 主题覆盖（粘贴到你的 .slint，或设回 PixelTheme）\nimport {{ PixelTheme }} from \"@slint_pixel\";\n\nPixelTheme.bg = {};\nPixelTheme.panel = {};\nPixelTheme.hover = {};\nPixelTheme.edge = {};\nPixelTheme.shadow = {};\nPixelTheme.text = {};\nPixelTheme.dim = {};\nPixelTheme.accent = {};\nPixelTheme.danger = {};",
-            hex(g.get_t_bg()),
-            hex(g.get_t_panel()),
-            hex(g.get_t_hover()),
-            hex(g.get_t_edge()),
-            hex(g.get_t_shadow()),
-            hex(g.get_t_text()),
-            hex(g.get_t_dim()),
-            hex(g.get_t_accent()),
-            hex(g.get_t_danger()),
+        let code = theme_code(
+            "slint-pixel 主题覆盖（粘贴到你的 .slint，或设回 PixelTheme）",
+            &[
+                ("bg", hex(g.get_t_bg())),
+                ("panel", hex(g.get_t_panel())),
+                ("hover", hex(g.get_t_hover())),
+                ("edge", hex(g.get_t_edge())),
+                ("shadow", hex(g.get_t_shadow())),
+                ("text", hex(g.get_t_text())),
+                ("dim", hex(g.get_t_dim())),
+                ("accent", hex(g.get_t_accent())),
+                ("danger", hex(g.get_t_danger())),
+                ("success", hex(g.get_t_success())),
+                ("warning", hex(g.get_t_warning())),
+                ("info", hex(g.get_t_info())),
+                ("on-accent", hex(g.get_t_on_accent())),
+                ("primary-face", hex(g.get_t_primary_face())),
+                ("primary-text", hex(g.get_t_primary_text())),
+                ("radius", px(g.get_t_radius())),
+                ("radius-sm", px(g.get_t_radius_sm())),
+            ],
         );
         g.set_generated_theme(code.into());
     });
@@ -219,20 +229,43 @@ fn wire_generate_theme(editor: &ThemeEditorWindow) {
     let weak = editor.as_weak();
     editor.on_generate_theme(move || {
         let Some(ui) = weak.upgrade() else { return };
-        let code = format!(
-            "// slint-pixel 主题覆盖\nimport {{ PixelTheme }} from \"@slint_pixel\";\n\nPixelTheme.bg = {};\nPixelTheme.panel = {};\nPixelTheme.hover = {};\nPixelTheme.edge = {};\nPixelTheme.shadow = {};\nPixelTheme.text = {};\nPixelTheme.dim = {};\nPixelTheme.accent = {};\nPixelTheme.danger = {};",
-            hex(ui.get_t_bg()),
-            hex(ui.get_t_panel()),
-            hex(ui.get_t_hover()),
-            hex(ui.get_t_edge()),
-            hex(ui.get_t_shadow()),
-            hex(ui.get_t_text()),
-            hex(ui.get_t_dim()),
-            hex(ui.get_t_accent()),
-            hex(ui.get_t_danger()),
+        let code = theme_code(
+            "slint-pixel 主题覆盖",
+            &[
+                ("bg", hex(ui.get_t_bg())),
+                ("panel", hex(ui.get_t_panel())),
+                ("hover", hex(ui.get_t_hover())),
+                ("edge", hex(ui.get_t_edge())),
+                ("shadow", hex(ui.get_t_shadow())),
+                ("text", hex(ui.get_t_text())),
+                ("dim", hex(ui.get_t_dim())),
+                ("accent", hex(ui.get_t_accent())),
+                ("danger", hex(ui.get_t_danger())),
+                ("success", hex(ui.get_t_success())),
+                ("warning", hex(ui.get_t_warning())),
+                ("info", hex(ui.get_t_info())),
+                ("on-accent", hex(ui.get_t_on_accent())),
+                ("primary-face", hex(ui.get_t_primary_face())),
+                ("primary-text", hex(ui.get_t_primary_text())),
+                ("radius", px(ui.get_t_radius())),
+                ("radius-sm", px(ui.get_t_radius_sm())),
+            ],
         );
         ui.set_generated_theme(code.into());
     });
+}
+
+/// 生成 PixelTheme 覆盖代码；画廊与主题编辑器共用一份，避免两处漂移。
+fn theme_code(comment: &str, values: &[(&str, String)]) -> String {
+    let mut code = format!("// {comment}\nimport {{ PixelTheme }} from \"@slint_pixel\";\n\n");
+    for (name, value) in values {
+        code.push_str(&format!("PixelTheme.{name} = {value};\n"));
+    }
+    code
+}
+
+fn px(len: f32) -> String {
+    format!("{len:.0}px")
 }
 
 fn hex(c: slint::Color) -> String {

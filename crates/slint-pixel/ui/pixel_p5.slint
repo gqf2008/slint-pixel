@@ -25,10 +25,12 @@ export component PixelRichTextEditor inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 4px; spacing: 4px;
                 HorizontalLayout {
@@ -62,10 +64,12 @@ export component PixelCodeBlock inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             Text {
                 x: 8px; y: 4px; width: parent.width - 16px; height: parent.height - 8px;
                 text: root.code;
@@ -96,10 +100,12 @@ export component PixelImageCrop inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
             background: #ffffff;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             clip: true;
             Image {
                 source: root.source;
@@ -179,10 +185,12 @@ export component PixelCalendar inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
             border-width: PixelTheme.border-width; border-color: root.border;
+            border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 4px; spacing: 4px;
                 PixelDatePicker {

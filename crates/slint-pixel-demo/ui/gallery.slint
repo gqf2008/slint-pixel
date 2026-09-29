@@ -9,7 +9,7 @@ import {
     PixelIconButton, PixelBubble, PixelPopconfirm,
     PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
     PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
-    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme,
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme, PixelPresets,
     PixelImage, PixelImageViewer, PixelTagInput, PixelAutoComplete,
     PixelCascader, PixelDateRangePicker, PixelRating, PixelDescriptionList, PixelResult,
     PixelAvatarGroup, PixelList, PixelVirtualList, PixelTreeTable,
@@ -32,18 +32,7 @@ export component GalleryWindow inherits Window {
     no-frame: true;
     preferred-width: 760px;
     preferred-height: 640px;
-    background: c-bg;
-
-    // ---------- 主题 ----------
-    property <color> c-bg: #ffffff;
-    property <color> c-panel: #ffffff;
-    property <color> c-panel-light: #f2f2f2;
-    property <color> c-border: #1a1a1a;
-    property <color> c-shadow: #000000;
-    property <color> c-text: #000000;
-    property <color> c-dim: #525252;
-    property <color> c-highlight: #000000;
-    property <color> c-danger: #ff004d;
+    background: PixelTheme.bg;
 
     // ---------- 演示状态 ----------
     in-out property <bool> grid-enabled: true;
@@ -65,6 +54,17 @@ export component GalleryWindow inherits Window {
     property <bool> bubble-open: false;
     property <string> action-status: "就绪";
     in-out property <bool> dark-mode: false;
+    // 无头截图 / 演示脚本用：改成 "soft" / "dark" 即套用对应整套预设（颜色 + 圆角）
+    in-out property <string> theme-preset: "classic";
+    changed theme-preset => {
+        if (root.theme-preset == "soft") {
+            PixelPresets.soft();
+        } else if (root.theme-preset == "dark") {
+            PixelPresets.dark();
+        } else {
+            PixelPresets.classic();
+        }
+    }
 
     // ---------- 回调（Rust 接线） ----------
     callback drag-start();
@@ -86,6 +86,14 @@ export component GalleryWindow inherits Window {
     in-out property <color> t-dim: PixelTheme.dim;
     in-out property <color> t-accent: PixelTheme.accent;
     in-out property <color> t-danger: PixelTheme.danger;
+    in-out property <color> t-success: PixelTheme.success;
+    in-out property <color> t-warning: PixelTheme.warning;
+    in-out property <color> t-info: PixelTheme.info;
+    in-out property <color> t-on-accent: PixelTheme.on-accent;
+    in-out property <color> t-primary-face: PixelTheme.primary-face;
+    in-out property <color> t-primary-text: PixelTheme.primary-text;
+    in-out property <length> t-radius: PixelTheme.radius;
+    in-out property <length> t-radius-sm: PixelTheme.radius-sm;
     callback dialog-accept();
     callback dialog-cancel();
 
@@ -96,14 +104,14 @@ export component GalleryWindow inherits Window {
 
         PixelTitleBar {
             title: "SLINT WIDGET GALLERY · 像素组件库";
-            bg: c-bg;
-            text-color: c-dim;
-            accent: c-highlight;
-            btn-face: c-panel;
-            btn-hover: c-panel-light;
-            btn-icon: c-text;
-            close-hover: c-danger;
-            divider: c-shadow;
+            bg: PixelTheme.bg;
+            text-color: PixelTheme.dim;
+            accent: PixelTheme.accent;
+            btn-face: PixelTheme.panel;
+            btn-hover: PixelTheme.hover;
+            btn-icon: PixelTheme.text;
+            close-hover: PixelTheme.danger;
+            divider: PixelTheme.shadow;
             drag-start => { root.drag-start(); }
             minimize => { root.minimize(); }
             toggle-maximize => { root.toggle-maximize(); }
@@ -132,7 +140,7 @@ export component GalleryWindow inherits Window {
                             PixelButton { text: "小"; width: 60px; size: "small"; }
                             PixelButton { text: "中"; width: 60px; }
                             PixelButton { text: "大"; width: 60px; size: "large"; }
-                            PixelButton { text: "清空"; width: 80px; face: c-danger; face-active: #ff2f77; }
+                            PixelButton { text: "清空"; width: 80px; face: PixelTheme.danger; face-active: #ff2f77; }
                         }
                     }
                 }
@@ -150,7 +158,7 @@ export component GalleryWindow inherits Window {
                     VerticalLayout {
                         spacing: 6px;
                         PixelSlider { value <=> root.slider-value; }
-                        Text { text: "值: " + Math.round(root.slider-value) + " / 100"; color: c-dim; font-size: 12px; }
+                        Text { text: "值: " + Math.round(root.slider-value) + " / 100"; color: PixelTheme.dim; font-size: 12px; }
                     }
                 }
                 PixelPanel {
@@ -158,7 +166,7 @@ export component GalleryWindow inherits Window {
                     VerticalLayout {
                         spacing: 6px;
                         PixelTextInput { text <=> root.input-text; placeholder: "输入文字…"; }
-                        Text { text: "回显: " + root.input-text; color: c-dim; font-size: 12px; }
+                        Text { text: "回显: " + root.input-text; color: PixelTheme.dim; font-size: 12px; }
                     }
                 }
                 PixelPanel {
@@ -176,7 +184,7 @@ export component GalleryWindow inherits Window {
                             model: ["#ff004d 红", "#ffa300 橙", "#000000 黄", "#00e436 绿", "#000000 蓝"];
                             index <=> root.combo-index;
                         }
-                        Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: c-dim; font-size: 12px; }
+                        Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: PixelTheme.dim; font-size: 12px; }
                     }
                 }
                 PixelPanel {
@@ -192,8 +200,8 @@ export component GalleryWindow inherits Window {
                     title: "徽章 BADGE";
                     HorizontalLayout {
                         spacing: 8px;
-                        PixelBadge { text: "NEW"; width: 60px; face: c-danger; }
-                        PixelBadge { text: "PICO-8"; width: 76px; face: c-highlight; }
+                        PixelBadge { text: "NEW"; width: 60px; face: PixelTheme.danger; }
+                        PixelBadge { text: "PICO-8"; width: 76px; face: PixelTheme.accent; }
                         PixelBadge { text: "16×16"; width: 76px; face: #000000; }
                     }
                 }
@@ -217,7 +225,7 @@ export component GalleryWindow inherits Window {
                             index <=> root.menu-index;
                             button-text: "文件菜单";
                         }
-                        Text { text: "选择: " + (root.menu-index >= 0 ? root.menu-index : "无"); color: c-dim; font-size: 12px; }
+                        Text { text: "选择: " + (root.menu-index >= 0 ? root.menu-index : "无"); color: PixelTheme.dim; font-size: 12px; }
                     }
                 }
                 PixelPanel {
@@ -256,7 +264,7 @@ export component GalleryWindow inherits Window {
                             expanded <=> root.collapsible-open;
                             Text {
                                 text: "点击标题栏展开/收起。内容区带高度动画。";
-                                color: c-text;
+                                color: PixelTheme.text;
                                 font-size: 13px;
                                 wrap: word-wrap;
                             }
@@ -266,7 +274,7 @@ export component GalleryWindow inherits Window {
                             expanded: false;
                             Text {
                                 text: "Ctrl+N 新建，Ctrl+S 保存，Ctrl+E 导出 PNG。";
-                                color: c-text;
+                                color: PixelTheme.text;
                                 font-size: 13px;
                                 wrap: word-wrap;
                             }
@@ -276,7 +284,7 @@ export component GalleryWindow inherits Window {
                             expanded: false;
                             Text {
                                 text: "如何更换主题？打开主题编辑器即可一键换肤。";
-                                color: c-text;
+                                color: PixelTheme.text;
                                 font-size: 13px;
                                 wrap: word-wrap;
                             }
@@ -292,7 +300,7 @@ export component GalleryWindow inherits Window {
                         title: "导航";
                         Text {
                             text: "当前页面: " + ["画布", "图层", "调色板", "导出"][root.sidebar-active];
-                            color: c-text;
+                            color: PixelTheme.text;
                             font-size: 13px;
                         }
                     }
@@ -318,7 +326,7 @@ export component GalleryWindow inherits Window {
                         }
                         PixelFormItem {
                             label: "状态";
-                            PixelText { text: root.action-status; color: c-dim; }
+                            PixelText { text: root.action-status; color: PixelTheme.dim; }
                         }
                     }
                 }
@@ -328,7 +336,7 @@ export component GalleryWindow inherits Window {
                         spacing: 6px;
                         PixelTitle { text: "像素小标题 PIXEL TITLE"; }
                         PixelText { text: "正文：这是一段像素风文本，用 PixelText 统一字号。"; }
-                        PixelText { text: "次要说明文字，用 color 覆盖即可。"; color: c-dim; }
+                        PixelText { text: "次要说明文字，用 color 覆盖即可。"; color: PixelTheme.dim; }
                     }
                 }
                 PixelPanel {
@@ -338,7 +346,7 @@ export component GalleryWindow inherits Window {
                         Rectangle {
                             PixelIconButton { icon: "×"; clicked => { root.action-status = "点击了关闭图标"; } }
                             // 右上角数字角标（PixelBadge 作角标）
-                            PixelBadge { text: "3"; x: 24px; y: -6px; width: 22px; height: 16px; face: c-danger; text-color: #ffffff; font-size: 10px; }
+                            PixelBadge { text: "3"; x: 24px; y: -6px; width: 22px; height: 16px; face: PixelTheme.danger; text-color: #ffffff; font-size: 10px; }
                         }
                         PixelIconButton { icon: "✓"; clicked => { root.action-status = "点击了确认图标"; } }
                         PixelIconButton { icon: "▲"; active: true; clicked => { root.action-status = "点击了上箭头"; } }
@@ -380,7 +388,7 @@ export component GalleryWindow inherits Window {
                             confirm => { root.action-status = "已确认删除"; }
                             cancel => { root.action-status = "已取消删除"; }
                         }
-                        PixelText { text: root.action-status; color: c-dim; }
+                        PixelText { text: root.action-status; color: PixelTheme.dim; }
                     }
                 }
                 PixelPanel {
@@ -415,7 +423,7 @@ export component GalleryWindow inherits Window {
                             tabs: ["画布", "图层", "导出"];
                             active: 1;
                         }
-                        PixelText { text: "当前标签内容区由宿主切换（active 索引）。"; color: c-dim; }
+                        PixelText { text: "当前标签内容区由宿主切换（active 索引）。"; color: PixelTheme.dim; }
                     }
                 }
                 PixelPanel {
@@ -442,7 +450,7 @@ export component GalleryWindow inherits Window {
                         title: "像素小妖";
                         width: 260px;
                         PixelText { text: "稀有度：传说"; }
-                        PixelText { text: "掉落：金币 × 12"; color: c-dim; }
+                        PixelText { text: "掉落：金币 × 12"; color: PixelTheme.dim; }
                         PixelButton { text: "查看详情"; width: 100px; size: "small"; }
                     }
                 }
@@ -692,8 +700,20 @@ export component GalleryWindow inherits Window {
                             text: root.dark-mode ? "切回浅色" : "切到暗色"; width: 110px;
                             clicked => {
                                 root.dark-mode = !root.dark-mode;
-                                PixelTheme.scheme = root.dark-mode ? "dark" : "light";
+                                if root.dark-mode {
+                                    PixelPresets.dark();
+                                } else {
+                                    PixelPresets.classic();
+                                }
                             }
+                        }
+                        PixelButton {
+                            text: "柔彩圆角"; width: 90px; variant: "primary";
+                            clicked => { PixelPresets.soft(); root.dark-mode = false; }
+                        }
+                        PixelButton {
+                            text: "经典像素"; width: 90px;
+                            clicked => { PixelPresets.classic(); root.dark-mode = false; }
                         }
                     }
                 }
@@ -712,7 +732,7 @@ export component GalleryWindow inherits Window {
         title: "像素对话框";
         Text {
             text: "这是 PixelDialog 的内容插槽，可以放任意组件。点击确定或取消关闭。";
-            color: c-text;
+            color: PixelTheme.text;
             font-size: 13px;
             wrap: word-wrap;
         }

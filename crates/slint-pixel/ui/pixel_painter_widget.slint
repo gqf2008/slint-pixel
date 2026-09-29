@@ -27,6 +27,7 @@ component TitleButton inherits Rectangle {
     width: 30px; height: 26px;
     background: ta.has-hover ? root.hover-face : root.face;
     border-width: 1px;
+    border-radius: PixelTheme.radius;
     border-color: root.face;
 
     // 最小化：横条
@@ -173,6 +174,7 @@ export component Swatch inherits Rectangle {
     height: 34px;
     background: root.shade;
     border-width: PixelTheme.border-width;
+    border-radius: PixelTheme.radius-sm;
     border-color: root.selected ? root.select-color : root.shade;
     Rectangle {
         x: 2px; y: 2px; width: 30px; height: 30px;
@@ -202,8 +204,9 @@ export component PixelButton inherits Rectangle {
     in property <color> text-color: PixelTheme.text;
     in property <color> shadow: PixelTheme.shadow;
     // variant 专用色（默认值随黑白主题）
-    in property <color> primary-face: #ffffff;
-    in property <color> primary-text: #000000; // primary 面为白底，文字恒用深色，避免暗色主题白底白字
+    // primary 走主题（默认仍是白面黑字）；彩色主题可在 PixelTheme 里一次改掉所有 primary 按钮
+    in property <color> primary-face: PixelTheme.primary-face;
+    in property <color> primary-text: PixelTheme.primary-text;
     in property <color> danger-face: PixelTheme.danger;
     in property <color> danger-text: #ffffff;
     in property <color> ghost-text: PixelTheme.text;
@@ -240,6 +243,7 @@ export component PixelButton inherits Rectangle {
         x: 2px; y: 2px;
         width: parent.width; height: parent.height;
         background: root.shadow;
+        border-radius: PixelTheme.radius;
     }
 
     // 面层：常态左上对齐、按下时右下落到阴影位
@@ -249,6 +253,7 @@ export component PixelButton inherits Rectangle {
         width: parent.width; height: parent.height;
         background: root.eff-face;
         border-width: root.variant == "primary" ? PixelTheme.primary-border-width : PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
         border-color: root.active ? root.border-active : root.border;
         btn-text := Text {
             width: 100%; height: 100%;
@@ -326,6 +331,7 @@ export component PixelPainter inherits Rectangle {
             Rectangle {
                 width: 424px; height: 424px;
                 background: root.shadow;
+                border-radius: PixelTheme.radius;
                 Rectangle {
                     x: 6px; y: 6px; width: 412px; height: 412px;
                     background: root.edge;
@@ -369,6 +375,7 @@ export component PixelPainter inherits Rectangle {
             Rectangle {
                 width: 250px;
                 background: root.shadow;
+                border-radius: PixelTheme.radius;
                 Rectangle {
                     x: 4px; y: 4px; width: 242px; height: parent.height - 8px;
                     background: root.panel;
@@ -452,6 +459,7 @@ export component PixelPainter inherits Rectangle {
                             Rectangle {
                                 width: 28px; height: 28px;
                                 background: root.shadow;
+                                border-radius: PixelTheme.radius;
                                 Rectangle {
                                     x: 2px; y: 2px; width: 24px; height: 24px;
                                     background: root.brush-color;
@@ -468,6 +476,7 @@ export component PixelPainter inherits Rectangle {
             height: 28px;
             background: root.panel;
             border-width: PixelTheme.border-width;
+            border-radius: PixelTheme.radius;
             border-color: root.edge;
             HorizontalLayout {
                 padding: 6px;
