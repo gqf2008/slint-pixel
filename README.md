@@ -31,7 +31,7 @@
   （透明边距 + 圆角 + 描边 + 把内容 clip 在圆角内），Rust 侧一行 `slint_pixel::transparent_window()`
   打开透明窗口即可，见下方「圆角窗口（可选，三步）」。
 - **描边不再混档**：新增 `PixelTheme.border-thin`（输入类发丝档，默认 `0.5px`），组件里**不再有硬编码宽度**；
-  `soft()` 把三档统一成 1px、`dark()` 统一成 2px，宿主也可一行把 `border-width` /
+  `soft()` 把三档统一成 2px（保留原本的分量感）、`dark()` 同样 2px，宿主也可一行把 `border-width` /
   `primary-border-width` / `border-thin` 设成同一个值。
 - **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
   ```slint
@@ -413,10 +413,10 @@ shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` �
 ```slint
 PixelTheme.border-width = 1px;
 PixelTheme.primary-border-width = 1px;
-PixelTheme.border-thin = 1px;    // 想更细用 1px，想保留像素厚度用 2px
+PixelTheme.border-thin = 2px;    // 2px = 库的默认分量；想更细可整组用 1px
 ```
 
-`PixelPresets.soft()` 内置就是 1px×3（配柔彩圆角），`dark()` 是 2px×3；
+`PixelPresets.soft()` 内置就是 2px×3（配柔彩圆角），`dark()` 也是 2px×3；
 主题编辑器里也有「细 1px / 中 2px / 粗 3px」一键档位。
 
 ### 圆角窗口（可选，三步）

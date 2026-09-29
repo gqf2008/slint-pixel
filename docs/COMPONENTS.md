@@ -52,7 +52,7 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
 | `accent` / `on-accent` | `#000000` / `#ffffff` | 强调、选中底色 / **accent 底之上的前景色**（选中行文字、勾选标记、开关滑块） |
 | `danger` / `success` / `warning` / `info` | 红 / 绿 / 琥珀 / 蓝 | 功能色；`PixelAlert` 按 `kind` 取用 |
 | `primary-face` / `primary-text` | `#ffffff` / `#000000` | `PixelButton variant="primary"` 的面与字 |
-| `border-width` / `primary-border-width` / `border-thin` | `2px` / `3px` / `0.5px` | 控件描边 / primary 按钮描边 / 输入类"发丝档"描边。三档都可用主题统一（预设里 soft=1px×3、dark=2px×3 就是全库同宽） |
+| `border-width` / `primary-border-width` / `border-thin` | `2px` / `3px` / `0.5px` | 控件描边 / primary 按钮描边 / 输入类"发丝档"描边。三档都可用主题统一（预设里 soft=2px×3、dark=2px×3 就是全库同宽） |
 | `radius` / `radius-sm` | `0px` / `radius / 2` | 容器圆角 / 小件圆角（默认直角像素风） |
 | `window-radius` | `0px` | 窗口自身圆角（默认直角窗口）；> 0 需配合 `PixelWindowBody` 与透明窗口，见下 |
 
@@ -136,7 +136,7 @@ export component App inherits Window {
 ```slint
 PixelTheme.border-width = 1px;
 PixelTheme.primary-border-width = 1px;
-PixelTheme.border-thin = 1px;   // 预设 PixelPresets.soft() 就是 1px×3，dark() 是 2px×3
+PixelTheme.border-thin = 2px;   // 预设 PixelPresets.soft() 与 dark() 都是 2px×3（全库同宽）
 ```
 
 `cargo test -p slint-pixel --test theme_radius` 里的 `every_border_width_is_theme_driven`
