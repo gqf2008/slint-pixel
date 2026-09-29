@@ -12,6 +12,9 @@ import { PixelTheme } from "pixel_theme.slint";
 //
 // 预设只写 PixelTheme，因此任何组件属性（按钮 primary-face、卡片 bg…）都能继续单独覆盖；
 // 想微调就在预设之后覆盖个别 token。
+//
+// 预设只写 `radius`、不写 `radius-sm`：后者默认绑定 `radius / 2`，
+// 保持绑定不断开，"改 radius 小件自动跟随"，除非宿主自己显式覆盖过 `radius-sm`。
 // ============================================================================
 export global PixelPresets {
     // ---------- 经典像素风：纯白 + 近黑描边 + 直角（= 库默认值） ----------
@@ -36,7 +39,6 @@ export global PixelPresets {
         PixelTheme.border-width = 2px;
         PixelTheme.primary-border-width = 3px;
         PixelTheme.radius = 0px;
-        PixelTheme.radius-sm = 0px;
     }
 
     // ---------- 柔彩圆角：暖米底 + 墨黑描边 + 暖黄主色 + 圆角 ----------
@@ -62,7 +64,6 @@ export global PixelPresets {
         PixelTheme.border-width = 2px;
         PixelTheme.primary-border-width = 3px;
         PixelTheme.radius = 12px;
-        PixelTheme.radius-sm = 6px;
     }
 
     // ---------- 深色：近黑底 + 琥珀主色 + 直角 ----------
@@ -87,6 +88,5 @@ export global PixelPresets {
         PixelTheme.border-width = 2px;
         PixelTheme.primary-border-width = 3px;
         PixelTheme.radius = 0px;
-        PixelTheme.radius-sm = 0px;
     }
 }

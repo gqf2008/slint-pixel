@@ -19,7 +19,9 @@ fn main() {
     };
 
     // 集成测试只能 include! 构建期生成的代码，圆角行为探针因此在这里编译（tests/theme_radius.rs 用）。
-    // 必须排在 pixel_painter_window.slint 之前：SLINT_INCLUDE_GENERATED 指向最后一次编译的文件。
+    // 它必须排在 pixel_painter_window.slint 之前：src/lib.rs 的 slint::include_modules!() 读
+    // SLINT_INCLUDE_GENERATED，而那个变量指向**最后一次**编译产物（测试自己按文件名 include!，
+    // 不受该变量影响）。
     slint_build::compile_with_config("tests/theme_radius.slint", config())
         .expect("编译圆角探针 tests/theme_radius.slint 失败");
 

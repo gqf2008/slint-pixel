@@ -183,10 +183,11 @@ export component ThemeEditorWindow inherits Window {
                         font-size: 12px;
                         vertical-alignment: center;
                     }
-                    PixelButton { text: "直角"; width: 56px; clicked => { PixelTheme.radius = 0px; PixelTheme.radius-sm = 0px; } }
-                    PixelButton { text: "微圆"; width: 56px; clicked => { PixelTheme.radius = 6px; PixelTheme.radius-sm = 3px; } }
-                    PixelButton { text: "圆角"; width: 56px; clicked => { PixelTheme.radius = 12px; PixelTheme.radius-sm = 6px; } }
-                    PixelButton { text: "大圆角"; width: 66px; clicked => { PixelTheme.radius = 18px; PixelTheme.radius-sm = 9px; } }
+                    // 只设 radius：radius-sm 绑定 radius / 2，会自动跟随（宿主显式覆盖过才会断开）
+                    PixelButton { text: "直角"; width: 56px; clicked => { PixelTheme.radius = 0px; } }
+                    PixelButton { text: "微圆"; width: 56px; clicked => { PixelTheme.radius = 6px; } }
+                    PixelButton { text: "圆角"; width: 56px; clicked => { PixelTheme.radius = 12px; } }
+                    PixelButton { text: "大圆角"; width: 66px; clicked => { PixelTheme.radius = 18px; } }
                 }
             }
         }

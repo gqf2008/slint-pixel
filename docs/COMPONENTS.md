@@ -59,6 +59,13 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
 复选框 / 开关 / 滑块 / 标签等小件读 `radius-sm`。**默认 0px，不设置就没有外观变化**。
 单个组件仍可用自己的 `border-radius` 属性覆盖。
 
+`radius-sm` 默认绑定 `radius / 2`，所以只写 `radius` 就能让小件自动跟随（预设与主题编辑器都只写
+`radius`）；只有宿主显式给 `radius-sm` 赋过值，这个派生才会断开。
+
+> 贴边子元素与圆角：Slint 的 `clip` 会跟随 `border-radius`（实测 2026-09-29：`PixelAlert`
+> 左侧色条去掉 `clip: true` 后就会从圆角处露出直角）。自己往圆角表面里塞贴边子元素时，
+> 要么给表面开 `clip: true`，要么把子元素从边缘内缩。
+
 ### 一键预设 `PixelPresets`
 
 ```slint

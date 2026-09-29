@@ -47,7 +47,8 @@ export component PixelAlert inherits Rectangle {
         border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius;
         border-color: root.border;
-        // 圆角下左侧色条要跟着内缩，否则方角色条会从圆角处探出去
+        // 左侧色条贴边铺满：靠 clip 按圆角裁剪，否则方角色条会从圆角处探出去
+        // （实测 2026-09-29：去掉这行后色条在圆角处露出直角；Slint 1.18 的 clip 会跟随 border-radius）
         clip: true;
         Rectangle {
             x: 0px; y: 0px; width: 4px; height: 100%;

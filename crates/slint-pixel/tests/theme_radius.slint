@@ -12,10 +12,11 @@ export component RadiusProbe inherits Window {
     background: #ff0000;
 
     // 测试从 Rust 侧改这个值，再由它写进 PixelTheme —— 组件必须真的读主题才会变。
+    // 只写 radius：PixelBadge 走的是 radius-sm，它必须能从默认绑定（radius / 2）自动派生，
+    // 否则"改一个 radius 小件不跟随"这个坑就会被漏掉。
     in-out property <length> probe-radius: 0px;
     changed probe-radius => {
         PixelTheme.radius = root.probe-radius;
-        PixelTheme.radius-sm = root.probe-radius / 2;
     }
 
     PixelPanel {

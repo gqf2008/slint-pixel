@@ -385,6 +385,8 @@ init => {
 
 圆角是**主题级**的：`radius` 给容器与大面积表面，`radius-sm` 给小件；单个组件仍可用
 `border-radius` 属性单独覆盖。预设只写 `PixelTheme`，所以预设之后再覆盖个别 token 也没问题。
+`radius-sm` 默认绑定 `radius / 2`（预设与画廊的圆角档位都只写 `radius`），所以改一个值小件就自动跟随；
+只有宿主显式给 `radius-sm` 赋过值，这个派生才会断开。
 
 配色上，除 `danger` 外又补了 `success` / `warning` / `info` 三个功能色（`PixelAlert` 按 `kind` 取用），
 以及 `on-accent` —— 它表示"`accent` 底之上的前景色"，选中行文字、勾选标记、开关滑块都用它，
