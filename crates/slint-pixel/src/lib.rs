@@ -322,6 +322,28 @@ pub fn install_window_resize<T: ResizeUi + 'static>(ui: &T) {
     });
 }
 
+/// 开启透明窗口，无边框窗口做「圆角窗身」时必须调用它。
+///
+/// 用法（在创建任何窗口之前设置 backend，把 hook 串进去）：
+///
+/// ```ignore
+/// slint::BackendSelector::new()
+///     .with_winit_window_attributes_hook(|attrs| slint_pixel::transparent_window(attrs))
+///     .select()?;
+/// ```
+///
+/// 配方（三步，缺一不可）：
+/// 1. 宿主打开透明窗口（本函数）；
+/// 2. `PixelTheme.window-radius = 12px`（或任意 > 0 的值；默认 0px 表示直角窗口、旧观感）；
+/// 3. 窗口内容放进 `PixelWindowBody { ... }`（它负责透明边距 + 圆角 + 描边 + clip）。
+///
+/// 不打开透明窗口就设 `window-radius > 0`，圆角外那圈边距会显示成黑边。
+pub fn transparent_window(
+    attributes: slint::winit_030::winit::window::WindowAttributes,
+) -> slint::winit_030::winit::window::WindowAttributes {
+    attributes.with_transparent(true)
+}
+
 /// 把 `child` 窗口设为 `owner` 的子窗口。
 /// Windows 上子窗口不再单独出现在任务栏（跟随 owner 一起最小化/还原）；
 /// 其他平台为 no-op。需在窗口 `show()` 且 winit 窗口创建完成后调用

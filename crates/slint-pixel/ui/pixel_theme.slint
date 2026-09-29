@@ -34,4 +34,8 @@ export global PixelTheme {
     // 容器 / 卡片 / 输入 / 对话框等可见表面用 radius；复选框、开关、标签、滑块等小件用 radius-sm。
     in-out property <length> radius: 0px;
     in-out property <length> radius-sm: root.radius / 2;
+    // 窗口本身的圆角：0px = 直角窗口（默认，旧观感）。
+    // 设成 > 0 时窗口会留出透明边距并画圆角窗身（用 PixelWindowBody），
+    // 因此宿主必须同时把窗口开成透明窗口，见 `slint_pixel::transparent_window()` 与 README。
+    in-out property <length> window-radius: 0px;
 }

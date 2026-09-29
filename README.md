@@ -27,10 +27,13 @@
 - **圆角主题**：`PixelTheme.radius`（默认 `0px`）/ `radius-sm`（默认 = `radius / 2`）。
   全库 130+ 个可见表面（卡片、面板、按钮、输入框、下拉、表格、对话框、标签…）都接了这两个 token，
   **默认 0px，既有宿主升级零外观变化**；宿主要圆角只需一行。
+- **圆角窗口（可选）**：`PixelTheme.window-radius`（默认 `0px` = 直角窗口）+ 库组件 `PixelWindowBody`
+  （透明边距 + 圆角 + 描边 + 把内容 clip 在圆角内），Rust 侧一行 `slint_pixel::transparent_window()`
+  打开透明窗口即可，见下方「圆角窗口（可选，三步）」。
 - **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
   ```slint
   import { PixelPresets } from "@slint_pixel";
-  init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 12px 圆角
+  init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 8px 圆角
   ```
 - **语义色扩展**：新增 `success` / `warning` / `info` / `on-accent`（`accent` 面上的前景色）。
   `PixelAlert` 现在按 `kind` 显示语义色（信息蓝 / 成功绿 / 警告琥珀 / 错误红）；
@@ -111,8 +114,9 @@
 | `PixelDivider` | 分隔线（可带文字） |
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
-| `PixelTheme` | 全局主题（九色语义色 + `success`/`warning`/`info`/`on-accent` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`，改一处全部组件实时换肤） |
+| `PixelTheme` | 全局主题（九色语义色 + `success`/`warning`/`info`/`on-accent` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`/`window-radius`，改一处全部组件实时换肤） |
 | `PixelPresets` | 内置整套预设：`classic()`（经典黑白像素）/ `soft()`（柔彩圆角）/ `dark()`（深色琥珀），一行切换颜色 + 圆角 |
+| `PixelWindowBody` | 圆角窗身：透明边距 + 圆角 + 描边 + 内容按圆角裁切；`window-radius = 0` 时等价于旧的全出血观感 |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
 
@@ -194,7 +198,8 @@
 ## 运行演示
 
 ```bash
-cargo run
+cargo run            # 经典像素风（默认）
+cargo run -- soft     # 柔彩圆角；也可以 dark
 ```
 
 启动后打开 **组件画廊**（展示全部常用控件），点画廊里的 **打开像素画板 →** 可打开画板窗口。窗口为无边框自绘标题栏，**四边/四角可直接拖拽缩放**，标题栏可拖动/最小化/最大化/关闭。
@@ -396,6 +401,38 @@ init => {
 所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /
 shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的
 `track / fill / thumb / border / shadow` 等），宿主可在 `.slint` 里直接覆盖。
+
+### 圆角窗口（可选，三步）
+
+无边框窗口默认是直角矩形；要让**窗口本身**也圆角（内部圆角配方角外框会显得不协调），三步：
+
+```rust
+// 1) 打开透明窗口（必须在创建任何窗口之前设置 backend）
+slint::BackendSelector::new()
+    .with_winit_window_attributes_hook(|attrs| slint_pixel::transparent_window(attrs))
+    .select()?;
+```
+
+```slint
+// 2) 窗口底色透明 + 3) 内容包进 PixelWindowBody
+import { PixelWindowBody, PixelTheme } from "@slint_pixel";
+
+export component App inherits Window {
+    no-frame: true;
+    background: transparent;
+
+    init => { PixelTheme.window-radius = 12px; }   // 0px（默认）= 直角窗口、全出血
+
+    PixelWindowBody {
+        VerticalLayout { /* 标题栏 + 你的内容 */ }
+    }
+}
+```
+
+`window-radius > 0` 时 `PixelWindowBody` 四周留 3px 透明边距、按 `border-width` 描边，
+并把内容裁在圆角内（自绘标题栏会顺着圆角切）；`window-radius = 0` 时边距与描边都为 0，
+与旧版一样铺满窗口。**没开透明窗口就设 `window-radius > 0`，圆角外那圈边距会显示成黑边**，
+所以库预设（`PixelPresets.*`）不碰 `window-radius`，由宿主自己决定。
 
 ### 窗口拖动的两种接法（`native-move`）
 

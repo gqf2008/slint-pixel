@@ -489,3 +489,30 @@ export component PixelDialog inherits Rectangle {
         }
     }
 }
+
+// ===== 圆角窗身（可选） =====
+// 无边框窗口做圆角窗身：外面留出透明边距（窗口必须是透明窗口），里层按 window-radius 画圆角 + 描边，
+// 并把内容 clip 在圆角内（标题栏等贴边内容会跟着圆角切）。
+// `PixelTheme.window-radius = 0px`（默认）时不透明边距、不描边，退回全出血的旧观感。
+export component PixelWindowBody inherits Rectangle {
+    in property <color> face: PixelTheme.bg;
+    in property <color> border: PixelTheme.edge;
+    in property <length> radius: PixelTheme.window-radius;
+    // 圆角打开时窗身四周留出的透明边距（描边画在边距内侧）
+    out property <length> pad: root.radius > 0px ? 3px : 0px;
+    width: 100%;
+    height: 100%;
+
+    Rectangle {
+        x: root.pad;
+        y: root.pad;
+        width: parent.width - 2 * root.pad;
+        height: parent.height - 2 * root.pad;
+        background: root.face;
+        border-width: root.radius > 0px ? PixelTheme.border-width : 0px;
+        border-color: root.border;
+        border-radius: root.radius;
+        clip: true;
+        @children
+    }
+}

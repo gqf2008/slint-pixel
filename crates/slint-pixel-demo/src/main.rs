@@ -80,6 +80,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     slint::BackendSelector::new()
         .backend_name("winit".into())
         .with_winit_window_attributes_hook(move |attributes| {
+            // 圆角窗身（PixelWindowBody + PixelTheme.window-radius）要求窗口本身透明
+            let attributes = slint_pixel::transparent_window(attributes);
             if let Some(position) = *initial_center_for_hook.borrow() {
                 attributes
                     .with_inner_size(winit::dpi::LogicalSize::new(
@@ -116,6 +118,11 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
     slint_pixel::install_title_bar_controls(&gallery);
     slint_pixel::install_window_resize(&gallery);
 
+    // 可选：命令行选初始预设 —— `cargo run -- soft` / `dark`（默认 classic 经典像素风）
+    if let Some(preset) = std::env::args().nth(1) {
+        gallery.set_theme_preset(preset.as_str().into());
+    }
+
     // 画廊里的“打开像素画板”：新开一个画板窗口并保持存活
     let painters: Rc<RefCell<Vec<MainWindow>>> = Rc::new(RefCell::new(Vec::new()));
     let painters_open = painters.clone();
@@ -124,6 +131,8 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
     let gallery_ref = gallery.clone_strong();
     gallery.on_open_painter(move || {
         if let Ok(painter) = MainWindow::new() {
+            // Slint 的 global 不跨窗口共享：把画廊当前预设带给新窗口
+            painter.set_theme_preset(gallery_ref.get_theme_preset());
             slint_pixel::install_painter(&painter);
             slint_pixel::install_title_bar_controls_no_quit(&painter);
             slint_pixel::install_window_resize(&painter);
@@ -169,6 +178,7 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
                 ("primary-text", hex(g.get_t_primary_text())),
                 ("radius", px(g.get_t_radius())),
                 ("radius-sm", px(g.get_t_radius_sm())),
+                ("window-radius", px(g.get_t_window_radius())),
             ],
         );
         g.set_generated_theme(code.into());
@@ -180,6 +190,7 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
     let gallery_ref2 = gallery.clone_strong();
     gallery.on_open_theme_editor(move || {
         if let Ok(editor) = ThemeEditorWindow::new() {
+            editor.set_theme_preset(gallery_ref2.get_theme_preset());
             slint_pixel::install_title_bar_controls_no_quit(&editor);
             slint_pixel::install_window_resize(&editor);
             wire_generate_theme(&editor);
@@ -249,6 +260,7 @@ fn wire_generate_theme(editor: &ThemeEditorWindow) {
                 ("primary-text", hex(ui.get_t_primary_text())),
                 ("radius", px(ui.get_t_radius())),
                 ("radius-sm", px(ui.get_t_radius_sm())),
+                ("window-radius", px(ui.get_t_window_radius())),
             ],
         );
         ui.set_generated_theme(code.into());

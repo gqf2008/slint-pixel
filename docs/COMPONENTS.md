@@ -54,6 +54,7 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
 | `primary-face` / `primary-text` | `#ffffff` / `#000000` | `PixelButton variant="primary"` 的面与字 |
 | `border-width` / `primary-border-width` | `2px` / `3px` | 控件描边宽度 |
 | `radius` / `radius-sm` | `0px` / `radius / 2` | 容器圆角 / 小件圆角（默认直角像素风） |
+| `window-radius` | `0px` | 窗口自身圆角（默认直角窗口）；> 0 需配合 `PixelWindowBody` 与透明窗口，见下 |
 
 `radius` 是全库生效的：卡片、面板、按钮、输入框、下拉、表格、对话框、标签等可见表面都读它，
 复选框 / 开关 / 滑块 / 标签等小件读 `radius-sm`。**默认 0px，不设置就没有外观变化**。
@@ -90,6 +91,35 @@ PixelTheme.radius = 8px;
 cargo test -p slint-pixel --test theme_radius          # 行为守卫 + 全库覆盖守卫
 cargo run -p slint-pixel-demo --example render_gallery -- /tmp/shots   # 无头导出各预设截图
 ```
+
+### 圆角窗口 `PixelWindowBody`
+
+无边框窗口默认是直角矩形。要让窗口本身圆角，三步（缺一不可）：
+
+```rust
+// 1) 透明窗口（必须在创建窗口之前设置 backend）
+slint::BackendSelector::new()
+    .with_winit_window_attributes_hook(|attrs| slint_pixel::transparent_window(attrs))
+    .select()?;
+```
+
+```slint
+import { PixelWindowBody, PixelTheme } from "@slint_pixel";
+
+export component App inherits Window {
+    no-frame: true;
+    background: transparent;                  // 2) 窗口底色透明
+    init => { PixelTheme.window-radius = 12px; }   // 0px（默认）= 直角窗口、全出血
+    PixelWindowBody {                         // 3) 内容包进圆角窗身
+        VerticalLayout { /* 标题栏 + 内容 */ }
+    }
+}
+```
+
+`window-radius > 0`：四周留 3px 透明边距、按 `border-width` 描边、内容被裁在圆角内
+（自绘标题栏会顺着圆角切）。`window-radius = 0`：`pad = 0`、无描边，与旧版全出血观感一致。
+**未开透明窗口却设 `window-radius > 0`**，圆角外那圈边距会显示成黑边 —— 所以
+`PixelPresets.*` 不写 `window-radius`，由宿主自行决定（demo 里是切换预设时一起设的）。
 
 ## 组件清单
 

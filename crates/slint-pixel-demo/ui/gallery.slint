@@ -9,7 +9,7 @@ import {
     PixelIconButton, PixelBubble, PixelPopconfirm,
     PixelAlert, PixelToast, PixelSpinner, PixelSkeleton, PixelTabs,
     PixelBreadcrumb, PixelPagination, PixelDrawer, PixelAvatar, PixelTag,
-    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme, PixelPresets,
+    PixelCard, PixelNavbar, PixelEmpty, PixelDivider, PixelStat, PixelWindowResize, PixelTheme, PixelPresets, PixelWindowBody,
     PixelImage, PixelImageViewer, PixelTagInput, PixelAutoComplete,
     PixelCascader, PixelDateRangePicker, PixelRating, PixelDescriptionList, PixelResult,
     PixelAvatarGroup, PixelList, PixelVirtualList, PixelTreeTable,
@@ -32,7 +32,7 @@ export component GalleryWindow inherits Window {
     no-frame: true;
     preferred-width: 760px;
     preferred-height: 640px;
-    background: PixelTheme.bg;
+    background: transparent;
 
     // ---------- 演示状态 ----------
     in-out property <bool> grid-enabled: true;
@@ -59,10 +59,13 @@ export component GalleryWindow inherits Window {
     changed theme-preset => {
         if (root.theme-preset == "soft") {
             PixelPresets.soft();
+            PixelTheme.window-radius = 12px;   // 窗身圆角只在这里开：它要求宿主开透明窗口
         } else if (root.theme-preset == "dark") {
             PixelPresets.dark();
+            PixelTheme.window-radius = 0px;
         } else {
             PixelPresets.classic();
+            PixelTheme.window-radius = 0px;
         }
     }
 
@@ -94,626 +97,631 @@ export component GalleryWindow inherits Window {
     in-out property <color> t-primary-text: PixelTheme.primary-text;
     in-out property <length> t-radius: PixelTheme.radius;
     in-out property <length> t-radius-sm: PixelTheme.radius-sm;
+    in-out property <length> t-window-radius: PixelTheme.window-radius;
     callback dialog-accept();
     callback dialog-cancel();
 
 
-    VerticalLayout {
-        padding: 8px;
-        spacing: 10px;
+    // 圆角窗身：window-radius = 0 时 pad = 0、无描边，退回原来的全出血观感
+    PixelWindowBody {
+        VerticalLayout {
+            padding: 8px;
+            spacing: 10px;
 
-        PixelTitleBar {
-            title: "SLINT WIDGET GALLERY · 像素组件库";
-            bg: PixelTheme.bg;
-            text-color: PixelTheme.dim;
-            accent: PixelTheme.accent;
-            btn-face: PixelTheme.panel;
-            btn-hover: PixelTheme.hover;
-            btn-icon: PixelTheme.text;
-            close-hover: PixelTheme.danger;
-            divider: PixelTheme.shadow;
-            drag-start => { root.drag-start(); }
-            minimize => { root.minimize(); }
-            toggle-maximize => { root.toggle-maximize(); }
-            close-window => { root.close-window(); }
-        }
+            PixelTitleBar {
+                title: "SLINT WIDGET GALLERY · 像素组件库";
+                bg: PixelTheme.bg;
+                text-color: PixelTheme.dim;
+                accent: PixelTheme.accent;
+                btn-face: PixelTheme.panel;
+                btn-hover: PixelTheme.hover;
+                btn-icon: PixelTheme.text;
+                close-hover: PixelTheme.danger;
+                divider: PixelTheme.shadow;
+                drag-start => { root.drag-start(); }
+                minimize => { root.minimize(); }
+                toggle-maximize => { root.toggle-maximize(); }
+                close-window => { root.close-window(); }
+            }
 
-        // ===== 滚动面板：承载全部组件（单列，滚轮/拖动滚动） =====
-        PixelScrollPanel {
-            VerticalLayout {
-                // 显式宽度：打破 ScrollView 视口宽度 ↔ 内容宽度的循环绑定
-                width: root.width - 28px;
-                spacing: 10px;
-                PixelPanel {
-                    title: "按钮 BUTTON · VARIANT / SIZE";
-                    VerticalLayout {
-                        spacing: 8px;
-                        HorizontalLayout {
+            // ===== 滚动面板：承载全部组件（单列，滚轮/拖动滚动） =====
+            PixelScrollPanel {
+                VerticalLayout {
+                    // 显式宽度：打破 ScrollView 视口宽度 ↔ 内容宽度的循环绑定
+                    width: root.width - 28px;
+                    spacing: 10px;
+                    PixelPanel {
+                        title: "按钮 BUTTON · VARIANT / SIZE";
+                        VerticalLayout {
                             spacing: 8px;
-                            PixelButton { text: "默认"; width: 80px; active: true; }
-                            PixelButton { text: "主要"; width: 80px; variant: "primary"; }
-                            PixelButton { text: "危险"; width: 80px; variant: "danger"; }
-                            PixelButton { text: "幽灵"; width: 80px; variant: "ghost"; }
+                            HorizontalLayout {
+                                spacing: 8px;
+                                PixelButton { text: "默认"; width: 80px; active: true; }
+                                PixelButton { text: "主要"; width: 80px; variant: "primary"; }
+                                PixelButton { text: "危险"; width: 80px; variant: "danger"; }
+                                PixelButton { text: "幽灵"; width: 80px; variant: "ghost"; }
+                            }
+                            HorizontalLayout {
+                                spacing: 8px;
+                                PixelButton { text: "小"; width: 60px; size: "small"; }
+                                PixelButton { text: "中"; width: 60px; }
+                                PixelButton { text: "大"; width: 60px; size: "large"; }
+                                PixelButton { text: "清空"; width: 80px; face: PixelTheme.danger; face-active: #ff2f77; }
+                            }
                         }
+                    }
+                    PixelPanel {
+                        title: "复选 / 开关 CHECKBOX · SWITCH";
                         HorizontalLayout {
-                            spacing: 8px;
-                            PixelButton { text: "小"; width: 60px; size: "small"; }
-                            PixelButton { text: "中"; width: 60px; }
-                            PixelButton { text: "大"; width: 60px; size: "large"; }
-                            PixelButton { text: "清空"; width: 80px; face: PixelTheme.danger; face-active: #ff2f77; }
+                            spacing: 12px;
+                            PixelCheckBox { text: "启用网格"; width: 100px; checked <=> root.grid-enabled; }
+                            PixelCheckBox { text: "自动保存"; width: 100px; }
+                            PixelSwitch { checked <=> root.sound-on; }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "复选 / 开关 CHECKBOX · SWITCH";
-                    HorizontalLayout {
-                        spacing: 12px;
-                        PixelCheckBox { text: "启用网格"; width: 100px; checked <=> root.grid-enabled; }
-                        PixelCheckBox { text: "自动保存"; width: 100px; }
-                        PixelSwitch { checked <=> root.sound-on; }
-                    }
-                }
-                PixelPanel {
-                    title: "滑块 SLIDER";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelSlider { value <=> root.slider-value; }
-                        Text { text: "值: " + Math.round(root.slider-value) + " / 100"; color: PixelTheme.dim; font-size: 12px; }
-                    }
-                }
-                PixelPanel {
-                    title: "输入 TEXT INPUT";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelTextInput { text <=> root.input-text; placeholder: "输入文字…"; }
-                        Text { text: "回显: " + root.input-text; color: PixelTheme.dim; font-size: 12px; }
-                    }
-                }
-                PixelPanel {
-                    title: "单选框 RADIO";
-                    PixelRadioGroup {
-                        options: ["像素风", "扁平风", "拟物风"];
-                        index <=> root.radio-index;
-                    }
-                }
-                PixelPanel {
-                    title: "下拉选择 COMBOBOX";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelComboBox {
-                            model: ["#ff004d 红", "#ffa300 橙", "#000000 黄", "#00e436 绿", "#000000 蓝"];
-                            index <=> root.combo-index;
-                        }
-                        Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: PixelTheme.dim; font-size: 12px; }
-                    }
-                }
-                PixelPanel {
-                    title: "进度 PROGRESS";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelProgressBar { progress: root.slider-value / 100.0; show-text: true; }
-                        PixelProgressBar { progress: 0.35; }
-                        PixelProgressBar { progress: 0.85; show-text: true; }
-                    }
-                }
-                PixelPanel {
-                    title: "徽章 BADGE";
-                    HorizontalLayout {
-                        spacing: 8px;
-                        PixelBadge { text: "NEW"; width: 60px; face: PixelTheme.danger; }
-                        PixelBadge { text: "PICO-8"; width: 76px; face: PixelTheme.accent; }
-                        PixelBadge { text: "16×16"; width: 76px; face: #000000; }
-                    }
-                }
-                PixelPanel {
-                    title: "提示 TOOLTIP";
-                    HorizontalLayout {
-                        spacing: 8px;
-                        PixelButton {
-                            text: "悬停看提示"; width: 120px;
-                            // Slint 内置 Tooltip：延迟出现、跟随指针（样式跟随活动主题）
-                            Tooltip { text: @markdown("**我是提示气泡**"); }
+                    PixelPanel {
+                        title: "滑块 SLIDER";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelSlider { value <=> root.slider-value; }
+                            Text { text: "值: " + Math.round(root.slider-value) + " / 100"; color: PixelTheme.dim; font-size: 12px; }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "菜单 MENU";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelMenu {
-                            items: ["新建文件", "打开…", "---", "保存", "另存为…", "---", "退出"];
-                            index <=> root.menu-index;
-                            button-text: "文件菜单";
-                        }
-                        Text { text: "选择: " + (root.menu-index >= 0 ? root.menu-index : "无"); color: PixelTheme.dim; font-size: 12px; }
-                    }
-                }
-                PixelPanel {
-                    title: "表格 TABLE";
-                    PixelTableView {
-                        headers: ["角色", "HP", "攻击", "防御"];
-                        rows: [
-                            ["勇者", "120", "25", "18"],
-                            ["法师", "80", "30", "10"],
-                            ["盗贼", "95", "28", "14"],
-                            ["猎人", "110", "22", "16"],
-                            ["牧师", "75", "15", "20"],
-                            ["骑士", "150", "20", "28"],
-                            ["游侠", "100", "26", "13"],
-                            ["巫师", "70", "35", "8"],
-                            ["狂战士", "160", "32", "15"],
-                            ["召唤师", "85", "18", "12"]
-                        ];
-                        selected-row <=> root.table-row;
-                    }
-                }
-                PixelPanel {
-                    title: "手风琴 ACCORDION";
-                    PixelAccordion {
-                        titles: ["第一章 启程", "第二章 森林", "第三章 城堡"];
-                        contents: ["你醒来时发现自己在一片像素草地上。", "幽暗的森林里藏着宝箱与陷阱。", "城堡的大门缓缓打开，冒险继续。"];
-                        active <=> root.accordion-active;
-                    }
-                }
-                PixelPanel {
-                    title: "折叠 COLLAPSIBLE";
-                    VerticalLayout {
-                        spacing: 8px;
-                        PixelCollapsible {
-                            title: "使用说明";
-                            expanded <=> root.collapsible-open;
-                            Text {
-                                text: "点击标题栏展开/收起。内容区带高度动画。";
-                                color: PixelTheme.text;
-                                font-size: 13px;
-                                wrap: word-wrap;
-                            }
-                        }
-                        PixelCollapsible {
-                            title: "快捷键";
-                            expanded: false;
-                            Text {
-                                text: "Ctrl+N 新建，Ctrl+S 保存，Ctrl+E 导出 PNG。";
-                                color: PixelTheme.text;
-                                font-size: 13px;
-                                wrap: word-wrap;
-                            }
-                        }
-                        PixelCollapsible {
-                            title: "常见问题";
-                            expanded: false;
-                            Text {
-                                text: "如何更换主题？打开主题编辑器即可一键换肤。";
-                                color: PixelTheme.text;
-                                font-size: 13px;
-                                wrap: word-wrap;
-                            }
+                    PixelPanel {
+                        title: "输入 TEXT INPUT";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelTextInput { text <=> root.input-text; placeholder: "输入文字…"; }
+                            Text { text: "回显: " + root.input-text; color: PixelTheme.dim; font-size: 12px; }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "侧边栏 SIDEBAR";
-                    PixelSidebar {
-                        height: 160px;
-                        items: ["画布", "图层", "调色板", "导出"];
-                        active <=> root.sidebar-active;
-                        title: "导航";
-                        Text {
-                            text: "当前页面: " + ["画布", "图层", "调色板", "导出"][root.sidebar-active];
-                            color: PixelTheme.text;
-                            font-size: 13px;
+                    PixelPanel {
+                        title: "单选框 RADIO";
+                        PixelRadioGroup {
+                            options: ["像素风", "扁平风", "拟物风"];
+                            index <=> root.radio-index;
                         }
                     }
-                }
-                PixelPanel {
-                    title: "表单 FORM";
-                    PixelForm {
-                        spacing: 10px;
-                        PixelFormItem {
-                            label: "名称";
-                            PixelTextInput { text <=> root.form-name; }
-                        }
-                        PixelFormItem {
-                            label: "描述";
-                            PixelTextArea { text <=> root.form-desc; placeholder: "写点什么…"; }
-                        }
-                        PixelFormItem {
-                            label: "分类";
+                    PixelPanel {
+                        title: "下拉选择 COMBOBOX";
+                        VerticalLayout {
+                            spacing: 6px;
                             PixelComboBox {
-                                model: ["普通", "稀有", "传说"];
-                                index <=> root.form-class;
+                                model: ["#ff004d 红", "#ffa300 橙", "#000000 黄", "#00e436 绿", "#000000 蓝"];
+                                index <=> root.combo-index;
+                            }
+                            Text { text: "选中: " + (root.combo-index >= 0 ? "[" + root.combo-index + "]" : "无"); color: PixelTheme.dim; font-size: 12px; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "进度 PROGRESS";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelProgressBar { progress: root.slider-value / 100.0; show-text: true; }
+                            PixelProgressBar { progress: 0.35; }
+                            PixelProgressBar { progress: 0.85; show-text: true; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "徽章 BADGE";
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelBadge { text: "NEW"; width: 60px; face: PixelTheme.danger; }
+                            PixelBadge { text: "PICO-8"; width: 76px; face: PixelTheme.accent; }
+                            PixelBadge { text: "16×16"; width: 76px; face: #000000; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "提示 TOOLTIP";
+                        HorizontalLayout {
+                            spacing: 8px;
+                            PixelButton {
+                                text: "悬停看提示"; width: 120px;
+                                // Slint 内置 Tooltip：延迟出现、跟随指针（样式跟随活动主题）
+                                Tooltip { text: @markdown("**我是提示气泡**"); }
                             }
                         }
-                        PixelFormItem {
-                            label: "状态";
+                    }
+                    PixelPanel {
+                        title: "菜单 MENU";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelMenu {
+                                items: ["新建文件", "打开…", "---", "保存", "另存为…", "---", "退出"];
+                                index <=> root.menu-index;
+                                button-text: "文件菜单";
+                            }
+                            Text { text: "选择: " + (root.menu-index >= 0 ? root.menu-index : "无"); color: PixelTheme.dim; font-size: 12px; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "表格 TABLE";
+                        PixelTableView {
+                            headers: ["角色", "HP", "攻击", "防御"];
+                            rows: [
+                                ["勇者", "120", "25", "18"],
+                                ["法师", "80", "30", "10"],
+                                ["盗贼", "95", "28", "14"],
+                                ["猎人", "110", "22", "16"],
+                                ["牧师", "75", "15", "20"],
+                                ["骑士", "150", "20", "28"],
+                                ["游侠", "100", "26", "13"],
+                                ["巫师", "70", "35", "8"],
+                                ["狂战士", "160", "32", "15"],
+                                ["召唤师", "85", "18", "12"]
+                            ];
+                            selected-row <=> root.table-row;
+                        }
+                    }
+                    PixelPanel {
+                        title: "手风琴 ACCORDION";
+                        PixelAccordion {
+                            titles: ["第一章 启程", "第二章 森林", "第三章 城堡"];
+                            contents: ["你醒来时发现自己在一片像素草地上。", "幽暗的森林里藏着宝箱与陷阱。", "城堡的大门缓缓打开，冒险继续。"];
+                            active <=> root.accordion-active;
+                        }
+                    }
+                    PixelPanel {
+                        title: "折叠 COLLAPSIBLE";
+                        VerticalLayout {
+                            spacing: 8px;
+                            PixelCollapsible {
+                                title: "使用说明";
+                                expanded <=> root.collapsible-open;
+                                Text {
+                                    text: "点击标题栏展开/收起。内容区带高度动画。";
+                                    color: PixelTheme.text;
+                                    font-size: 13px;
+                                    wrap: word-wrap;
+                                }
+                            }
+                            PixelCollapsible {
+                                title: "快捷键";
+                                expanded: false;
+                                Text {
+                                    text: "Ctrl+N 新建，Ctrl+S 保存，Ctrl+E 导出 PNG。";
+                                    color: PixelTheme.text;
+                                    font-size: 13px;
+                                    wrap: word-wrap;
+                                }
+                            }
+                            PixelCollapsible {
+                                title: "常见问题";
+                                expanded: false;
+                                Text {
+                                    text: "如何更换主题？打开主题编辑器即可一键换肤。";
+                                    color: PixelTheme.text;
+                                    font-size: 13px;
+                                    wrap: word-wrap;
+                                }
+                            }
+                        }
+                    }
+                    PixelPanel {
+                        title: "侧边栏 SIDEBAR";
+                        PixelSidebar {
+                            height: 160px;
+                            items: ["画布", "图层", "调色板", "导出"];
+                            active <=> root.sidebar-active;
+                            title: "导航";
+                            Text {
+                                text: "当前页面: " + ["画布", "图层", "调色板", "导出"][root.sidebar-active];
+                                color: PixelTheme.text;
+                                font-size: 13px;
+                            }
+                        }
+                    }
+                    PixelPanel {
+                        title: "表单 FORM";
+                        PixelForm {
+                            spacing: 10px;
+                            PixelFormItem {
+                                label: "名称";
+                                PixelTextInput { text <=> root.form-name; }
+                            }
+                            PixelFormItem {
+                                label: "描述";
+                                PixelTextArea { text <=> root.form-desc; placeholder: "写点什么…"; }
+                            }
+                            PixelFormItem {
+                                label: "分类";
+                                PixelComboBox {
+                                    model: ["普通", "稀有", "传说"];
+                                    index <=> root.form-class;
+                                }
+                            }
+                            PixelFormItem {
+                                label: "状态";
+                                PixelText { text: root.action-status; color: PixelTheme.dim; }
+                            }
+                        }
+                    }
+                    PixelPanel {
+                        title: "文本 TEXT";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelTitle { text: "像素小标题 PIXEL TITLE"; }
+                            PixelText { text: "正文：这是一段像素风文本，用 PixelText 统一字号。"; }
+                            PixelText { text: "次要说明文字，用 color 覆盖即可。"; color: PixelTheme.dim; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "图标按钮 ICON";
+                        HorizontalLayout {
+                            spacing: 10px;
+                            Rectangle {
+                                PixelIconButton { icon: "×"; clicked => { root.action-status = "点击了关闭图标"; } }
+                                // 右上角数字角标（PixelBadge 作角标）
+                                PixelBadge { text: "3"; x: 24px; y: -6px; width: 22px; height: 16px; face: PixelTheme.danger; text-color: #ffffff; font-size: 10px; }
+                            }
+                            PixelIconButton { icon: "✓"; clicked => { root.action-status = "点击了确认图标"; } }
+                            PixelIconButton { icon: "▲"; active: true; clicked => { root.action-status = "点击了上箭头"; } }
+                            PixelIconButton { icon: "★"; clicked => { root.action-status = "点击了星标"; } }
+                            PixelIconButton { icon: "♥"; clicked => { root.action-status = "点击了爱心"; } }
+                        }
+                    }
+                    PixelPanel {
+                        title: "气泡 TOOLTIP · BUBBLE";
+                        HorizontalLayout {
+                            spacing: 12px;
+                            Rectangle {
+                                width: 90px;
+                                height: 34px;
+                                PixelButton { text: "悬停我"; width: 90px; }
+                                Tooltip { text: @markdown("这是像素风悬停提示气泡"); }
+                            }
+                            PixelBubble {
+                                icon: "ⓘ";
+                                title: "使用说明";
+                                open: root.bubble-open;
+                                PixelText { text: "气泡内容插槽可以放任意组件，点外部自动关闭。"; }
+                                PixelButton {
+                                    text: "知道了"; width: 90px;
+                                    clicked => { root.bubble-open = false; }
+                                }
+                            }
+                        }
+                    }
+                    PixelPanel {
+                        title: "确认 POPCONFIRM";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelPopconfirm {
+                                text: "确定要删除这个像素小妖吗？此操作不可撤销。";
+                                button-text: "删除角色";
+                                viewport-width: root.width;
+                                open: root.popconfirm-open;
+                                confirm => { root.action-status = "已确认删除"; }
+                                cancel => { root.action-status = "已取消删除"; }
+                            }
                             PixelText { text: root.action-status; color: PixelTheme.dim; }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "文本 TEXT";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelTitle { text: "像素小标题 PIXEL TITLE"; }
-                        PixelText { text: "正文：这是一段像素风文本，用 PixelText 统一字号。"; }
-                        PixelText { text: "次要说明文字，用 color 覆盖即可。"; color: PixelTheme.dim; }
-                    }
-                }
-                PixelPanel {
-                    title: "图标按钮 ICON";
-                    HorizontalLayout {
-                        spacing: 10px;
-                        Rectangle {
-                            PixelIconButton { icon: "×"; clicked => { root.action-status = "点击了关闭图标"; } }
-                            // 右上角数字角标（PixelBadge 作角标）
-                            PixelBadge { text: "3"; x: 24px; y: -6px; width: 22px; height: 16px; face: PixelTheme.danger; text-color: #ffffff; font-size: 10px; }
+                    PixelPanel {
+                        title: "警告 ALERT";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelAlert { kind: "info"; text: "这是信息提示条 info"; }
+                            PixelAlert { kind: "success"; text: "操作成功 success"; }
+                            PixelAlert { kind: "warning"; text: "注意：磁盘空间不足 warning"; }
+                            PixelAlert { kind: "error"; text: "保存失败 error"; closable: false; }
                         }
-                        PixelIconButton { icon: "✓"; clicked => { root.action-status = "点击了确认图标"; } }
-                        PixelIconButton { icon: "▲"; active: true; clicked => { root.action-status = "点击了上箭头"; } }
-                        PixelIconButton { icon: "★"; clicked => { root.action-status = "点击了星标"; } }
-                        PixelIconButton { icon: "♥"; clicked => { root.action-status = "点击了爱心"; } }
                     }
-                }
-                PixelPanel {
-                    title: "气泡 TOOLTIP · BUBBLE";
-                    HorizontalLayout {
-                        spacing: 12px;
-                        Rectangle {
-                            width: 90px;
-                            height: 34px;
-                            PixelButton { text: "悬停我"; width: 90px; }
-                            Tooltip { text: @markdown("这是像素风悬停提示气泡"); }
+                    PixelPanel {
+                        title: "通知 TOAST · 加载 SPINNER · 骨架 SKELETON";
+                        VerticalLayout {
+                            spacing: 10px;
+                            HorizontalLayout {
+                                spacing: 10px;
+                                PixelToast { text: "像素通知：已保存"; shown: true; duration: 9999s; }
+                                PixelSpinner { }
+                                PixelSpinner { size: 40px; }
+                            }
+                            PixelSkeleton { frame-height: 14px; }
+                            PixelSkeleton { frame-height: 14px; pulse: false; }
                         }
-                        PixelBubble {
-                            icon: "ⓘ";
-                            title: "使用说明";
-                            open: root.bubble-open;
-                            PixelText { text: "气泡内容插槽可以放任意组件，点外部自动关闭。"; }
+                    }
+                    PixelPanel {
+                        title: "标签页 TABS";
+                        VerticalLayout {
+                            spacing: 6px;
+                            PixelTabs {
+                                tabs: ["画布", "图层", "导出"];
+                                active: 1;
+                            }
+                            PixelText { text: "当前标签内容区由宿主切换（active 索引）。"; color: PixelTheme.dim; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "面包屑 BREADCRUMB · 分页 PAGINATION";
+                        VerticalLayout {
+                            spacing: 10px;
+                            PixelBreadcrumb { items: ["首页", "素材", "像素小妖"]; }
+                            PixelPagination { page: 2; total: 5; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "头像 AVATAR · 标签 TAG";
+                        HorizontalLayout {
+                            spacing: 12px;
+                            PixelAvatar { text: "P"; }
+                            PixelAvatar { text: "妖"; }
+                            PixelTag { text: "像素"; }
+                            PixelTag { text: "稀有"; closable: true; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "卡片 CARD";
+                        PixelCard {
+                            title: "像素小妖";
+                            width: 260px;
+                            PixelText { text: "稀有度：传说"; }
+                            PixelText { text: "掉落：金币 × 12"; color: PixelTheme.dim; }
+                            PixelButton { text: "查看详情"; width: 100px; size: "small"; }
+                        }
+                    }
+                    PixelPanel {
+                        title: "顶栏 NAVBAR";
+                        PixelNavbar {
+                            brand: "PIXEL";
+                            items: ["首页", "素材", "作品"];
+                            active: 0;
+                        }
+                    }
+                    PixelPanel {
+                        title: "空状态 EMPTY · 分隔线 DIVIDER · 统计 STAT";
+                        VerticalLayout {
+                            spacing: 10px;
+                            PixelEmpty {
+                                title: "还没有像素素材";
+                                description: "点击下方按钮开始创作";
+                                height: 140px;
+                                PixelButton { text: "去创作"; width: 90px; variant: "primary"; }
+                            }
+                            PixelDivider { text: "分隔线"; }
+                            HorizontalLayout {
+                                spacing: 10px;
+                                PixelStat { label: "今日作品"; value: "128"; delta: "12.5%"; }
+                                PixelStat { label: "金币"; value: "9,999"; delta: "-3.2%"; delta-up: false; }
+                            }
+                        }
+                    }
+                    PixelPanel {
+                        title: "对话框 DIALOG";
+                        HorizontalLayout {
+                            spacing: 8px;
                             PixelButton {
-                                text: "知道了"; width: 90px;
-                                clicked => { root.bubble-open = false; }
+                                text: "打开对话框"; width: 140px;
+                                clicked => { root.dialog-open = true; }
                             }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "确认 POPCONFIRM";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelPopconfirm {
-                            text: "确定要删除这个像素小妖吗？此操作不可撤销。";
-                            button-text: "删除角色";
-                            viewport-width: root.width;
-                            open: root.popconfirm-open;
-                            confirm => { root.action-status = "已确认删除"; }
-                            cancel => { root.action-status = "已取消删除"; }
-                        }
-                        PixelText { text: root.action-status; color: PixelTheme.dim; }
-                    }
-                }
-                PixelPanel {
-                    title: "警告 ALERT";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelAlert { kind: "info"; text: "这是信息提示条 info"; }
-                        PixelAlert { kind: "success"; text: "操作成功 success"; }
-                        PixelAlert { kind: "warning"; text: "注意：磁盘空间不足 warning"; }
-                        PixelAlert { kind: "error"; text: "保存失败 error"; closable: false; }
-                    }
-                }
-                PixelPanel {
-                    title: "通知 TOAST · 加载 SPINNER · 骨架 SKELETON";
-                    VerticalLayout {
-                        spacing: 10px;
-                        HorizontalLayout {
+                    PixelPanel {
+                        title: "扩展组件 ROUND 2";
+                        VerticalLayout {
                             spacing: 10px;
-                            PixelToast { text: "像素通知：已保存"; shown: true; duration: 9999s; }
-                            PixelSpinner { }
-                            PixelSpinner { size: 40px; }
-                        }
-                        PixelSkeleton { frame-height: 14px; }
-                        PixelSkeleton { frame-height: 14px; pulse: false; }
-                    }
-                }
-                PixelPanel {
-                    title: "标签页 TABS";
-                    VerticalLayout {
-                        spacing: 6px;
-                        PixelTabs {
-                            tabs: ["画布", "图层", "导出"];
-                            active: 1;
-                        }
-                        PixelText { text: "当前标签内容区由宿主切换（active 索引）。"; color: PixelTheme.dim; }
-                    }
-                }
-                PixelPanel {
-                    title: "面包屑 BREADCRUMB · 分页 PAGINATION";
-                    VerticalLayout {
-                        spacing: 10px;
-                        PixelBreadcrumb { items: ["首页", "素材", "像素小妖"]; }
-                        PixelPagination { page: 2; total: 5; }
-                    }
-                }
-                PixelPanel {
-                    title: "头像 AVATAR · 标签 TAG";
-                    HorizontalLayout {
-                        spacing: 12px;
-                        PixelAvatar { text: "P"; }
-                        PixelAvatar { text: "妖"; }
-                        PixelTag { text: "像素"; }
-                        PixelTag { text: "稀有"; closable: true; }
-                    }
-                }
-                PixelPanel {
-                    title: "卡片 CARD";
-                    PixelCard {
-                        title: "像素小妖";
-                        width: 260px;
-                        PixelText { text: "稀有度：传说"; }
-                        PixelText { text: "掉落：金币 × 12"; color: PixelTheme.dim; }
-                        PixelButton { text: "查看详情"; width: 100px; size: "small"; }
-                    }
-                }
-                PixelPanel {
-                    title: "顶栏 NAVBAR";
-                    PixelNavbar {
-                        brand: "PIXEL";
-                        items: ["首页", "素材", "作品"];
-                        active: 0;
-                    }
-                }
-                PixelPanel {
-                    title: "空状态 EMPTY · 分隔线 DIVIDER · 统计 STAT";
-                    VerticalLayout {
-                        spacing: 10px;
-                        PixelEmpty {
-                            title: "还没有像素素材";
-                            description: "点击下方按钮开始创作";
-                            height: 140px;
-                            PixelButton { text: "去创作"; width: 90px; variant: "primary"; }
-                        }
-                        PixelDivider { text: "分隔线"; }
-                        HorizontalLayout {
-                            spacing: 10px;
-                            PixelStat { label: "今日作品"; value: "128"; delta: "12.5%"; }
-                            PixelStat { label: "金币"; value: "9,999"; delta: "-3.2%"; delta-up: false; }
-                        }
-                    }
-                }
-                PixelPanel {
-                    title: "对话框 DIALOG";
-                    HorizontalLayout {
-                        spacing: 8px;
-                        PixelButton {
-                            text: "打开对话框"; width: 140px;
-                            clicked => { root.dialog-open = true; }
-                        }
-                    }
-                }
-                PixelPanel {
-                    title: "扩展组件 ROUND 2";
-                    VerticalLayout {
-                        spacing: 10px;
-                        HorizontalLayout {
-                            width: 100%;
-                            spacing: 8px;
-                            PixelImage { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
-                            PixelImageViewer { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
-                            PixelImageCrop { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
-                            PixelQRCode { code: "SLINT"; width: 25%; height: 60px; }
-                        }
-                        PixelTagInput { tags: ["像素", "复古", "RPG"]; width: 100%; }
-                        PixelAutoComplete { options: ["PixelButton", "PixelImage", "PixelList"]; width: 100%; }
-                        PixelCascader {
-                            level1: ["文件", "编辑"];
-                            level2: [["新建", "打开"], ["撤销", "重做"]];
-                            width: 100%;
-                        }
-                        HorizontalLayout {
-                            width: 100%;
-                            spacing: 10px;
-                            PixelDateRangePicker { width: 50%; height: 160px; }
-                            PixelCalendar { width: 50%; height: 180px; }
-                        }
-                        PixelRating { value: 3; max: 5; }
-                        PixelDescriptionList {
-                            labels: ["类型", "稀有度", "掉落"];
-                            values: ["像素小妖", "传说", "金币 × 12"];
-                            width: 100%;
-                        }
-                        PixelResult { status: "success"; title: "保存成功"; description: "你的像素作品已保存到本地。"; width: 100%; }
-                        PixelAvatarGroup { names: ["A", "B", "C"]; size: 26px; }
-                        HorizontalLayout {
-                            width: 100%;
-                            spacing: 8px;
-                            PixelList { items: ["列表项 1", "列表项 2", "列表项 3"]; width: 50%; }
-                            PixelVirtualList { items: ["虚拟项 1", "虚拟项 2", "虚拟项 3", "虚拟项 4"]; width: 50%; viewport-height: 90px; }
-                        }
-                        PixelTreeTable {
-                            headers: ["名称", "数值"];
-                            rows: [["根节点", "10"], ["  子节点", "5"], ["  孙节点", "2"]];
-                            levels: [0, 1, 2];
-                            width: 100%;
-                        }
-                        PixelDataTable {
-                            headers: ["名称", "数值"];
-                            rows: [["Alpha", "10"], ["Beta", "20"], ["Gamma", "30"]];
-                            width: 100%;
-                        }
-                        PixelSearchBox { query: "像素"; width: 100%; }
-                        PixelNotificationCenter { messages: ["新版本发布", "系统维护通知"]; width: 100%; }
-                        PixelSubMenu {
-                            items: ["文件", "编辑"];
-                            children: [["新建", "打开"], ["撤销", "重做"]];
-                            width: 100%;
-                        }
-                        HorizontalLayout {
-                            width: 100%;
-                            spacing: 8px;
-                            PixelBackTop { width: 36px; }
-                            PixelAffix {
-                                width: 50%; height: 40px;
-                                PixelText { text: "Affix"; }
+                            HorizontalLayout {
+                                width: 100%;
+                                spacing: 8px;
+                                PixelImage { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                                PixelImageViewer { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                                PixelImageCrop { source: @image-url("../../../docs/gallery.png"); width: 25%; height: 60px; }
+                                PixelQRCode { code: "SLINT"; width: 25%; height: 60px; }
                             }
-                            PixelSticky {
-                                width: 50%; height: 40px;
-                                PixelText { text: "Sticky"; }
+                            PixelTagInput { tags: ["像素", "复古", "RPG"]; width: 100%; }
+                            PixelAutoComplete { options: ["PixelButton", "PixelImage", "PixelList"]; width: 100%; }
+                            PixelCascader {
+                                level1: ["文件", "编辑"];
+                                level2: [["新建", "打开"], ["撤销", "重做"]];
+                                width: 100%;
+                            }
+                            HorizontalLayout {
+                                width: 100%;
+                                spacing: 10px;
+                                PixelDateRangePicker { width: 50%; height: 160px; }
+                                PixelCalendar { width: 50%; height: 180px; }
+                            }
+                            PixelRating { value: 3; max: 5; }
+                            PixelDescriptionList {
+                                labels: ["类型", "稀有度", "掉落"];
+                                values: ["像素小妖", "传说", "金币 × 12"];
+                                width: 100%;
+                            }
+                            PixelResult { status: "success"; title: "保存成功"; description: "你的像素作品已保存到本地。"; width: 100%; }
+                            PixelAvatarGroup { names: ["A", "B", "C"]; size: 26px; }
+                            HorizontalLayout {
+                                width: 100%;
+                                spacing: 8px;
+                                PixelList { items: ["列表项 1", "列表项 2", "列表项 3"]; width: 50%; }
+                                PixelVirtualList { items: ["虚拟项 1", "虚拟项 2", "虚拟项 3", "虚拟项 4"]; width: 50%; viewport-height: 90px; }
+                            }
+                            PixelTreeTable {
+                                headers: ["名称", "数值"];
+                                rows: [["根节点", "10"], ["  子节点", "5"], ["  孙节点", "2"]];
+                                levels: [0, 1, 2];
+                                width: 100%;
+                            }
+                            PixelDataTable {
+                                headers: ["名称", "数值"];
+                                rows: [["Alpha", "10"], ["Beta", "20"], ["Gamma", "30"]];
+                                width: 100%;
+                            }
+                            PixelSearchBox { query: "像素"; width: 100%; }
+                            PixelNotificationCenter { messages: ["新版本发布", "系统维护通知"]; width: 100%; }
+                            PixelSubMenu {
+                                items: ["文件", "编辑"];
+                                children: [["新建", "打开"], ["撤销", "重做"]];
+                                width: 100%;
+                            }
+                            HorizontalLayout {
+                                width: 100%;
+                                spacing: 8px;
+                                PixelBackTop { width: 36px; }
+                                PixelAffix {
+                                    width: 50%; height: 40px;
+                                    PixelText { text: "Affix"; }
+                                }
+                                PixelSticky {
+                                    width: 50%; height: 40px;
+                                    PixelText { text: "Sticky"; }
+                                }
+                            }
+                            PixelRichTextEditor { value: "像素风富文本"; width: 100%; }
+                            PixelCodeBlock { code: "let a = 1;\nprintln!(a);"; width: 100%; }
+                            PixelWatermark {
+                                text: "PIXEL WATERMARK";
+                                width: 100%; height: 60px;
+                                PixelText { text: "底层内容"; }
                             }
                         }
-                        PixelRichTextEditor { value: "像素风富文本"; width: 100%; }
-                        PixelCodeBlock { code: "let a = 1;\nprintln!(a);"; width: 100%; }
-                        PixelWatermark {
-                            text: "PIXEL WATERMARK";
-                            width: 100%; height: 60px;
-                            PixelText { text: "底层内容"; }
+                    }
+                    PixelPanel {
+                        title: "高级组件 ROUND 3";
+                        VerticalLayout {
+                            spacing: 10px;
+                            HorizontalLayout {
+                                width: 100%;
+                                spacing: 8px;
+                                PixelChart { data: [40.0, 80.0, 55.0, 90.0, 70.0]; labels: ["A","B","C","D","E"]; width: 50%; height: 100px; }
+                                PixelSparkline { data: [10.0, 30.0, 20.0, 60.0, 45.0, 80.0]; width: 50%; }
+                            }
+                            PixelDataGrid {
+                                headers: ["名称", "数值"];
+                                rows: [["Alpha", "10"], ["Beta", "20"], ["Gamma", "30"]];
+                                width: 100%;
+                            }
+                            PixelProTable {
+                                headers: ["名称", "数值"];
+                                rows: [["A", "1"], ["B", "2"]];
+                                width: 100%;
+                            }
+                            PixelVirtualScroll {
+                                items: ["项 1", "项 2", "项 3", "项 4", "项 5"];
+                                width: 100%;
+                            }
+                            PixelTreePro {
+                                items: ["根节点", "子节点", "孙节点"];
+                                levels: [0, 1, 2];
+                                expanded: [true, true, false];
+                                width: 100%;
+                            }
+                            PixelFormValidator {
+                                fields: ["昵称", "邮箱"];
+                                valid: [true, false];
+                                errors: ["", "邮箱格式不正确"];
+                                width: 100%;
+                            }
+                            PixelScheduler {
+                                times: ["09:00", "10:00", "11:00"];
+                                events: ["晨会", "开发", "评审"];
+                                width: 100%;
+                            }
+                            PixelCalendarAgenda {
+                                dates: ["08-17", "08-18"];
+                                events: ["发布 v0.1", "联调"];
+                                width: 100%;
+                            }
+                            PixelWizard {
+                                steps: ["基础信息", "配置", "完成"];
+                                current: 1;
+                                width: 100%;
+                            }
+                            PixelMultiStepForm {
+                                titles: ["账号", "资料", "完成"];
+                                descriptions: ["填写账号", "完善资料", "提交"];
+                                width: 100%;
+                            }
+                            PixelTransferPro {
+                                left-items: ["A", "B", "C"];
+                                right-items: ["D"];
+                                width: 100%;
+                            }
+                            PixelKanbanPro {
+                                columns: ["待办", "进行中", "完成"];
+                                cards: [["设计", "开发"], ["联调"], ["发布"]];
+                                width: 100%;
+                            }
+                            PixelCommandPalettePro {
+                                groups: ["文件", "编辑"];
+                                commands: ["新建", "打开", "撤销", "重做"];
+                                group-index: [0, 0, 1, 1];
+                                open: false;
+                            }
+                            PixelColorPickerPro { width: 100%; }
+                            PixelMention { options: ["Alice", "Bob", "Carol"]; width: 100%; }
+                            PixelOTPInput { value: "1234"; length: 4; }
+                            PixelSignature { width: 100%; }
+                            PixelDrawerPro { open: false; title: "高级抽屉"; width: 100%; height: 120px; }
+                            PixelOrgChart {
+                                names: ["CEO", "CTO", "工程师"];
+                                roles: ["首席执行官", "技术总监", "研发"];
+                                levels: [0, 1, 2];
+                                width: 100%;
+                            }
+                            PixelFlowChart { nodes: ["开始", "处理", "结束"]; edges: ["", ""]; width: 100%; }
+                            PixelMindMap { center-text: "SLINT"; branches: ["组件", "主题", "Demo"]; width: 100%; }
+                            PixelGantt {
+                                tasks: ["设计", "开发", "测试"];
+                                starts: [0, 5, 12];
+                                durations: [5, 7, 4];
+                                total-days: 20;
+                                width: 100%;
+                            }
+                            PixelMap {
+                                markers: ["A", "B"];
+                                marker-x: [20.0, 70.0];
+                                marker-y: [30.0, 60.0];
+                                width: 100%;
+                            }
+                            PixelGeo {
+                                markers: ["C"];
+                                marker-x: [50.0];
+                                marker-y: [50.0];
+                                width: 100%;
+                            }
+                            PixelVideoPlayer {
+                                poster: @image-url("../../../docs/gallery.png");
+                                width: 100%;
+                            }
+                            PixelAudioPlayer { title: "像素 BGM"; width: 100%; }
+                            PixelPDFViewer { file-name: "guide.pdf"; page: 1; total-pages: 3; width: 100%; }
+                            PixelPrintPreview { pages: ["第 1 页", "第 2 页"]; width: 100%; }
+                            PixelBarcode { code: "1234567890"; width: 100%; }
+                            PixelCaptcha { code: "A1B2"; }
                         }
                     }
-                }
-                PixelPanel {
-                    title: "高级组件 ROUND 3";
-                    VerticalLayout {
-                        spacing: 10px;
+                    PixelPanel {
+                        title: "画板 PAINTER · 主题 EDITOR";
                         HorizontalLayout {
-                            width: 100%;
                             spacing: 8px;
-                            PixelChart { data: [40.0, 80.0, 55.0, 90.0, 70.0]; labels: ["A","B","C","D","E"]; width: 50%; height: 100px; }
-                            PixelSparkline { data: [10.0, 30.0, 20.0, 60.0, 45.0, 80.0]; width: 50%; }
-                        }
-                        PixelDataGrid {
-                            headers: ["名称", "数值"];
-                            rows: [["Alpha", "10"], ["Beta", "20"], ["Gamma", "30"]];
-                            width: 100%;
-                        }
-                        PixelProTable {
-                            headers: ["名称", "数值"];
-                            rows: [["A", "1"], ["B", "2"]];
-                            width: 100%;
-                        }
-                        PixelVirtualScroll {
-                            items: ["项 1", "项 2", "项 3", "项 4", "项 5"];
-                            width: 100%;
-                        }
-                        PixelTreePro {
-                            items: ["根节点", "子节点", "孙节点"];
-                            levels: [0, 1, 2];
-                            expanded: [true, true, false];
-                            width: 100%;
-                        }
-                        PixelFormValidator {
-                            fields: ["昵称", "邮箱"];
-                            valid: [true, false];
-                            errors: ["", "邮箱格式不正确"];
-                            width: 100%;
-                        }
-                        PixelScheduler {
-                            times: ["09:00", "10:00", "11:00"];
-                            events: ["晨会", "开发", "评审"];
-                            width: 100%;
-                        }
-                        PixelCalendarAgenda {
-                            dates: ["08-17", "08-18"];
-                            events: ["发布 v0.1", "联调"];
-                            width: 100%;
-                        }
-                        PixelWizard {
-                            steps: ["基础信息", "配置", "完成"];
-                            current: 1;
-                            width: 100%;
-                        }
-                        PixelMultiStepForm {
-                            titles: ["账号", "资料", "完成"];
-                            descriptions: ["填写账号", "完善资料", "提交"];
-                            width: 100%;
-                        }
-                        PixelTransferPro {
-                            left-items: ["A", "B", "C"];
-                            right-items: ["D"];
-                            width: 100%;
-                        }
-                        PixelKanbanPro {
-                            columns: ["待办", "进行中", "完成"];
-                            cards: [["设计", "开发"], ["联调"], ["发布"]];
-                            width: 100%;
-                        }
-                        PixelCommandPalettePro {
-                            groups: ["文件", "编辑"];
-                            commands: ["新建", "打开", "撤销", "重做"];
-                            group-index: [0, 0, 1, 1];
-                            open: false;
-                        }
-                        PixelColorPickerPro { width: 100%; }
-                        PixelMention { options: ["Alice", "Bob", "Carol"]; width: 100%; }
-                        PixelOTPInput { value: "1234"; length: 4; }
-                        PixelSignature { width: 100%; }
-                        PixelDrawerPro { open: false; title: "高级抽屉"; width: 100%; height: 120px; }
-                        PixelOrgChart {
-                            names: ["CEO", "CTO", "工程师"];
-                            roles: ["首席执行官", "技术总监", "研发"];
-                            levels: [0, 1, 2];
-                            width: 100%;
-                        }
-                        PixelFlowChart { nodes: ["开始", "处理", "结束"]; edges: ["", ""]; width: 100%; }
-                        PixelMindMap { center-text: "SLINT"; branches: ["组件", "主题", "Demo"]; width: 100%; }
-                        PixelGantt {
-                            tasks: ["设计", "开发", "测试"];
-                            starts: [0, 5, 12];
-                            durations: [5, 7, 4];
-                            total-days: 20;
-                            width: 100%;
-                        }
-                        PixelMap {
-                            markers: ["A", "B"];
-                            marker-x: [20.0, 70.0];
-                            marker-y: [30.0, 60.0];
-                            width: 100%;
-                        }
-                        PixelGeo {
-                            markers: ["C"];
-                            marker-x: [50.0];
-                            marker-y: [50.0];
-                            width: 100%;
-                        }
-                        PixelVideoPlayer {
-                            poster: @image-url("../../../docs/gallery.png");
-                            width: 100%;
-                        }
-                        PixelAudioPlayer { title: "像素 BGM"; width: 100%; }
-                        PixelPDFViewer { file-name: "guide.pdf"; page: 1; total-pages: 3; width: 100%; }
-                        PixelPrintPreview { pages: ["第 1 页", "第 2 页"]; width: 100%; }
-                        PixelBarcode { code: "1234567890"; width: 100%; }
-                        PixelCaptcha { code: "A1B2"; }
-                    }
-                }
-                PixelPanel {
-                    title: "画板 PAINTER · 主题 EDITOR";
-                    HorizontalLayout {
-                        spacing: 8px;
-                        PixelButton {
-                            text: "打开画板"; width: 110px; variant: "primary";
-                            clicked => { root.open-painter(); }
-                        }
-                        PixelButton {
-                            text: "主题编辑器"; width: 100px; variant: "primary";
-                            clicked => { root.open-theme-editor(); }
-                        }
-                        PixelButton {
-                            text: root.dark-mode ? "切回浅色" : "切到暗色"; width: 110px;
-                            clicked => {
-                                root.dark-mode = !root.dark-mode;
+                            PixelButton {
+                                text: "打开画板"; width: 110px; variant: "primary";
+                                clicked => { root.open-painter(); }
+                            }
+                            PixelButton {
+                                text: "主题编辑器"; width: 100px; variant: "primary";
+                                clicked => { root.open-theme-editor(); }
+                            }
+                            PixelButton {
+                                text: root.dark-mode ? "切回浅色" : "切到暗色"; width: 110px;
+                                clicked => {
+                                    root.dark-mode = !root.dark-mode;
                                 if root.dark-mode {
                                     PixelPresets.dark();
                                 } else {
                                     PixelPresets.classic();
                                 }
+                                PixelTheme.window-radius = 0px;
+                                }
                             }
-                        }
                         PixelButton {
                             text: "柔彩圆角"; width: 90px; variant: "primary";
-                            clicked => { PixelPresets.soft(); root.dark-mode = false; }
+                            clicked => { PixelPresets.soft(); PixelTheme.window-radius = 12px; root.dark-mode = false; }
                         }
                         PixelButton {
                             text: "经典像素"; width: 90px;
-                            clicked => { PixelPresets.classic(); root.dark-mode = false; }
+                            clicked => { PixelPresets.classic(); PixelTheme.window-radius = 0px; root.dark-mode = false; }
+                        }
                         }
                     }
                 }

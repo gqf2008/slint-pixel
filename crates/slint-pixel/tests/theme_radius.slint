@@ -4,7 +4,7 @@
 //   - 直角：左上角是面自己的描边（Panel）/ 硬阴影层（Card、Badge）
 //   - 圆角：左上角被切掉，露出红底
 // 这样断言就落在「圆角真的生效」这件行为上，而不是「属性赋值成功」。
-import { PixelPanel, PixelCard, PixelBadge, PixelTheme } from "@slint_pixel";
+import { PixelPanel, PixelCard, PixelBadge, PixelTheme, PixelWindowBody } from "@slint_pixel";
 
 export component RadiusProbe inherits Window {
     width: 200px;
@@ -31,5 +31,23 @@ export component RadiusProbe inherits Window {
         x: 130px; y: 10px;
         width: 40px;
         text: "";
+    }
+}
+
+// 圆角窗身探针（同文件第二个窗口，测试里各用一个独立的 MinimalSoftwareWindow）：
+// 窗口底色红、窗身白 —— window-radius = 0 时四角是窗身白，> 0 时四角露出窗口底色红。
+export component WindowBodyProbe inherits Window {
+    width: 80px;
+    height: 80px;
+    background: #ff0000;
+
+    in-out property <length> probe-window-radius: 0px;
+    changed probe-window-radius => {
+        PixelTheme.window-radius = root.probe-window-radius;
+    }
+
+    PixelWindowBody {
+        face: #ffffff;
+        border: #000000;
     }
 }

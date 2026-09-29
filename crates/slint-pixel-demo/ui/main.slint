@@ -2,7 +2,7 @@
 // 与 slint-pixel 库内的 PixelPainterWindow 等价，这里以“消费者”身份
 // 通过 `@slint_pixel` 导入组件并自行组装，验证组件库的可复用性。
 
-import { PixelPainter, PixelTitleBar, PixelWindowResize } from "@slint_pixel";
+import { PixelPainter, PixelTitleBar, PixelWindowResize, PixelWindowBody, PixelTheme, PixelPresets } from "@slint_pixel";
 
 export component MainWindow inherits Window {
     title: "Slint 像素画板";
@@ -11,18 +11,7 @@ export component MainWindow inherits Window {
     preferred-height: 560px;
     min-width: 720px;
     min-height: 560px;
-    background: c-bg;
-
-    // ---------- 主题 ----------
-    property <color> c-bg: #ffffff;
-    property <color> c-panel: #ffffff;
-    property <color> c-panel-light: #f2f2f2;
-    property <color> c-border: #1a1a1a;
-    property <color> c-shadow: #000000;
-    property <color> c-text: #000000;
-    property <color> c-dim: #525252;
-    property <color> c-highlight: #000000;
-    property <color> c-danger: #ff004d;
+    background: transparent;
 
     // ---------- 与画板 widget 双向同步的状态 ----------
     in-out property <color> brush-color: #ff004d;
@@ -30,6 +19,20 @@ export component MainWindow inherits Window {
     in-out property <int> brush-size: 1;
     in-out property <image> canvas-image;
     in-out property <string> status-text: "就绪 —— 左键画 / 右键擦除，点击色板选色";
+    // 由 Rust 在创建窗口时传入画廊当前预设（Slint 的 global 不跨窗口共享）
+    in-out property <string> theme-preset: "classic";
+    changed theme-preset => {
+        if (root.theme-preset == "soft") {
+            PixelPresets.soft();
+            PixelTheme.window-radius = 12px;
+        } else if (root.theme-preset == "dark") {
+            PixelPresets.dark();
+            PixelTheme.window-radius = 0px;
+        } else {
+            PixelPresets.classic();
+            PixelTheme.window-radius = 0px;
+        }
+    }
 
     // ---------- 转发回调（Rust 侧用 install_painter / install_title_bar_controls 接线） ----------
     callback paint(length, length, bool);
@@ -41,46 +44,49 @@ export component MainWindow inherits Window {
     callback close-window();
     callback begin-resize(string);
 
-    VerticalLayout {
-        padding: 8px;
-        spacing: 10px;
+    // 圆角窗身：window-radius = 0 时 pad = 0、无描边，退回原来的全出血观感
+    PixelWindowBody {
+        VerticalLayout {
+            padding: 8px;
+            spacing: 10px;
 
-        PixelTitleBar {
-            title: "SLINT PIXEL PAINTER · 像素画板";
-            bg: c-bg;
-            text-color: c-dim;
-            accent: c-highlight;
-            btn-face: c-panel;
-            btn-hover: c-panel-light;
-            btn-icon: c-text;
-            close-hover: c-danger;
-            divider: c-shadow;
-            drag-start => { root.drag-start(); }
-            minimize => { root.minimize(); }
-            toggle-maximize => { root.toggle-maximize(); }
-            close-window => { root.close-window(); }
-        }
+            PixelTitleBar {
+                title: "SLINT PIXEL PAINTER · 像素画板";
+                bg: PixelTheme.bg;
+                text-color: PixelTheme.dim;
+                accent: PixelTheme.accent;
+                btn-face: PixelTheme.panel;
+                btn-hover: PixelTheme.hover;
+                btn-icon: PixelTheme.text;
+                close-hover: PixelTheme.danger;
+                divider: PixelTheme.shadow;
+                drag-start => { root.drag-start(); }
+                minimize => { root.minimize(); }
+                toggle-maximize => { root.toggle-maximize(); }
+                close-window => { root.close-window(); }
+            }
 
-        PixelPainter {
-            page: c-bg;
-            panel: c-panel;
-            panel-light: c-panel-light;
-            edge: c-border;
-            shadow: c-shadow;
-            text-color: c-text;
-            dim: c-dim;
-            highlight: c-highlight;
-            danger: c-danger;
+            PixelPainter {
+                page: PixelTheme.bg;
+                panel: PixelTheme.panel;
+                panel-light: PixelTheme.hover;
+                edge: PixelTheme.edge;
+                shadow: PixelTheme.shadow;
+                text-color: PixelTheme.text;
+                dim: PixelTheme.dim;
+                highlight: PixelTheme.accent;
+                danger: PixelTheme.danger;
 
-            brush-color <=> root.brush-color;
-            eraser <=> root.eraser;
-            brush-size <=> root.brush-size;
-            canvas-image <=> root.canvas-image;
-            status-text <=> root.status-text;
+                brush-color <=> root.brush-color;
+                eraser <=> root.eraser;
+                brush-size <=> root.brush-size;
+                canvas-image <=> root.canvas-image;
+                status-text <=> root.status-text;
 
-            paint(px, py, erase) => { root.paint(px, py, erase); }
-            clear-canvas => { root.clear-canvas(); }
-            save-png => { root.save-png(); }
+                paint(px, py, erase) => { root.paint(px, py, erase); }
+                clear-canvas => { root.clear-canvas(); }
+                save-png => { root.save-png(); }
+            }
         }
     }
 

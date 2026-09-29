@@ -16,7 +16,7 @@ use slint::platform::software_renderer::{
     MinimalSoftwareWindow, PremultipliedRgbaColor, RepaintBufferType,
 };
 use slint::platform::{Platform, PlatformError, WindowAdapter};
-use slint::{ComponentHandle as _, LogicalSize};
+use slint::{ComponentHandle, LogicalSize};
 
 include!(concat!(env!("OUT_DIR"), "/theme_radius.rs"));
 
@@ -31,43 +31,74 @@ const PROBES: [(u32, u32, &str); 3] = [
 /// 窗口底色，探针的「背景」也是断言基准色。
 const BACKDROP: [u8; 3] = [0xff, 0x00, 0x00];
 
-/// 无头平台：所有组件都挂到同一个 `MinimalSoftwareWindow` 上，用软件渲染器出像素。
-struct SoftPlatform(Rc<MinimalSoftwareWindow>);
+/// 无头平台：每个窗口组件配一个独立的 `MinimalSoftwareWindow`（探针有多个窗口组件）。
+struct SoftPlatform {
+    /// 已建好、等 `create_window_adapter` 领走的窗口（`new_window()` 每次压一个）
+    pending: RefCell<Vec<Rc<MinimalSoftwareWindow>>>,
+}
 
-impl Platform for SoftPlatform {
-    fn create_window_adapter(&self) -> Result<Rc<dyn WindowAdapter>, PlatformError> {
-        Ok(self.0.clone())
+impl SoftPlatform {
+    fn new_window(&self) -> Rc<MinimalSoftwareWindow> {
+        let window = MinimalSoftwareWindow::new(RepaintBufferType::NewBuffer);
+        self.pending.borrow_mut().push(window.clone());
+        window
     }
 }
 
-/// `set_platform` 每个进程只能调一次；窗口本身不是 `Send`，所以用 thread-local 持有。
-/// 本文件里只有渲染那条测试会走到这里，不存在两个线程抢 `set_platform` 的情况。
-fn minimal_window() -> Rc<MinimalSoftwareWindow> {
-    thread_local! {
-        static WINDOW: RefCell<Option<Rc<MinimalSoftwareWindow>>> = const { RefCell::new(None) };
+impl Platform for SoftPlatform {
+    fn create_window_adapter(&self) -> Result<Rc<dyn WindowAdapter>, PlatformError> {
+        self.pending
+            .borrow_mut()
+            .pop()
+            .map(|w| w as Rc<dyn WindowAdapter>)
+            .ok_or_else(|| PlatformError::Other("先 new_window() 再建窗口组件".into()))
     }
-    WINDOW.with(|slot| {
+}
+
+/// `set_platform` 每进程只能调一次；窗口不是 `Send`，所以平台用 thread-local 持有。
+/// 本文件只有渲染那条测试会走到这里，不存在两个线程抢 `set_platform`。
+fn platform() -> Rc<SoftPlatform> {
+    thread_local! {
+        static PLATFORM: RefCell<Option<Rc<SoftPlatform>>> = const { RefCell::new(None) };
+    }
+    PLATFORM.with(|slot| {
         let mut slot = slot.borrow_mut();
         slot.get_or_insert_with(|| {
-            let window = MinimalSoftwareWindow::new(RepaintBufferType::NewBuffer);
-            slint::platform::set_platform(Box::new(SoftPlatform(window.clone())))
+            let platform = Rc::new(SoftPlatform {
+                pending: RefCell::new(Vec::new()),
+            });
+            // `set_platform` 要 `Box<dyn Platform>`，用一个共享句柄包一层
+            slint::platform::set_platform(Box::new(SoftPlatformHandle(platform.clone())))
                 .expect("设置软件渲染平台（每进程只允许一次）");
-            window
+            platform
         })
         .clone()
     })
 }
 
-fn render(ui: &RadiusProbe) -> Vec<[u8; 4]> {
-    let window = minimal_window();
+/// 把 thread-local 里持有的 `Rc<SoftPlatform>` 转成 `Platform` 实现交给 Slint。
+struct SoftPlatformHandle(Rc<SoftPlatform>);
+
+impl Platform for SoftPlatformHandle {
+    fn create_window_adapter(&self) -> Result<Rc<dyn WindowAdapter>, PlatformError> {
+        self.0.create_window_adapter()
+    }
+}
+
+fn render<T: ComponentHandle>(
+    window: &Rc<MinimalSoftwareWindow>,
+    ui: &T,
+    width: u32,
+    height: u32,
+) -> Vec<[u8; 4]> {
     ui.window()
-        .set_size(LogicalSize::new(WIDTH as f32, HEIGHT as f32));
+        .set_size(LogicalSize::new(width as f32, height as f32));
     slint::platform::update_timers_and_animations();
     window.request_redraw();
     // 软件渲染器的目标像素类型：`PremultipliedRgbaColor` 是它有实现且字段公开的那一个。
-    let mut buffer = vec![PremultipliedRgbaColor::default(); (WIDTH * HEIGHT) as usize];
+    let mut buffer = vec![PremultipliedRgbaColor::default(); (width * height) as usize];
     let redrawn = window.draw_if_needed(|renderer| {
-        renderer.render(buffer.as_mut_slice(), WIDTH as usize);
+        renderer.render(buffer.as_mut_slice(), width as usize);
     });
     assert!(
         redrawn,
@@ -79,23 +110,24 @@ fn render(ui: &RadiusProbe) -> Vec<[u8; 4]> {
         .collect()
 }
 
-fn pixel_at(frame: &[[u8; 4]], x: u32, y: u32) -> [u8; 4] {
-    frame[(y * WIDTH + x) as usize]
+fn pixel_at(frame: &[[u8; 4]], x: u32, y: u32, width: u32) -> [u8; 4] {
+    frame[(y * width + x) as usize]
 }
 
 #[test]
 fn radius_actually_rounds_corners() {
-    // 必须先装好软件渲染平台：`RadiusProbe::new()` 会去要一个窗口 adapter，
+    // 必须先装好软件渲染平台：窗口组件 `::new()` 会去要一个窗口 adapter，
     // 没装平台时 Slint 会去初始化默认（winit）后端，而它要求事件循环在主线程。
-    let _ = minimal_window();
+    let platform = platform();
+    let window = platform.new_window();
     let ui = RadiusProbe::new().expect("构造圆角探针窗口");
 
     // ① 直角（库默认）：三块面的左上角都被面自己覆盖（描边或硬阴影层），不是红底
     ui.set_probe_radius(0.0);
-    let square = render(&ui);
+    let square = render(&window, &ui, WIDTH, HEIGHT);
     for (x, y, name) in PROBES {
         assert_ne!(
-            pixel_at(&square, x, y)[..3],
+            pixel_at(&square, x, y, WIDTH)[..3],
             BACKDROP,
             "{name} 在 radius=0 时左上角应被面自身覆盖，实际露出了背景色（说明布局坐标与探针不一致）"
         );
@@ -103,14 +135,14 @@ fn radius_actually_rounds_corners() {
 
     // ② 圆角 12px / 小件 6px：同一个左上角像素必须被切掉，露出红底
     ui.set_probe_radius(12.0);
-    let rounded = render(&ui);
+    let rounded = render(&window, &ui, WIDTH, HEIGHT);
     assert_ne!(
         square, rounded,
         "改 PixelTheme.radius 后渲染结果没变化：组件没读主题圆角"
     );
     for (x, y, name) in PROBES {
         assert_eq!(
-            pixel_at(&rounded, x, y)[..3],
+            pixel_at(&rounded, x, y, WIDTH)[..3],
             BACKDROP,
             "{name} 在 radius>0 时左上角应被圆角切掉（露出背景），实际仍是面自身颜色"
         );
@@ -119,9 +151,43 @@ fn radius_actually_rounds_corners() {
     // ③ 改回直角应当复原 —— 排除「一次性、不可逆」的假通过
     ui.set_probe_radius(0.0);
     assert_eq!(
-        render(&ui),
+        render(&window, &ui, WIDTH, HEIGHT),
         square,
         "把 radius 设回 0px 后应回到直角渲染结果"
+    );
+
+    // ④ 圆角窗身：window-radius = 0 时全出血（四角是窗身面色），> 0 时四角露出窗口底色
+    const BODY: u32 = 80;
+    let body_window = platform.new_window();
+    let body = WindowBodyProbe::new().expect("构造圆角窗身探针窗口");
+    body.set_probe_window_radius(0.0);
+    let full_bleed = render(&body_window, &body, BODY, BODY);
+    assert_ne!(
+        pixel_at(&full_bleed, 0, 0, BODY)[..3],
+        BACKDROP,
+        "window-radius=0 时窗身应全出血（左上角是面色），实际露了窗口底色"
+    );
+    body.set_probe_window_radius(12.0);
+    let rounded_body = render(&body_window, &body, BODY, BODY);
+    // (0,0) 只能证明窗身被内缩（pad）；(4,4) 还要求圆角真的把这一像素切掉：
+    // pad=3 的方角窗身在 (4,4) 仍是面色，只有圆角（r=12）才会露出窗口底色。
+    for (x, y) in [(0, 0), (4, 4)] {
+        assert_eq!(
+            pixel_at(&rounded_body, x, y, BODY)[..3],
+            BACKDROP,
+            "window-radius>0 时 ({x},{y}) 必须被圆角窗身切掉（露出窗口底色）"
+        );
+    }
+    assert_ne!(
+        pixel_at(&full_bleed, 4, 4, BODY)[..3],
+        BACKDROP,
+        "window-radius=0 时 (4,4) 应是窗身面色（全出血，没有透明边距）"
+    );
+    body.set_probe_window_radius(0.0);
+    assert_eq!(
+        render(&body_window, &body, BODY, BODY),
+        full_bleed,
+        "把 window-radius 设回 0px 后应回到全出血渲染结果"
     );
 }
 
@@ -185,6 +251,12 @@ fn every_bordered_surface_follows_theme_radius() {
             .expect("读取 pixel_theme.slint")
             .contains("in-out property <length> radius: 0px;"),
         "PixelTheme.radius 的默认值必须是 0px（既有宿主升级零外观变化）"
+    );
+    assert!(
+        std::fs::read_to_string(ui_dir.join("pixel_theme.slint"))
+            .expect("读取 pixel_theme.slint")
+            .contains("in-out property <length> window-radius: 0px;"),
+        "PixelTheme.window-radius 的默认值必须是 0px（直角窗口，且不要求宿主开透明窗口）"
     );
 }
 
