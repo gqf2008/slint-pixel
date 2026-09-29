@@ -30,9 +30,9 @@
 - **圆角窗口（可选）**：`PixelTheme.window-radius`（默认 `0px` = 直角窗口）+ 库组件 `PixelWindowBody`
   （透明边距 + 圆角 + 描边 + 把内容 clip 在圆角内），Rust 侧一行 `slint_pixel::transparent_window()`
   打开透明窗口即可，见下方「圆角窗口（可选，三步）」。
-- **描边不再混档**：新增 `PixelTheme.border-thin`（输入类发丝档，默认 `0.5px`），组件里**不再有硬编码宽度**；
-  `soft()` 把三档统一成 2px（保留原本的分量感）、`dark()` 同样 2px，宿主也可一行把 `border-width` /
-  `primary-border-width` / `border-thin` 设成同一个值。
+- **描边分成两级（外框 / 内框）**：`border-width: 2px`（卡片/面板/按钮等外框）+ `border-thin: 1px`
+  （输入类、复选/开关/标签/徽章等小件、以及扩展与高级组件的内部线框）；`primary-border-width` 默认改为 2px，
+  不再比普通按钮粗一档。组件里**不再有任何硬编码描边宽度**（有守卫盯着）。
 - **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
   ```slint
   import { PixelPresets } from "@slint_pixel";
@@ -405,19 +405,24 @@ init => {
 shadow / text-color / dim / highlight / danger` 与 `palette`；`PixelSlider` 的
 `track / fill / thumb / border / shadow` 等），宿主可在 `.slint` 里直接覆盖。
 
-### 让描边完全一致
+### 描边两级：外框 2px / 内框 1px
 
-默认三档描边是**有意区分**的：`border-width: 2px`（容器/控件）、`primary-border-width: 3px`（primary 按钮）、
-`border-thin: 0.5px`（输入类发丝）。觉得"有粗有细"就统一成一个值：
+| token | 默认 | 用在哪 |
+| --- | --- | --- |
+| `border-width` | `2px` | 外框：卡片 / 面板 / 对话框 / 表格 / 按钮 / 提示条 |
+| `primary-border-width` | `2px` | primary 按钮（0.2.4 起与普通按钮同宽） |
+| `border-thin` | `1px` | 内框：输入类、复选/开关/标签/徽章/评分/色块等小件、扩展与高级组件的内部线框 |
+
+觉得"有粗有细"就把三档设成同一个值（全 1px 最轻、全 2px 保留像素分量感）：
 
 ```slint
-PixelTheme.border-width = 1px;
-PixelTheme.primary-border-width = 1px;
-PixelTheme.border-thin = 2px;    // 2px = 库的默认分量；想更细可整组用 1px
+PixelTheme.border-width = 2px;
+PixelTheme.primary-border-width = 2px;
+PixelTheme.border-thin = 1px;    // 三个都填 1px 或都填 2px 即"全库同宽"
 ```
 
-`PixelPresets.soft()` 内置就是 2px×3（配柔彩圆角），`dark()` 也是 2px×3；
-主题编辑器里也有「细 1px / 中 2px / 粗 3px」一键档位。
+`PixelPresets.classic() / soft() / dark()` 内置都是 2px / 2px / 1px；主题编辑器里有
+「描边 细 1px / 中 2px / 粗 3px」一键档位。
 
 ### 圆角窗口（可选，三步）
 

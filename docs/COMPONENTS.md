@@ -52,7 +52,7 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
 | `accent` / `on-accent` | `#000000` / `#ffffff` | 强调、选中底色 / **accent 底之上的前景色**（选中行文字、勾选标记、开关滑块） |
 | `danger` / `success` / `warning` / `info` | 红 / 绿 / 琥珀 / 蓝 | 功能色；`PixelAlert` 按 `kind` 取用 |
 | `primary-face` / `primary-text` | `#ffffff` / `#000000` | `PixelButton variant="primary"` 的面与字 |
-| `border-width` / `primary-border-width` / `border-thin` | `2px` / `3px` / `0.5px` | 控件描边 / primary 按钮描边 / 输入类"发丝档"描边。三档都可用主题统一（预设里 soft=2px×3、dark=2px×3 就是全库同宽） |
+| `border-width` / `primary-border-width` / `border-thin` | `2px` / `2px` / `1px` | **两级描边**：外框（容器/卡片/按钮/primary）2px；内框（输入类、小件控件、组件内部线框）1px |
 | `radius` / `radius-sm` | `0px` / `radius / 2` | 容器圆角 / 小件圆角（默认直角像素风） |
 | `window-radius` | `0px` | 窗口自身圆角（默认直角窗口）；> 0 需配合 `PixelWindowBody` 与透明窗口，见下 |
 
@@ -121,26 +121,26 @@ export component App inherits Window {
 **未开透明窗口却设 `window-radius > 0`**，圆角外那圈边距会显示成黑边 —— 所以
 `PixelPresets.*` 不写 `window-radius`，由宿主自行决定（demo 里是切换预设时一起设的）。
 
-### 描边宽度要一致
-
-库里有三档描边 token，**语义不同、可以统一**：
+### 描边分成两级（外框 / 内框）
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | 卡片 / 面板 / 按钮 / 表格 / 标签等容器与控件 |
-| `primary-border-width` | `3px` | `PixelButton variant="primary"`（默认比普通按钮粗一档） |
-| `border-thin` | `0.5px` | 输入类：`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect`（发丝档） |
+| `border-width` | `2px` | **外框**：卡片 / 面板 / 对话框 / 表格 / 按钮 / 提示条等容器与控件 |
+| `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
+| `border-thin` | `1px` | **内框**：输入类（`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect`…）、小件控件（复选/开关/标签/徽章/评分/色块/分页/步骤…）与组件内部线框 |
 
-想让全库完全一致，把三个设成同一个值：
+两级是**有意**的：外框给容器定形，内框不抢视觉。要让全库完全同宽就设成同一个值：
 
 ```slint
 PixelTheme.border-width = 1px;
 PixelTheme.primary-border-width = 1px;
-PixelTheme.border-thin = 2px;   // 预设 PixelPresets.soft() 与 dark() 都是 2px×3（全库同宽）
+PixelTheme.border-thin = 1px;   // 全 1px：最轻
+// 或全 2px：保留像素分量感
 ```
 
+`PixelPresets.classic()` / `soft()` / `dark()` 内置都是 2px / 2px / 1px（同一套两级体系）。
 `cargo test -p slint-pixel --test theme_radius` 里的 `every_border_width_is_theme_driven`
-会盯住"组件里不许再出现硬编码宽度"，防止又冒出改不动的第四档（标题栏字形框、滑块轨道两处内部细节例外，已在测试里列明理由）。
+盯住"组件里不许再出现硬编码宽度"，防止又冒出改不动的第四档（标题栏字形框、滑块轨道两处内部细节例外，已在测试里列明理由）。
 
 ## 组件清单
 

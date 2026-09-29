@@ -103,7 +103,7 @@ export component PixelTagInput inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin; border-color: root.border;
             border-radius: PixelTheme.radius;
             VerticalLayout {
                 padding: 4px; spacing: 4px;
@@ -180,7 +180,7 @@ export component PixelAutoComplete inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             TextInput {
@@ -213,7 +213,7 @@ export component PixelAutoComplete inherits Rectangle {
             Rectangle {
                 x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: PixelTheme.border-width; border-color: root.border;
+                border-width: PixelTheme.border-thin; border-color: root.border;
                 border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 2px; spacing: 0px;
@@ -277,7 +277,7 @@ export component PixelCascader inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -318,7 +318,7 @@ export component PixelCascader inherits Rectangle {
             Rectangle {
                 x: 2px; y: 2px; width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: PixelTheme.border-width; border-color: root.border;
+                border-width: PixelTheme.border-thin; border-color: root.border;
                 border-radius: PixelTheme.radius;
                 HorizontalLayout {
                     spacing: 2px;
@@ -435,7 +435,7 @@ export component PixelRating inherits Rectangle {
                 y: rate-ta.pressed ? 1px : 0px;
                 width: 24px; height: 24px;
                 background: root.value >= idx + 1 ? root.face-active : root.face;
-                border-width: PixelTheme.border-width;
+                border-width: PixelTheme.border-thin;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.value >= idx + 1 ? root.face-active : root.border;
                 Text {

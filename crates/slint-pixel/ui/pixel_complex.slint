@@ -103,7 +103,7 @@ export component PixelRadioButton inherits Rectangle {
                 y: ta.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
-                border-width: PixelTheme.border-width;
+                border-width: PixelTheme.border-thin;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.checked ? root.face-checked : root.border;
                 Rectangle {
@@ -159,7 +159,7 @@ export component PixelRadioGroup inherits Rectangle {
                         y: item-ta.pressed ? 1px : 0px;
                         width: 22px; height: 22px;
                         background: root.index == i ? root.face-checked : root.face;
-                        border-width: PixelTheme.border-width;
+                        border-width: PixelTheme.border-thin;
                         border-radius: PixelTheme.radius-sm;
                         border-color: root.index == i ? root.face-checked : root.border;
                         Rectangle {

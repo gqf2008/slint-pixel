@@ -28,11 +28,11 @@ export global PixelTheme {
     in-out property <color> primary-text: #000000;
     // 控件描边宽度。默认保持 2px 像素风；宿主可统一调成 1px 获得更细、一致的控件边框。
     in-out property <length> border-width: 2px;
-    // primary 按钮描边。默认 3px；宿主通常与普通按钮统一，避免“有粗有细”。
-    in-out property <length> primary-border-width: 3px;
-    // 输入类控件（文本输入 / 文本域 / 下拉 / 选择框）的“发丝档”描边。默认 0.5px。
-    // 想让全库描边完全一致，把它设成与 border-width 相同（PixelPresets.soft() 就是 1px/1px/1px）。
-    in-out property <length> border-thin: 0.5px;
+    // primary 按钮描边。默认与普通按钮同宽（2px）：0.2.4 起不再默认粗一档，避免“有粗有细”。
+    in-out property <length> primary-border-width: 2px;
+    // 内框档描边：输入类控件、小件控件（复选/开关/标签/徽章/评分/色块…）与组件内部线框都用它。默认 1px。
+    // 两级体系 = 外框 border-width（2px）+ 内框 border-thin（1px）；想让全库同宽就设成同一个值。
+    in-out property <length> border-thin: 1px;
     // 圆角：默认 0px = 直角像素风（既有宿主升级零变化）。
     // 容器 / 卡片 / 输入 / 对话框等可见表面用 radius；复选框、开关、标签、滑块等小件用 radius-sm。
     in-out property <length> radius: 0px;

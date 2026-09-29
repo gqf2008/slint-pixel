@@ -329,7 +329,7 @@ export component PixelSearchBox inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             border-color: search-input.has-focus ? root.border-focus : root.border;
             search-input := TextInput {
@@ -501,7 +501,7 @@ export component PixelBackTop inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-width; border-color: root.border;
+            border-width: PixelTheme.border-thin; border-color: root.border;
             border-radius: PixelTheme.radius-sm;
             Text {
                 text: "↑";
