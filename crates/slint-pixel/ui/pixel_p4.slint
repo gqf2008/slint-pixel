@@ -26,6 +26,7 @@ export component PixelAvatarGroup inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             Text {
                 text: name;
                 color: root.text-color;
@@ -62,6 +63,7 @@ export component PixelList inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -115,6 +117,7 @@ export component PixelVirtualList inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -174,6 +177,7 @@ export component PixelTreeTable inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             // 表头
             Rectangle {
@@ -252,6 +256,7 @@ export component PixelDataTable inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             Rectangle {
                 height: root.header-height;
@@ -380,6 +385,7 @@ export component PixelNotificationCenter inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for msg[i] in root.messages : Rectangle {
@@ -463,6 +469,7 @@ export component PixelSubMenu inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 for child[j] in root.children[root.parent-index] : Rectangle {
                     height: 28px;
@@ -503,6 +510,7 @@ export component PixelBackTop inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
+            border-color: root.border;
             Text {
                 text: "↑";
                 color: PixelTheme.text;

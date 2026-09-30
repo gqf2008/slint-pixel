@@ -518,3 +518,73 @@ fn no_bleeding_shadow_rects() {
         offenders.join("\n")
     );
 }
+
+/// 显式边框色守卫：任何元素块里出现非 0 的 `border-width` 就必须有 `border-color`。
+/// Slint 的 Rectangle 默认 border-color 是 **transparent**——只写 border-width 不写的
+/// 边框永远不渲染。2026-09-30 统一 2px 批次的回归实证：批量把阴影层改 transparent 时，
+/// 50 个面层带着"无色的 border-width"，框线整体消失（owner 报"组件边框都没了"），
+/// 而宽度守卫/线粗守卫/渲染暗带审计全都抓不到"缺失"（审计只能抓多出来的，抓不住没了的）。
+/// 0px（tailwind 的 `border-width: 0px` 占位）与 pixel_theme.slint 的 token 定义豁免。
+/// 阳性对照：zz_border_color_probe.slint（同行单行/多行连写两种必抓 + 阴性两例不误报）。
+#[test]
+fn every_border_has_explicit_color() {
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let mut offenders = Vec::new();
+
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        if path.extension().and_then(|e| e.to_str()) != Some("slint") || name == "pixel_theme.slint"
+        {
+            continue;
+        }
+        let source = std::fs::read_to_string(&path).expect("读取 .slint 源文件");
+        let lines: Vec<&str> = source.lines().collect();
+        // 块起点 + 每个起点的块结束行
+        let mut stack: Vec<usize> = Vec::new();
+        let mut start_of = vec![usize::MAX; lines.len()];
+        let mut end_of: std::collections::HashMap<usize, usize> = std::collections::HashMap::new();
+        for (i, line) in lines.iter().enumerate() {
+            start_of[i] = *stack.last().unwrap_or(&usize::MAX);
+            for ch in line.chars() {
+                match ch {
+                    '{' => stack.push(i),
+                    '}' => {
+                        if let Some(s) = stack.pop() {
+                            end_of.insert(s, i);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+        for (i, line) in lines.iter().enumerate() {
+            // 按 `;`/`{`/`}` 切段找 border-width 段；0px 是纯占位（视觉上无边），豁免
+            let segs: Vec<&str> = line.split([';', '{', '}']).collect();
+            let has_bw = segs.iter().any(|s| {
+                let t = s.trim();
+                t.starts_with("border-width:") && !t.ends_with("0px")
+            });
+            if !has_bw {
+                continue;
+            }
+            // 含 `{` 的行（单行元素/开标签行）块从本行起算，否则取最内层未闭合块
+            let st = if line.contains('{') { i } else { start_of[i] };
+            let e = if st == usize::MAX {
+                i
+            } else {
+                *end_of.get(&st).unwrap_or(&i)
+            };
+            let blk = lines[st.min(i)..=e.max(i)].join("\n");
+            if !blk.contains("border-color") {
+                offenders.push(format!("{name}:{} {}", i + 1, line.trim()));
+            }
+        }
+    }
+
+    assert!(
+        offenders.is_empty(),
+        "以下元素写了 border-width 却没有 border-color（Slint 默认边框色 = transparent，框不会渲染）：\n{}",
+        offenders.join("\n")
+    );
+}

@@ -24,6 +24,7 @@ export component PixelImage inherits Rectangle {
             background: #ffffff;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: PixelTheme.edge;
             Image {
                 source: root.source;
                 image-rendering: pixelated;
@@ -56,6 +57,7 @@ export component PixelImageViewer inherits Rectangle {
             background: #ffffff;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: PixelTheme.edge;
             clip: true;
             Image {
                 source: root.source;
@@ -479,6 +481,7 @@ export component PixelDescriptionList inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for label[i] in root.labels : Rectangle {
@@ -531,6 +534,7 @@ export component PixelResult inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 12px; spacing: 6px;
                 Text {

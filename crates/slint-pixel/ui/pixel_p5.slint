@@ -31,6 +31,7 @@ export component PixelRichTextEditor inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 4px; spacing: 4px;
                 HorizontalLayout {
@@ -70,6 +71,7 @@ export component PixelCodeBlock inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             Text {
                 x: 8px; y: 4px; width: parent.width - 16px; height: parent.height - 8px;
                 text: root.code;
@@ -106,6 +108,7 @@ export component PixelImageCrop inherits Rectangle {
             background: #ffffff;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: PixelTheme.edge;
             clip: true;
             Image {
                 source: root.source;
@@ -191,6 +194,7 @@ export component PixelCalendar inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 4px; spacing: 4px;
                 PixelDatePicker {

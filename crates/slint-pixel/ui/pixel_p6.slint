@@ -26,6 +26,7 @@ export component PixelChart inherits Rectangle {
             background: #ffffff;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: PixelTheme.edge;
             HorizontalLayout {
                 padding: 8px;
                 spacing: 4px;
@@ -119,6 +120,7 @@ export component PixelDataGrid inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             Rectangle {
                 height: root.header-height;
@@ -223,6 +225,7 @@ export component PixelVirtualScroll inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             ScrollView {
                 x: 0px; y: 0px; width: parent.width; height: parent.height;
@@ -282,6 +285,7 @@ export component PixelTreePro inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             clip: true;
             VerticalLayout {
                 padding: 1px; spacing: 0px;
@@ -346,6 +350,7 @@ export component PixelFormValidator inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 4px; spacing: 0px;
                 for f[i] in root.fields : Rectangle {
@@ -398,6 +403,7 @@ export component PixelScheduler inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for t[i] in root.times : Rectangle {
@@ -453,6 +459,7 @@ export component PixelCalendarAgenda inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 2px; spacing: 0px;
                 for d[i] in root.dates : Rectangle {

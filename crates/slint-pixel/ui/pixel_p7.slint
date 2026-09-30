@@ -30,6 +30,7 @@ export component PixelWizard inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 8px; spacing: 8px;
                 Text {
@@ -71,6 +72,7 @@ export component PixelMultiStepForm inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             VerticalLayout {
                 padding: 8px; spacing: 6px;
                 HorizontalLayout {
@@ -143,6 +145,7 @@ export component PixelTransferPro inherits Rectangle {
                 background: root.face;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
+            border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     PixelTextInput { text <=> root.left-query; placeholder: "搜索"; height: 24px; }
@@ -174,6 +177,7 @@ export component PixelTransferPro inherits Rectangle {
                 background: root.face;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
+            border-color: root.border;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     PixelTextInput { text <=> root.right-query; placeholder: "搜索"; height: 24px; }
@@ -301,6 +305,7 @@ export component PixelCommandPalettePro inherits Rectangle {
                 background: root.face;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
+            border-color: root.border;
                 VerticalLayout {
                     padding: 6px; spacing: 4px;
                     Rectangle {
@@ -541,6 +546,7 @@ export component PixelSignature inherits Rectangle {
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
+            border-color: root.border;
             sig-ta := TouchArea {
                 pointer-event(ev) => {
                     if ev.button != PointerEventButton.left { return; }
