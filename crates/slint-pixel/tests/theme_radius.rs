@@ -347,10 +347,6 @@ fn enclosing_block(lines: &[&str]) -> Vec<usize> {
 /// 必须读主题值，否则宿主把 `border-width` 调细时边框变细、分隔线仍是 2px —— owner 说的"容器类不一致"。
 #[test]
 fn divider_lines_follow_theme_border_width() {
-    /// 状态高亮条（不是分隔线）：PixelButton 的 active 指示条
-    const EXEMPT: [(&str, &str); 1] =
-        [("pixel_painter_widget.slint", "// 底部高亮条（active 标记）")];
-
     let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
     let edge_colors = ["root.edge", "root.border", "root.line", "root.bubble-edge"];
     let literals = [
@@ -383,12 +379,6 @@ fn divider_lines_follow_theme_border_width() {
             if t.contains("PixelTheme.") {
                 continue;
             }
-            if EXEMPT
-                .iter()
-                .any(|(f, marker)| *f == name && t.contains(marker))
-            {
-                continue;
-            }
             checked += 1;
             offenders.push(format!("{name}:{} {}", i + 1, t));
         }
@@ -406,6 +396,11 @@ fn divider_lines_follow_theme_border_width() {
 /// 约定是全库线条一律跟随 PixelTheme.border-width（当前 2px）——tabs/navbar 激活条、
 /// 选中指示条这类"强调线"历史上两次滑回 3px，与 2px 边框同框即混档；3px 在本体系里
 /// 没有合法用途（滑轨填充/字形块不是线条，走不到这个断言）。
+///
+/// 检测要覆盖该写法的全部形状（sp-pkg-r 评审 P1 实证过漏报）：
+/// 两行式、`Rectangle { height: 3px; background: …; }` 单行元素、
+/// 多行元素内 `height: 3px; background: …;` 同行、`height: 3px` 无分号（右花括号前省略）。
+/// 探针文件 zz_guard_probe.slint 做过四形状阳性对照（修复前只抓两行式，修复后四种全红）。
 #[test]
 fn no_hardcoded_3px_painted_lines() {
     let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
@@ -422,16 +417,21 @@ fn no_hardcoded_3px_painted_lines() {
         let blocks = enclosing_block(&lines);
         for (i, line) in lines.iter().enumerate() {
             let t = line.trim();
-            // 宽高常与 parent 表达式同行（`width: parent.width; height: 3px;`），不能只认行首
-            let three_px = t.contains("height: 3px;") || t.contains("width: 3px;");
+            // 按 `;`/`{`/`}` 切段后精确匹配尺寸段：兼容无分号、同行多属性、单行元素；
+            // `preferred-height:` 这类带前缀的属性名不会被误判
+            let three_px = t
+                .split([';', '{', '}'])
+                .any(|s| matches!(s.trim(), "height: 3px" | "width: 3px"));
             if !three_px {
                 continue;
             }
-            // 同一个元素块里带 background 才是可见线条；纯占位/间距矩形不算
-            let painted = lines
-                .iter()
-                .enumerate()
-                .any(|(j, l)| blocks[j] == blocks[i] && l.trim().starts_with("background:"));
+            // painted：本行带 background（单行元素/同行式）→ 命中；否则回退经典两行式
+            // （background 单独一行、与尺寸行同元素块）
+            let painted = t.contains("background:")
+                || lines
+                    .iter()
+                    .enumerate()
+                    .any(|(j, l)| blocks[j] == blocks[i] && l.trim().starts_with("background:"));
             if painted {
                 offenders.push(format!("{name}:{} {}", i + 1, t));
             }
