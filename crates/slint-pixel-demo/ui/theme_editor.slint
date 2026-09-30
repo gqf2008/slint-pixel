@@ -54,9 +54,13 @@ export component ThemeEditorWindow inherits Window {
     callback begin-resize(string);
     callback generate-theme();
     in-out property <string> generated-theme: "";
-    // 由 Rust 在创建窗口时传入画廊当前预设（Slint 的 global 不跨窗口共享）
-    in-out property <string> theme-preset: "classic";
-    changed theme-preset => {
+    // 默认预设：soft 柔彩 + 圆角（画廊开箱观感）；无头截图 / 演示脚本可显式切 "classic" / "dark"。
+    // 初始声明值不触发 changed，故抽公共函数 + init 显式套用一次。
+    in-out property <string> theme-preset: "soft";
+    changed theme-preset => { root.apply-theme-preset(); }
+    init => { root.apply-theme-preset(); }
+
+    function apply-theme-preset() {
         if (root.theme-preset == "soft") {
             PixelPresets.soft();
             PixelTheme.window-radius = 12px;

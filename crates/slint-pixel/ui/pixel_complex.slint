@@ -220,13 +220,13 @@ export component PixelComboBox inherits Rectangle {
 
     Rectangle {
         width: 100%; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
-            border-width: PixelTheme.border-width; // 发丝档，与输入框一致
+            border-width: PixelTheme.border-width; // 与输入框一致：统一 2px 主题描边
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -315,12 +315,11 @@ export component PixelMenu inherits Rectangle {
 
     Rectangle {
         width: 100%; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: ta.pressed ? 1px : 0px;
-            y: ta.pressed ? 1px : 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -409,11 +408,11 @@ export component PixelTableView inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -523,20 +522,21 @@ export component PixelCollapsible inherits VerticalLayout {
     opacity: root.enabled ? 1.0 : 0.5;
     spacing: 0px;
 
-    // 标题栏
+    // 标题栏与内容区共享一个外框（避免两框相贴出 4px 缝）；框内标题下是 2px 分隔线
     Rectangle {
         width: 100%;
-        height: 32px;
-        background: root.shadow;
+        height: 32px + cl-body.height;
+        border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius;
+        border-color: root.edge;
+        background: root.header-face;
+        clip: true;
+
+        // 标题栏
         Rectangle {
-            x: header-ta.pressed ? 1px : 0px;
-            y: header-ta.pressed ? 1px : 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
-            background: header-ta.has-hover ? root.header-hover : root.header-face;
-            border-width: PixelTheme.border-width;
-            border-radius: PixelTheme.radius;
-            border-color: root.edge;
+            width: 100%;
+            height: 32px;
+            background: header-ta.has-hover ? root.header-hover : transparent;
             Text {
                 x: 10px; y: 0px;
                 width: parent.width - 40px; height: parent.height;
@@ -555,6 +555,12 @@ export component PixelCollapsible inherits VerticalLayout {
                 horizontal-alignment: center;
                 vertical-alignment: center;
             }
+            // 标题下分隔线（常显 2px：折叠态作框内分隔，展开态分隔内容区）
+            Rectangle {
+                x: 0px; y: parent.height - PixelTheme.border-width;
+                width: parent.width; height: PixelTheme.border-width;
+                background: root.edge;
+            }
             header-ta := TouchArea {
                 enabled: root.enabled;
                 width: 100%; height: 100%;
@@ -565,22 +571,20 @@ export component PixelCollapsible inherits VerticalLayout {
                 mouse-cursor: pointer;
             }
         }
-    }
 
-    // 内容区（收起时高度 0 + 裁剪，带展开动画）
-    Rectangle {
-        width: 100%;
-        height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
-        background: root.body;
-        border-width: PixelTheme.border-width;
-        border-radius: PixelTheme.radius;
-        border-color: root.edge;
-        clip: true;
-        animate height { duration: 160ms; easing: ease-out; }
-        body-content := VerticalLayout {
-            x: 0px;
+        // 内容区（收起时高度 0 + 裁剪，带展开动画）
+        cl-body := Rectangle {
+            y: 32px;
             width: 100%;
-            @children
+            height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
+            background: root.body;
+            clip: true;
+            animate height { duration: 160ms; easing: ease-out; }
+            body-content := VerticalLayout {
+                x: 0px;
+                width: 100%;
+                @children
+            }
         }
     }
 }
@@ -602,42 +606,44 @@ export component PixelAccordion inherits VerticalLayout {
     opacity: root.enabled ? 1.0 : 0.5;
     spacing: 4px;
 
-    for t[i] in root.titles : VerticalLayout {
+    for t[i] in root.titles : Rectangle {
         width: 100%;
-        spacing: 0px;
+        // 标题栏与内容区共享一个外框（避免两框相贴出 4px 缝）；框内标题下是 2px 分隔线
+        height: 32px + acc-body.height;
+        border-width: PixelTheme.border-width;
+        border-radius: PixelTheme.radius;
+        border-color: root.edge;
+        background: root.header-face;
+        clip: true;
 
         // 标题栏
         Rectangle {
             width: 100%;
             height: 32px;
-            background: root.shadow;
-            border-radius: PixelTheme.radius;
+            background: panel-ta.has-hover ? root.header-hover : transparent;
+            Text {
+                x: 10px; y: 0px;
+                width: parent.width - 40px; height: parent.height;
+                text: t;
+                color: root.text-color;
+                font-weight: 700;
+                font-size: 13px;
+                vertical-alignment: center;
+            }
+            Text {
+                x: parent.width - 30px; y: 0px;
+                width: 24px; height: parent.height;
+                text: root.active == i ? "▼" : "▶";
+                color: root.text-color;
+                font-size: 11px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            // 标题下分隔线（常显 2px）
             Rectangle {
-                x: panel-ta.pressed ? 1px : 0px;
-                y: panel-ta.pressed ? 1px : 0px;
-                width: parent.width - 2px; height: parent.height - 2px;
-                background: panel-ta.has-hover ? root.header-hover : root.header-face;
-                border-width: PixelTheme.border-width;
-                border-radius: PixelTheme.radius;
-                border-color: root.edge;
-                Text {
-                    x: 10px; y: 0px;
-                    width: parent.width - 40px; height: parent.height;
-                    text: t;
-                    color: root.text-color;
-                    font-weight: 700;
-                    font-size: 13px;
-                    vertical-alignment: center;
-                }
-                Text {
-                    x: parent.width - 30px; y: 0px;
-                    width: 24px; height: parent.height;
-                    text: root.active == i ? "▼" : "▶";
-                    color: root.text-color;
-                    font-size: 11px;
-                    horizontal-alignment: center;
-                    vertical-alignment: center;
-                }
+                x: 0px; y: parent.height - PixelTheme.border-width;
+                width: parent.width; height: PixelTheme.border-width;
+                background: root.edge;
             }
             panel-ta := TouchArea {
                 enabled: root.enabled;
@@ -651,16 +657,14 @@ export component PixelAccordion inherits VerticalLayout {
         }
 
         // 内容区
-        Rectangle {
+        acc-body := Rectangle {
+            y: 32px;
             width: 100%;
-            height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
+            height: root.active == i ? max(acc-body-content.preferred-height, 40px) : 0px;
             background: root.body;
-            border-width: PixelTheme.border-width;
-            border-radius: PixelTheme.radius;
-            border-color: root.edge;
             clip: true;
             animate height { duration: 160ms; easing: ease-out; }
-            acc-body := VerticalLayout {
+            acc-body-content := VerticalLayout {
                 x: 0px;
                 width: 100%;
                 Text {

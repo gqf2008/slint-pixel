@@ -34,13 +34,12 @@ export component PixelSegmentedControl inherits Rectangle {
         for opt[i] in root.options : Rectangle {
             width: root.width / root.options.length;
             height: 100%;
-            background: root.shadow;
+            background: transparent;
             border-radius: PixelTheme.radius-sm;
             Rectangle {
-                x: seg-ta.pressed ? 1px : 0px;
-                y: seg-ta.pressed ? 1px : 0px;
-                width: parent.width - 2px;
-                height: parent.height - 2px;
+                x: 0px; y: 0px;
+                width: parent.width;
+                height: parent.height;
                 background: root.index == i ? root.face-active
                     : (seg-ta.has-hover ? root.face : PixelTheme.bg);
                 border-width: PixelTheme.border-width;
@@ -94,11 +93,11 @@ export component PixelSteps inherits Rectangle {
                 x: (parent.width - 26px) / 2;
                 y: 4px;
                 width: 26px; height: 26px;
-                background: root.shadow;
+                background: transparent;
                 border-radius: PixelTheme.radius-sm;
                 Rectangle {
-                    x: 1px; y: 1px;
-                    width: 24px; height: 24px;
+                    x: 0px; y: 0px;
+                    width: 26px; height: 26px;
                     background: i < root.current ? root.face-done
                         : (i == root.current ? root.face-current : root.face);
                     border-width: PixelTheme.border-width;
@@ -158,11 +157,11 @@ export component PixelNumberInput inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -225,13 +224,13 @@ export component PixelSelect inherits Rectangle {
 
     Rectangle {
         width: 100%; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
-            border-width: PixelTheme.border-width; // 发丝档，与输入框一致
+            border-width: PixelTheme.border-width; // 与输入框一致：统一 2px 主题描边
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -290,10 +289,10 @@ export component PixelSelect inherits Rectangle {
                             spacing: 6px;
                             Rectangle {
                                 width: 18px; height: 18px;
-                                background: root.shadow;
+                                background: transparent;
                                 border-radius: PixelTheme.radius;
                                 Rectangle {
-                                    x: 1px; y: 1px; width: 16px; height: 16px;
+                                    x: 0px; y: 0px; width: 18px; height: 18px;
                                     background: root.value == opt || root.value == "*" ? root.border-focus : root.face;
                                     border-width: PixelTheme.border-width;
                                     border-radius: PixelTheme.radius;
@@ -343,12 +342,12 @@ export component PixelSwatchGroup inherits Rectangle {
         for c[i] in root.colors : Rectangle {
             width: root.swatch-size + 4px;
             height: root.swatch-size + 4px;
-            background: root.shadow;
+            background: transparent;
             border-radius: PixelTheme.radius-sm;
             Rectangle {
-                x: 1px; y: 1px;
-                width: root.swatch-size + 2px;
-                height: root.swatch-size + 2px;
+                x: 0px; y: 0px;
+                width: root.swatch-size + 4px;
+                height: root.swatch-size + 4px;
                 background: c;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius-sm;

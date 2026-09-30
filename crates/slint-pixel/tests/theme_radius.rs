@@ -267,23 +267,13 @@ fn every_bordered_surface_follows_theme_radius() {
 #[test]
 fn every_border_width_is_theme_driven() {
     /// (文件, 该行内容, 理由)
-    const EXEMPT: [(&str, &str, &str); 3] = [
-        (
-            "pixel_painter_widget.slint",
-            "border-width: 1px;",
-            "TitleButton 面：border-color 复用 face，纯字形内缩",
-        ),
-        (
-            "pixel_p1.slint",
-            "border-width: 1px;",
-            "PixelRangeSlider 轨道内部细节",
-        ),
-        (
-            "pixel_widgets.slint",
-            "border-width: 1px;",
-            "PixelSlider 轨道内部细节",
-        ),
-    ];
+    // 统一 2px 批次后滑轨已改走 PixelTheme.border-width，全库仅剩 TitleButton 一处 1px
+    // （border-color 复用 face 的字形内缩，不是框线）；其余任何文件新出现 1px 都会在此变红。
+    const EXEMPT: [(&str, &str, &str); 1] = [(
+        "pixel_painter_widget.slint",
+        "border-width: 1px;",
+        "TitleButton 面：border-color 复用 face，纯字形内缩",
+    )];
 
     let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
     let mut offenders = Vec::new();
@@ -441,6 +431,90 @@ fn no_hardcoded_3px_painted_lines() {
     assert!(
         offenders.is_empty(),
         "以下可见线条硬编码 3px（应跟随 PixelTheme.border-width，与 2px 边框同框才不混档）：\n{}",
+        offenders.join("\n")
+    );
+}
+
+/// 出血阴影守卫：`字面量 x/y 平移 + 撑满 parent（或 100%）+ 不透明背景` 的矩形就是旧的
+/// "像素键阴影"写法——border-width 升到 2px 后，阴影层让右/下缘比左/上缘粗一倍
+/// （owner 原话"线框粗细不一致"的根因之一）。统一 2px 体系里该写法废除：
+/// 要么整面同色走 border（平顶直框），要么背景 transparent 只做布局占位。
+///
+/// 检测形状（sp-pkg-r 评审风格，逐形状阳性对照过）：
+/// 同行单行元素 / 多行连写 / x·y 与 w·h 全分行（旧 PixelButton 像素键）/ 100% 撑满。
+/// 字面量只认 `x: 2px` 这种纯数字段——条件偏移（`x: ta.pressed ? 2px : 0px`）不可文本
+/// 求值，不在本守卫范围（按压下沉是瞬态反馈，另有视觉审计兜底）。
+/// 阴性对照（当前代码库真实存在、不得误报）：transparent 占位、定长内衬（色板/画布框）、
+/// `parent.width - Npx` 内缩（ScrollView 内容区/滑轨填充）、条件偏移。
+#[test]
+fn no_bleeding_shadow_rects() {
+    /// 从 `;`/`{`/`}` 切段里取 `轴: 数字px` 的字面量（条件式解析失败 → None）
+    fn lit_px(segs: &[&str], axis: &str) -> Option<i64> {
+        segs.iter()
+            .filter_map(|s| {
+                let rest = s.trim().strip_prefix(axis)?.strip_prefix(": ")?.trim();
+                rest.strip_suffix("px")?.trim().parse::<i64>().ok()
+            })
+            .max()
+    }
+    fn is_full_w(s: &str) -> bool {
+        matches!(s.trim(), "width: parent.width" | "width: 100%")
+    }
+    fn is_full_h(s: &str) -> bool {
+        matches!(s.trim(), "height: parent.height" | "height: 100%")
+    }
+
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let mut offenders: Vec<String> = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    let mut anchors = 0usize;
+
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        if path.extension().and_then(|e| e.to_str()) != Some("slint") {
+            continue;
+        }
+        let source = std::fs::read_to_string(&path).expect("读取 .slint 源文件");
+        let lines: Vec<&str> = source.lines().collect();
+        let blocks = enclosing_block(&lines);
+        for (i, line) in lines.iter().enumerate() {
+            // 窗口 = 本行 + 同元素块内后 5 行（属性惯用紧随其后的连写/分行两种形态）；
+            // 锚定行本身带 `{` 时元素块从本行起算，覆盖"开标签行内写 x/y"的形态
+            let scope = if line.contains('{') { i } else { blocks[i] };
+            let mut segs: Vec<&str> = line.split([';', '{', '}']).collect();
+            for j in (i + 1)..=(i + 5).min(lines.len().saturating_sub(1)) {
+                // 含 `{` 的行是子元素开标签：其行内属性属于子元素本身，
+                // 由子元素行自行锚定（单行元素 self-anchor，多行元素从 `{` 行起块），跳过以免并集串味
+                if blocks[j] == scope && !lines[j].contains('{') {
+                    segs.extend(lines[j].split([';', '{', '}']));
+                }
+            }
+            let x_off = lit_px(&segs, "x").is_some_and(|v| v > 0);
+            let y_off = lit_px(&segs, "y").is_some_and(|v| v > 0);
+            if !(x_off && y_off) {
+                continue;
+            }
+            anchors += 1;
+            let full = segs.iter().any(|s| is_full_w(s)) && segs.iter().any(|s| is_full_h(s));
+            let opaque_bg = segs.iter().any(|s| {
+                s.trim()
+                    .strip_prefix("background:")
+                    .is_some_and(|b| b.trim() != "transparent")
+            });
+            if full && opaque_bg && seen.insert((name.clone(), scope)) {
+                offenders.push(format!("{name}:{} {}", i + 1, line.trim()));
+            }
+        }
+    }
+
+    assert!(
+        anchors > 10,
+        "覆盖面异常：只锚定到 {anchors} 处字面量偏移（守卫可能没在扫）"
+    );
+    assert!(
+        offenders.is_empty(),
+        "以下矩形是出血阴影（x/y 平移 + 撑满 parent + 不透明背景），右/下缘会比左/上缘粗：\n{}",
         offenders.join("\n")
     );
 }

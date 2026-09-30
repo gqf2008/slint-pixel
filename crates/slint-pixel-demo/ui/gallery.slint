@@ -54,9 +54,13 @@ export component GalleryWindow inherits Window {
     property <bool> bubble-open: false;
     property <string> action-status: "就绪";
     in-out property <bool> dark-mode: false;
-    // 无头截图 / 演示脚本用：改成 "soft" / "dark" 即套用对应整套预设（颜色 + 圆角）
-    in-out property <string> theme-preset: "classic";
-    changed theme-preset => {
+    // 默认预设：soft 柔彩 + 圆角（画廊开箱观感）；无头截图 / 演示脚本可显式切 "classic" / "dark"。
+    // 初始声明值不触发 changed，故抽公共函数 + init 显式套用一次。
+    in-out property <string> theme-preset: "soft";
+    changed theme-preset => { root.apply-theme-preset(); }
+    init => { root.apply-theme-preset(); }
+
+    function apply-theme-preset() {
         if (root.theme-preset == "soft") {
             PixelPresets.soft();
             PixelTheme.window-radius = 12px;   // 窗身圆角只在这里开：它要求宿主开透明窗口
@@ -131,6 +135,8 @@ export component GalleryWindow inherits Window {
                 VerticalLayout {
                     // 显式宽度：打破 ScrollView 视口宽度 ↔ 内容宽度的循环绑定
                     width: root.width - 28px;
+                    // 首尾纵向留白：否则首/尾面板贴住滚动视口边，与外框叠成 4px 双框
+                    padding-top: 10px; padding-bottom: 10px;
                     spacing: 10px;
                     PixelPanel {
                         title: "按钮 BUTTON · VARIANT / SIZE";

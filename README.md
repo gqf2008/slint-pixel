@@ -47,6 +47,12 @@
 
 ![圆角 + 柔彩](docs/gallery-soft.png)
 
+三种预设同一套组件、同一套 2px 描边（仅配色/圆角不同），`cargo run` 默认 soft：
+
+| classic（黑白直角） | soft（暖米圆角，默认） | dark（深色圆角） |
+| --- | --- | --- |
+| ![classic](docs/gallery-classic.png) | ![soft](docs/gallery-soft.png) | ![dark](docs/gallery-dark.png) |
+
 ## 最新特性（v0.2.3）
 
 - **可统一配置的控件描边**：`PixelTheme.border-width`（默认 2px）和

@@ -19,10 +19,10 @@ export component PixelAvatarGroup inherits Rectangle {
     for name[i] in root.names : Rectangle {
         x: i * (root.size - 10px);
         y: 0px; width: root.size; height: root.size;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -55,10 +55,10 @@ export component PixelList inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -108,10 +108,10 @@ export component PixelVirtualList inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -167,10 +167,10 @@ export component PixelTreeTable inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -245,10 +245,10 @@ export component PixelDataTable inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -324,10 +324,10 @@ export component PixelSearchBox inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -373,10 +373,10 @@ export component PixelNotificationCenter inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -456,10 +456,10 @@ export component PixelSubMenu inherits Rectangle {
     if root.parent-index >= 0 && root.parent-index < root.children.length : Rectangle {
         y: 40px;
         width: 180px; height: root.children[root.parent-index].length * 28px + 4px;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -496,10 +496,10 @@ export component PixelBackTop inherits Rectangle {
     width: 36px; height: 36px;
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius-sm;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;

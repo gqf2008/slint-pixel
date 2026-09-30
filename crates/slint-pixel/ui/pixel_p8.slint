@@ -20,10 +20,10 @@ export component PixelOrgChart inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -75,27 +75,30 @@ export component PixelFlowChart inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             HorizontalLayout {
                 for nd[i] in root.nodes : Rectangle {
                     width: 80px; height: 40px;
-                    background: root.border;
+                    background: transparent;
+                    // 节点间分隔线（单边 2px：相邻节点不再各画一条叠成 4px）
                     Rectangle {
-                        x: 1px; y: 1px; width: 78px; height: 38px;
-                        background: root.face;
-                        Text {
-                            text: nd;
-                            color: PixelTheme.text;
-                            font-size: 10px;
-                            horizontal-alignment: center;
-                            vertical-alignment: center;
-                        }
+                        visible: i > 0;
+                        x: 0px; y: 0px;
+                        width: PixelTheme.border-width; height: parent.height;
+                        background: root.border;
+                    }
+                    Text {
+                        text: nd;
+                        color: PixelTheme.text;
+                        font-size: 10px;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
                     }
                     Text {
                         text: i < root.edges.length ? "→" : "";
@@ -121,10 +124,10 @@ export component PixelMindMap inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -139,7 +142,7 @@ export component PixelMindMap inherits Rectangle {
                     width: 90px; height: 36px;
                     background: root.border;
                     Rectangle {
-                        x: 1px; y: 1px; width: 88px; height: 34px;
+                        x: 2px; y: 2px; width: 86px; height: 32px;
                         background: root.face;
                         Text { text: b; color: PixelTheme.text; font-size: 10px; horizontal-alignment: center; vertical-alignment: center; }
                     }
@@ -165,10 +168,10 @@ export component PixelGantt inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -215,10 +218,10 @@ export component PixelMap inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -258,10 +261,10 @@ export component PixelVideoPlayer inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -315,10 +318,10 @@ export component PixelAudioPlayer inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -363,10 +366,10 @@ export component PixelPDFViewer inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -401,10 +404,10 @@ export component PixelPrintPreview inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -453,10 +456,10 @@ export component PixelCaptcha inherits Rectangle {
 
     Rectangle {
         width: 100%; height: 100%;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px; width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;

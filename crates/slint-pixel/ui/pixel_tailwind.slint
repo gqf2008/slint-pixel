@@ -523,17 +523,11 @@ export component PixelCard inherits Rectangle {
     in property <color> shadow: PixelTheme.shadow;
     in property <color> title-color: PixelTheme.text;
     background: root.bg;
-    // 根底色也要圆：硬阴影层被切掉的角上不能露出方角底色
     border-radius: PixelTheme.radius;
 
     Rectangle {
-        width: 100%; height: 100%;
-        background: root.shadow;
-        border-radius: PixelTheme.radius;
-    }
-    Rectangle {
-        x: 3px; y: 3px;
-        width: parent.width - 6px; height: parent.height - 6px;
+        x: 0px; y: 0px;
+        width: parent.width; height: parent.height;
         background: root.bg;
         border-width: root.bordered ? PixelTheme.border-width : 0px;
         border-radius: PixelTheme.radius;

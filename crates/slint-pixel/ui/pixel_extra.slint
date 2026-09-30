@@ -78,13 +78,13 @@ export component PixelTextArea inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
-            border-width: PixelTheme.border-width; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
+            border-width: PixelTheme.border-width; // 输入/文本域与全库统一 2px 主题描边
             border-radius: PixelTheme.radius;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {
@@ -129,12 +129,11 @@ export component PixelIconButton inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius-sm;
         Rectangle {
-            x: ta.pressed ? 1px : 0px;
-            y: ta.pressed ? 1px : 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.active ? root.face-active : (ta.has-hover ? root.face-hover : root.face);
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
@@ -240,12 +239,11 @@ export component PixelBubble inherits Rectangle {
     // 触发按钮（图标）
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: ta.pressed ? 1px : 0px;
-            y: ta.pressed ? 1px : 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: ta.has-hover ? root.face-hover : root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
@@ -347,12 +345,11 @@ export component PixelPopconfirm inherits Rectangle {
     // 触发按钮
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: ta.pressed ? 1px : 0px;
-            y: ta.pressed ? 1px : 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: ta.has-hover ? root.face-hover : root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;

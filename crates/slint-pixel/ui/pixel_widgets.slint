@@ -88,11 +88,11 @@ export component PixelSwitch inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius-sm;
         Rectangle {
             x: 0px; y: 0px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            width: parent.width; height: parent.height;
             background: root.checked ? root.track-on : root.track-off;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
@@ -136,25 +136,19 @@ export component PixelSlider inherits Rectangle {
     // 0..1 归一化进度
     property <float> ratio: (root.value - root.min) / Math.max(root.max - root.min, 0.0001);
 
-    // 轨道（两侧留出滑块空间）
+    // 轨道（两侧留出滑块空间）：统一 2px 框 + 2px 填充道
     Rectangle {
         x: 12px; y: 11px;
         width: root.width - 24px; height: 6px;
-        background: root.shadow;
+        background: root.track;
+        border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius-sm;
+        border-color: root.border;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: 4px;
-            background: root.track;
-            border-width: PixelTheme.border-width;
-            border-radius: PixelTheme.radius-sm;
-            border-color: root.border;
-            Rectangle {
-                x: 1px; y: 1px;
-                width: Math.max((parent.width - 2px) * root.ratio, 0px);
-                height: 2px;
-                background: root.fill;
-            }
+            x: 2px; y: 2px;
+            width: Math.max((parent.width - 4px) * root.ratio, 0px);
+            height: parent.height - 4px;
+            background: root.fill;
         }
     }
 
@@ -219,13 +213,13 @@ export component PixelTextInput inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
-            border-width: PixelTheme.border-width; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
+            border-width: PixelTheme.border-width; // 输入/文本域与全库统一 2px 主题描边
             border-radius: PixelTheme.radius;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {
@@ -269,11 +263,11 @@ export component PixelProgressBar inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius-sm;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.track;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
@@ -312,11 +306,11 @@ export component PixelBadge inherits Rectangle {
 
     Rectangle {
         width: root.width; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius-sm;
         Rectangle {
-            x: 1px; y: 1px;
-            width: parent.width - 2px; height: parent.height - 2px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
@@ -397,8 +391,8 @@ export component PixelDialog inherits Rectangle {
             background: root.shadow;
             border-radius: PixelTheme.radius;
             Rectangle {
-                x: 4px; y: 4px;
-                width: parent.width - 8px; height: parent.height - 8px;
+                x: 2px; y: 2px;
+                width: parent.width - 4px; height: parent.height - 4px;
                 background: root.panel;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
