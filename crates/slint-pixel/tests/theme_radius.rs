@@ -401,3 +401,46 @@ fn divider_lines_follow_theme_border_width() {
     );
     let _ = checked;
 }
+
+/// 3px 线条守卫：任何**带背景色的可见线条**都不允许硬编码 3px（横线看 height、竖线看 width）。
+/// 约定是全库线条一律跟随 PixelTheme.border-width（当前 2px）——tabs/navbar 激活条、
+/// 选中指示条这类"强调线"历史上两次滑回 3px，与 2px 边框同框即混档；3px 在本体系里
+/// 没有合法用途（滑轨填充/字形块不是线条，走不到这个断言）。
+#[test]
+fn no_hardcoded_3px_painted_lines() {
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let mut offenders = Vec::new();
+
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        if path.extension().and_then(|e| e.to_str()) != Some("slint") {
+            continue;
+        }
+        let source = std::fs::read_to_string(&path).expect("读取 .slint 源文件");
+        let lines: Vec<&str> = source.lines().collect();
+        let blocks = enclosing_block(&lines);
+        for (i, line) in lines.iter().enumerate() {
+            let t = line.trim();
+            // 宽高常与 parent 表达式同行（`width: parent.width; height: 3px;`），不能只认行首
+            let three_px = t.contains("height: 3px;") || t.contains("width: 3px;");
+            if !three_px {
+                continue;
+            }
+            // 同一个元素块里带 background 才是可见线条；纯占位/间距矩形不算
+            let painted = lines
+                .iter()
+                .enumerate()
+                .any(|(j, l)| blocks[j] == blocks[i] && l.trim().starts_with("background:"));
+            if painted {
+                offenders.push(format!("{name}:{} {}", i + 1, t));
+            }
+        }
+    }
+
+    assert!(
+        offenders.is_empty(),
+        "以下可见线条硬编码 3px（应跟随 PixelTheme.border-width，与 2px 边框同框才不混档）：\n{}",
+        offenders.join("\n")
+    );
+}

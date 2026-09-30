@@ -218,8 +218,8 @@ export component PixelTabs inherits Rectangle {
         background: root.face;
 
         Rectangle {
-            x: 0px; y: parent.height - 2px;
-            width: parent.width; height: 2px;
+            x: 0px; y: parent.height - PixelTheme.border-width;
+            width: parent.width; height: PixelTheme.border-width;
             background: root.edge;
         }
         HorizontalLayout {
@@ -238,11 +238,12 @@ export component PixelTabs inherits Rectangle {
                     horizontal-alignment: center;
                     vertical-alignment: center;
                 }
-                // 激活下划线
+                // 激活下划线：压在与容器同色的底边线上（声明在后，盖掉底边），
+                // 全屏任意横线都是 2px，不再叠加出 4~5px 的粗带
                 Rectangle {
                     visible: root.active == i;
-                    x: 6px; y: 32px;
-                    width: parent.width - 12px; height: 3px;
+                    x: 6px; y: parent.height - PixelTheme.border-width;
+                    width: parent.width - 12px; height: PixelTheme.border-width;
                     background: root.active-bar;
                 border-radius: PixelTheme.radius-sm;
                 }
@@ -571,8 +572,8 @@ export component PixelNavbar inherits Rectangle {
         border-width: 0px;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 0px; y: parent.height - 2px;
-            width: parent.width; height: 2px;
+            x: 0px; y: parent.height - PixelTheme.border-width;
+            width: parent.width; height: PixelTheme.border-width;
             background: root.edge;
         }
         HorizontalLayout {
@@ -596,8 +597,8 @@ export component PixelNavbar inherits Rectangle {
                 }
                 Rectangle {
                     visible: root.active == i;
-                    x: 0px; y: 44px;
-                    width: parent.width; height: 3px;
+                    x: 0px; y: parent.height - PixelTheme.border-width;
+                    width: parent.width; height: PixelTheme.border-width;
                     background: root.text-active;
                 }
                 nav-ta := TouchArea {
@@ -664,7 +665,7 @@ export component PixelDivider inherits Rectangle {
         spacing: 8px;
         Rectangle {
             visible: root.text != "";
-            width: 12px; height: 2px;
+            width: 12px; height: PixelTheme.border-width;
             background: root.edge;
         }
         Text {

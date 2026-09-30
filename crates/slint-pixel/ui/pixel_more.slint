@@ -441,7 +441,7 @@ export component PixelContextMenu inherits Rectangle {
                         border-radius: PixelTheme.radius-sm;
                         Rectangle {
                             visible: item == "---";
-                            x: 6px; y: 13px; width: parent.width - 12px; height: 2px;
+                            x: 6px; y: 13px; width: parent.width - 12px; height: PixelTheme.border-width;
                             background: root.border;
                         }
                         Text {

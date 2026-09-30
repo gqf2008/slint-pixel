@@ -457,6 +457,9 @@ export component GalleryWindow inherits Window {
                         PixelCard {
                             title: "像素小妖";
                             width: 260px;
+                            // PixelCard 根是 Rectangle + 绝对定位子节点，无固有高度——
+                            // 不显式给高会被布局压成 0（示例里整卡消失）。
+                            height: 140px;
                             PixelText { text: "稀有度：传说"; }
                             PixelText { text: "掉落：金币 × 12"; color: PixelTheme.dim; }
                             PixelButton { text: "查看详情"; width: 100px; size: "small"; }

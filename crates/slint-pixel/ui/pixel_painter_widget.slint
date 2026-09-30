@@ -268,7 +268,7 @@ export component PixelButton inherits Rectangle {
         Rectangle {
             visible: root.active;
             x: 3px; y: parent.height - 4px;
-            width: parent.width - 6px; height: 3px;
+            width: parent.width - 6px; height: PixelTheme.border-width;
             background: root.border-active;
         }
     }
