@@ -21,7 +21,7 @@ export component PixelImage inherits Rectangle {
         border-radius: PixelTheme.radius;
         Rectangle {
             x: 0px; y: 0px; width: parent.width; height: parent.height;
-            background: #ffffff;
+            background: PixelTheme.panel;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
@@ -54,7 +54,7 @@ export component PixelImageViewer inherits Rectangle {
         border-radius: PixelTheme.radius;
         Rectangle {
             x: 0px; y: 0px; width: parent.width; height: parent.height;
-            background: #ffffff;
+            background: PixelTheme.panel;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
@@ -116,7 +116,7 @@ export component PixelTagInput inherits Rectangle {
                         background: root.border;
                         Text {
                             text: tag;
-                            color: #ffffff;
+                            color: PixelTheme.on-ink;
                             font-size: 11px;
                             vertical-alignment: center;
                         }
@@ -332,7 +332,7 @@ export component PixelCascader inherits Rectangle {
                             background: root.index1 == i ? root.border : transparent;
                             Text {
                                 text: item1;
-                                color: root.index1 == i ? #ffffff : root.text-color;
+                                color: root.index1 == i ? PixelTheme.on-ink : root.text-color;
                                 font-size: 12px;
                                 vertical-alignment: center;
                             }
@@ -354,7 +354,7 @@ export component PixelCascader inherits Rectangle {
                                 background: root.index2 == j ? root.border : transparent;
                                 Text {
                                     text: item2;
-                                    color: root.index2 == j ? #ffffff : root.text-color;
+                                    color: root.index2 == j ? PixelTheme.on-ink : root.text-color;
                                     font-size: 12px;
                                     vertical-alignment: center;
                                 }

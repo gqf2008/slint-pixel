@@ -162,7 +162,7 @@ export component PixelTooltip inherits Rectangle {
     in-out property <bool> open: false;
     in property <color> bubble-bg: PixelTheme.shadow;
     in property <color> bubble-border: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.on-ink;
     in property <color> arrow: PixelTheme.shadow;
 
     // 悬停/外部 open 则显示，离开则关闭（普通 Rectangle 气泡，绕开 PopupWindow 限制）

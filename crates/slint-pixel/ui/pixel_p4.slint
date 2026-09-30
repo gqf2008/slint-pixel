@@ -394,7 +394,7 @@ export component PixelNotificationCenter inherits Rectangle {
                     Text {
                         x: 8px; width: parent.width - 32px; height: parent.height;
                         text: msg;
-                        color: root.active == i ? #ffffff : root.text-color;
+                        color: root.active == i ? PixelTheme.on-ink : root.text-color;
                         font-size: 12px;
                         vertical-alignment: center;
                     }

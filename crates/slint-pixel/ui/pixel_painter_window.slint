@@ -3,7 +3,7 @@
 // 下游可 `slint_pixel::PixelPainterWindow::new()` 直接使用，
 // 也可参考本文件在自己的 .slint 里用 `@slint_pixel` 组装窗口。
 
-import { PixelPainter, PixelTitleBar, PixelWindowResize } from "@slint_pixel";
+import { PixelPainter, PixelTitleBar, PixelWindowResize, PixelTheme } from "@slint_pixel";
 
 export component PixelPainterWindow inherits Window {
     title: "Slint 像素画板";
@@ -15,15 +15,16 @@ export component PixelPainterWindow inherits Window {
     background: c-bg;
 
     // ---------- 主题 ----------
-    property <color> c-bg: #ffffff;
-    property <color> c-panel: #ffffff;
-    property <color> c-panel-light: #f2f2f2;
-    property <color> c-border: #1a1a1a;
-    property <color> c-shadow: #000000;
-    property <color> c-text: #000000;
-    property <color> c-dim: #525252;
-    property <color> c-highlight: #000000;
-    property <color> c-danger: #ff004d;
+    // 本窗口不自定义皮肤：全部别名到 PixelTheme，随宿主主题/预设整体换肤。
+    property <color> c-bg: PixelTheme.bg;
+    property <color> c-panel: PixelTheme.panel;
+    property <color> c-panel-light: PixelTheme.hover;
+    property <color> c-border: PixelTheme.edge;
+    property <color> c-shadow: PixelTheme.shadow;
+    property <color> c-text: PixelTheme.text;
+    property <color> c-dim: PixelTheme.dim;
+    property <color> c-highlight: PixelTheme.text;
+    property <color> c-danger: PixelTheme.danger;
 
     // ---------- 与画板 widget 双向同步的状态 ----------
     in-out property <color> brush-color: #ff004d;

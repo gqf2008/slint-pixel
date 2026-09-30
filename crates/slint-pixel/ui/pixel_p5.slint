@@ -55,10 +55,10 @@ export component PixelRichTextEditor inherits Rectangle {
 export component PixelCodeBlock inherits Rectangle {
     in property <string> code: "";
     in property <string> language: "";
-    in property <color> face: #1a1a1a;
+    in property <color> face: PixelTheme.shadow;
     in property <color> border: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
+    in property <color> text-color: PixelTheme.on-ink;
     callback copy;
     height: 120px;
 
@@ -105,7 +105,7 @@ export component PixelImageCrop inherits Rectangle {
         border-radius: PixelTheme.radius;
         Rectangle {
             x: 0px; y: 0px; width: parent.width; height: parent.height;
-            background: #ffffff;
+            background: PixelTheme.panel;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;

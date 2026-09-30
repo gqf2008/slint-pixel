@@ -38,9 +38,14 @@
   import { PixelPresets } from "@slint_pixel";
   init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 8px 圆角
   ```
-- **语义色扩展**：新增 `success` / `warning` / `info` / `on-accent`（`accent` 面上的前景色）。
+- **语义色扩展**：新增 `success` / `warning` / `info` / `on-accent`（`accent` 面上的前景色）
+  与 `on-ink`（深墨面上的恒白前景）/ `scrim`（模态遮罩）。
   `PixelAlert` 现在按 `kind` 显示语义色（信息蓝 / 成功绿 / 警告琥珀 / 错误红）；
   选中行、勾选标记、开关滑块统一走 `on-accent`，顺带修掉深色主题下"白字压白底"的选中态。
+- **统一风格模版**：库内全部皮肤色（面 / 文字 / 描边 / 遮罩 / 选中态）只出自 `PixelTheme` token
+  与三预设，换预设或改 token 即全库换肤；唯一的硬编码色值豁免是内容数据
+  （二维码/条码符号色、取色器默认数据、画板 PICO-8 品牌色），由
+  `no_hardcoded_colors_outside_theme_files` 守卫逐行登记防回潮。
 - **可复现的视觉验证**：`cargo test -p slint-pixel --test theme_radius` 用软件渲染器把同一场景渲染两次，
   断言圆角真的改变了四角像素（阳性对照：把组件改回不读主题即报红）；另有覆盖守卫防止新增组件漏接圆角。
   `cargo run -p slint-pixel-demo --example render_gallery -- <目录>` 可无头导出各预设截图（docs 里的图就是这么来的）。
@@ -123,7 +128,7 @@
 | `PixelDivider` | 分隔线（可带文字） |
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
-| `PixelTheme` | 全局主题（九色语义色 + `success`/`warning`/`info`/`on-accent` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`/`window-radius`，改一处全部组件实时换肤） |
+| `PixelTheme` | 全局主题（`bg`/`panel`/`hover`/`edge`/`border-soft`/`shadow`/`text`/`dim`/`accent`/`danger` 语义色 + `success`/`warning`/`info` + `on-accent`/`on-ink`/`scrim` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`/`window-radius`，改一处全部组件实时换肤） |
 | `PixelPresets` | 内置整套预设：`classic()`（经典黑白像素）/ `soft()`（柔彩圆角）/ `dark()`（深色琥珀），一行切换颜色 + 圆角 |
 | `PixelWindowBody` | 圆角窗身：透明边距 + 圆角 + 描边 + 内容按圆角裁切；`window-radius = 0` 时等价于旧的全出血观感 |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
@@ -404,7 +409,9 @@ init => {
 
 配色上，除 `danger` 外又补了 `success` / `warning` / `info` 三个功能色（`PixelAlert` 按 `kind` 取用），
 以及 `on-accent` —— 它表示"`accent` 底之上的前景色"，选中行文字、勾选标记、开关滑块都用它，
-这样把 `accent` 换成暖黄之类的亮色时不会出现白字压白底。想回到纯黑白，把这几个色设回
+这样把 `accent` 换成暖黄之类的亮色时不会出现白字压白底。`on-ink` 是"深墨面（`shadow`/`edge` 底）
+之上的恒白前景"，选中行、标签、气泡、码块等压深底的字都用它；`scrim` 是模态遮罩的半透明黑。
+想回到纯黑白，把这几个色设回
 `PixelTheme.text` / `PixelTheme.edge` 即可（或直接 `PixelPresets.classic()`）。
 
 所有组件暴露 `in` 主题属性（如 `PixelPainter` 的 `page / panel / panel-light / edge /

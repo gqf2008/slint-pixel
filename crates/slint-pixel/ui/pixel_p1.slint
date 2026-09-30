@@ -303,7 +303,7 @@ export component PixelTransfer inherits Rectangle {
                         height: 24px;
                         background: root.left-index == i ? root.border : transparent;
                         Text {
-                            text: item; color: root.left-index == i ? #ffffff : root.text-color;
+                            text: item; color: root.left-index == i ? PixelTheme.on-ink : root.text-color;
                             font-size: 12px; vertical-alignment: center;
                         }
                         left-ta := TouchArea {
@@ -339,7 +339,7 @@ export component PixelTransfer inherits Rectangle {
                         height: 24px;
                         background: root.right-index == i ? root.border : transparent;
                         Text {
-                            text: item; color: root.right-index == i ? #ffffff : root.text-color;
+                            text: item; color: root.right-index == i ? PixelTheme.on-ink : root.text-color;
                             font-size: 12px; vertical-alignment: center;
                         }
                         right-ta := TouchArea {

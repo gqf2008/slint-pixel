@@ -105,7 +105,7 @@ export component PixelSteps inherits Rectangle {
                     border-color: i <= root.current ? root.face-done : root.border;
                     Text {
                         text: i + 1;
-                        color: i < root.current || i == root.current ? #ffffff : root.text-color;
+                        color: i < root.current || i == root.current ? PixelTheme.on-ink : root.text-color;
                         font-size: 13px;
                         font-weight: 700;
                         horizontal-alignment: center;
@@ -300,7 +300,7 @@ export component PixelSelect inherits Rectangle {
                                     Rectangle {
                                         visible: root.value == opt || root.value == "*";
                                         x: 5px; y: 5px; width: 6px; height: 6px;
-                                        background: #ffffff;
+                                        background: PixelTheme.on-accent;
                                     }
                                 }
                             }

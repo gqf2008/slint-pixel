@@ -101,8 +101,8 @@ export component PixelToast inherits Rectangle {
     in property <duration> duration: 2500ms;
     in-out property <bool> shown: true;
     in property <color> bg: PixelTheme.shadow;
-    in property <color> text-color: #ffffff;
-    in property <color> close-color: PixelTheme.text;
+    in property <color> text-color: PixelTheme.on-ink;
+    in property <color> close-color: PixelTheme.on-ink;
     callback dismissed;
     visible: root.shown;
     height: 40px;
@@ -122,7 +122,7 @@ export component PixelToast inherits Rectangle {
         background: root.bg;
         border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius;
-        border-color: #000000;
+        border-color: PixelTheme.edge;
         Text {
             x: 14px; y: 0px;
             width: parent.width - 44px; height: parent.height;
@@ -134,11 +134,11 @@ export component PixelToast inherits Rectangle {
         Rectangle {
             x: parent.width - 34px; y: 8px;
             width: 24px; height: 24px;
-            background: close.has-hover ? #000000 : transparent;
+            background: close.has-hover ? PixelTheme.hover : transparent;
             Text {
                 x: 0px; y: 0px; width: 24px; height: 24px;
                 text: "×";
-                color: root.close-color;
+                color: close.has-hover ? PixelTheme.text : root.close-color;
                 font-size: 14px;
                 horizontal-alignment: center;
                 vertical-alignment: center;
@@ -229,7 +229,7 @@ export component PixelTabs inherits Rectangle {
                 // 绑定循环——stretch 均分是标准做法，无循环）
                 horizontal-stretch: 1;
                 height: 36px;
-                background: tab-ta.has-hover ? #f2f2f2 : transparent;
+                background: tab-ta.has-hover ? PixelTheme.hover : transparent;
                 Text {
                     text: t;
                     color: root.active == i ? root.text-active : root.text-color;
@@ -395,7 +395,7 @@ export component PixelDrawer inherits Rectangle {
     in property <bool> open: false;
     in property <string> title: "";
     in property <length> drawer-width: 280px;
-    in property <color> overlay: #00000080;
+    in property <color> overlay: PixelTheme.scrim;
     in property <color> panel: PixelTheme.panel;
     in property <color> edge: PixelTheme.edge;
     in property <color> title-color: PixelTheme.text;

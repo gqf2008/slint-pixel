@@ -588,3 +588,83 @@ fn every_border_has_explicit_color() {
         offenders.join("\n")
     );
 }
+
+/// 主题纯净度守卫：`ui/*.slint`（主题/预设文件自身除外）不许出现硬编码色值 ——
+/// 皮肤色必须走 PixelTheme token，宿主改一处全库生效（库输出统一风格模版）。
+/// 豁免清单只有一类：内容数据（二维码/条码的符号色、取色器默认数据、画板 PICO-8 品牌色），
+/// 按「文件名 + 整行 trimmed 文本」精确登记；改动其中任何一行都会让守卫变红，强制重新评审。
+#[test]
+fn no_hardcoded_colors_outside_theme_files() {
+    /// 从 `#` 起连续取十六进制字符；长度 ∈ {3,4,6,8} 且后界非十六进制字符即视为色值。
+    fn hex_color_at(line: &str) -> Option<String> {
+        let b = line.as_bytes();
+        let mut i = 0;
+        while i < b.len() {
+            if b[i] == b'#' {
+                let mut j = i + 1;
+                while j < b.len() && b[j].is_ascii_hexdigit() {
+                    j += 1;
+                }
+                if matches!(j - i - 1, 3 | 4 | 6 | 8) {
+                    return Some(line[i..j].to_string());
+                }
+            }
+            i += 1;
+        }
+        None
+    }
+
+    // (文件, 整行 trimmed) —— 内容数据豁免，逐行登记理由：
+    // QR/条码符号色（p5/p8 各一对 dark/light）——功能符号，反色会不可扫；
+    // 取色器默认数据（more/p7 的 palette/colors/value/hex 字符串）——被拾取内容不是皮肤；
+    // 画板 PICO-8 品牌色与笔刷状态（painter_widget/window）——工具内容色，同族豁免。
+    const EXEMPT: &[(&str, &str)] = &[
+        ("pixel_more.slint", "in property <[color]> colors: [#000000, #ffffff, #ff004d, #ffa500, #ffe14d, #00c853, #00bcd4, #2979ff];"),
+        ("pixel_more.slint", "in property <[color]> palette: [#000000, #ffffff, #ff004d, #ffa500, #ffe14d, #00c853, #00bcd4, #2979ff];"),
+        ("pixel_more.slint", "in-out property <color> value: #ff004d;"),
+        ("pixel_p5.slint", "in property <color> dark: #000000;"),
+        ("pixel_p5.slint", "in property <color> light: #ffffff;"),
+        ("pixel_p7.slint", "in-out property <color> value: #ff004d;"),
+        ("pixel_p7.slint", "in-out property <string> hex: \"#ff004d\";"),
+        ("pixel_p7.slint", "palette: [#ff004d, #ffa500, #ffe14d, #00c853, #00bcd4, #2979ff];"),
+        ("pixel_p8.slint", "in property <color> dark: #000000;"),
+        ("pixel_p8.slint", "in property <color> light: #ffffff;"),
+        ("pixel_painter_widget.slint", "#000000, #1d2b53, #7e2553, #008751, #ab5236, #5f574f, #c2c3c7, #fff1e8,"),
+        ("pixel_painter_widget.slint", "#ff004d, #ffa300, #ffec27, #00e436, #29adff, #83769c, #ff77a8, #ffccaa"),
+        ("pixel_painter_widget.slint", "in-out property <color> brush-color: #ff004d;"),
+        ("pixel_painter_widget.slint", "face-active: #ff2f77;"),
+        ("pixel_painter_window.slint", "in-out property <color> brush-color: #ff004d;"),
+    ];
+
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let mut offenders = Vec::new();
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n,
+            None => continue,
+        };
+        if path.extension().and_then(|e| e.to_str()) != Some("slint")
+            || matches!(name, "pixel_theme.slint" | "pixel_presets.slint")
+        {
+            continue;
+        }
+        for (i, line) in std::fs::read_to_string(&path)
+            .expect("读取 .slint 源文件")
+            .lines()
+            .enumerate()
+        {
+            if let Some(hex) = hex_color_at(line) {
+                if !EXEMPT.contains(&(name, line.trim())) {
+                    offenders.push(format!("{}:{}: {} （{}）", name, i + 1, line.trim(), hex));
+                }
+            }
+        }
+    }
+    assert!(
+        offenders.is_empty(),
+        "ui/*.slint 出现 {} 处硬编码色值（应走 PixelTheme token）：\n{}",
+        offenders.len(),
+        offenders.join("\n")
+    );
+}

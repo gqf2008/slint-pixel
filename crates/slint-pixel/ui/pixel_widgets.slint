@@ -360,7 +360,7 @@ export component PixelPanel inherits Rectangle {
 export component PixelDialog inherits Rectangle {
     in-out property <bool> open: false;
     in property <string> title: "对话框";
-    in property <color> overlay: #00000080;
+    in property <color> overlay: PixelTheme.scrim;
     in property <color> panel: PixelTheme.panel;
     in property <color> edge: PixelTheme.edge;
     in property <color> shadow: PixelTheme.shadow;

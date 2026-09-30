@@ -23,6 +23,11 @@ export global PixelTheme {
     // accent 底之上的前景色（选中行文字 / 勾选标记 / 开关滑块）。
     // 默认主题 accent 是黑（浅色）/近白（深色），所以浅色时用白、深色时用黑，保证对比度。
     in-out property <color> on-accent: root.scheme == "dark" ? #000000 : #ffffff;
+    // 深墨面（shadow / edge 底）之上的恒白前景：选中行 / 标签 / 气泡 / 码块 / 视频上的字与图形。
+    // 两种 scheme 下 shadow 恒黑、edge 恒深，故固定白色；宿主若把 edge/shadow 改浅需同步改它。
+    in-out property <color> on-ink: #ffffff;
+    // 模态遮罩：压暗下层的半透明黑，两种 scheme 通用（叠在深色上继续压暗）。
+    in-out property <color> scrim: #00000080;
     // primary 按钮配色（默认白面黑字，与 0.2.3 完全一致）；彩色主题可设成 accent/on-accent。
     in-out property <color> primary-face: #ffffff;
     in-out property <color> primary-text: #000000;
