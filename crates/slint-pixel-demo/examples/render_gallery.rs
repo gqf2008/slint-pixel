@@ -21,7 +21,9 @@ include!(concat!(env!("OUT_DIR"), "/gallery.rs"));
 
 const WIDTH: u32 = 760;
 const DEFAULT_HEIGHT: u32 = 640;
-const PRESETS: [&str; 3] = ["classic", "soft", "dark"];
+const PRESETS: [&str; 10] = [
+    "classic", "soft", "dark", "forest", "ocean", "sakura", "sunset", "grape", "nord", "terminal",
+];
 
 struct SoftPlatform(Rc<MinimalSoftwareWindow>);
 

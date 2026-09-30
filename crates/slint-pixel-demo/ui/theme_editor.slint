@@ -54,23 +54,16 @@ export component ThemeEditorWindow inherits Window {
     callback begin-resize(string);
     callback generate-theme();
     in-out property <string> generated-theme: "";
-    // 默认预设：soft 柔彩 + 圆角（画廊开箱观感）；无头截图 / 演示脚本可显式切 "classic" / "dark"。
+    // 默认预设：soft 柔彩 + 圆角（画廊开箱观感）；无头截图 / 演示脚本可切 10 套里的任意名字。
     // 初始声明值不触发 changed，故抽公共函数 + init 显式套用一次。
     in-out property <string> theme-preset: "soft";
     changed theme-preset => { root.apply-theme-preset(); }
     init => { root.apply-theme-preset(); }
 
     function apply-theme-preset() {
-        if (root.theme-preset == "soft") {
-            PixelPresets.soft();
-            PixelTheme.window-radius = 12px;
-        } else if (root.theme-preset == "dark") {
-            PixelPresets.dark();
-            PixelTheme.window-radius = 0px;
-        } else {
-            PixelPresets.classic();
-            PixelTheme.window-radius = 0px;
-        }
+        PixelPresets.apply(root.theme-preset);
+        // 窗身圆角跟随主题圆角（要求宿主开透明窗口）
+        PixelTheme.window-radius = PixelTheme.radius > 0px ? 12px : 0px;
     }
     // 主题当前值（跟随 PixelTheme，供 Rust 生成样式代码）
     in-out property <color> t-bg: PixelTheme.bg;
@@ -166,11 +159,17 @@ export component ThemeEditorWindow inherits Window {
                         PixelButton { text: "黑金"; width: 70px; clicked => { root.preset-dark(); } }
                         PixelButton { text: "蓝白"; width: 70px; clicked => { root.preset-blue(); } }
                     }
-                    HorizontalLayout {
+                    Text { text: "内置预设（色 + 圆角 + 描边一套带走；窗身圆角随主题圆角开关）"; color: PixelTheme.dim; font-size: 11px; }
+                    GridLayout {
                         spacing: 8px;
-                    PixelButton { text: "柔彩圆角"; width: 90px; variant: "primary"; clicked => { PixelPresets.soft(); PixelTheme.window-radius = 12px; } }
-                    PixelButton { text: "经典像素"; width: 90px; clicked => { PixelPresets.classic(); PixelTheme.window-radius = 0px; } }
-                        PixelText { text: "一键切整套观感（色 + 圆角）"; color: PixelTheme.dim; font-size: 11px; vertical-alignment: center; }
+                        // 10 套预设两排铺开（库导出 names/labels 平行清单，直接遍历）
+                        for name[i] in PixelPresets.names : PixelButton {
+                            text: PixelPresets.labels[i];
+                            row: i / 5;
+                            col: Math.mod(i, 5);
+                            variant: name == root.theme-preset ? "primary" : "";
+                            clicked => { root.theme-preset = name; }
+                        }
                     }
                 }
             }

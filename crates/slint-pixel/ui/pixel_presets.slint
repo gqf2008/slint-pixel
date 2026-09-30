@@ -1,7 +1,7 @@
 import { PixelTheme } from "pixel_theme.slint";
 
 // ============================================================================
-// slint-pixel · 内置主题预设
+// slint-pixel · 内置主题预设（10 套：3 套经典 + 7 套风格化）
 //
 // 一行切换整套观感（语义色 + 圆角 + 描边），不用逐个属性赋值：
 //
@@ -9,14 +9,50 @@ import { PixelTheme } from "pixel_theme.slint";
 //
 //     init => { PixelPresets.soft(); }     // 柔彩圆角
 //     // 或者： PixelPresets.classic();    // 经典黑白像素风（库的默认值）
+//     // 或者： PixelPresets.apply("sakura"); // 按名字切换（选择器 UI 用）
 //
 // 预设只写 PixelTheme，因此任何组件属性（按钮 primary-face、卡片 bg…）都能继续单独覆盖；
 // 想微调就在预设之后覆盖个别 token。
 //
 // 预设只写 `radius`、不写 `radius-sm`：后者默认绑定 `radius / 2`，
 // 保持绑定不断开，"改 radius 小件自动跟随"，除非宿主自己显式覆盖过 `radius-sm`。
+//
+// 新增预设必须写全 20 个 token（scheme/bg/panel/hover/edge/border-soft/shadow/
+// text/dim/accent/danger/success/warning/info/on-accent/primary-face/primary-text/
+// border-width/primary-border-width/radius）——守卫 every_preset_writes_every_token
+// 会逐套核对，漏写或拼错即报红。
 // ============================================================================
 export global PixelPresets {
+    // 全部预设的 key 与中文名（平行数组、顺序一致），选择器 UI 直接遍历：
+    // for name[i] in PixelPresets.names : PixelButton { text: PixelPresets.labels[i]; ... }
+    in property <[string]> names: ["classic", "soft", "dark", "forest", "ocean", "sakura", "sunset", "grape", "nord", "terminal"];
+    in property <[string]> labels: ["经典", "柔彩", "深色", "森林", "海洋", "樱花", "落日", "葡萄", "北欧", "终端"];
+
+    // 按名字套用预设；未知名字回退 classic（库的默认值，最安全）。
+    public function apply(name: string) {
+        if name == "soft" {
+            PixelPresets.soft();
+        } else if name == "dark" {
+            PixelPresets.dark();
+        } else if name == "forest" {
+            PixelPresets.forest();
+        } else if name == "ocean" {
+            PixelPresets.ocean();
+        } else if name == "sakura" {
+            PixelPresets.sakura();
+        } else if name == "sunset" {
+            PixelPresets.sunset();
+        } else if name == "grape" {
+            PixelPresets.grape();
+        } else if name == "nord" {
+            PixelPresets.nord();
+        } else if name == "terminal" {
+            PixelPresets.terminal();
+        } else {
+            PixelPresets.classic();
+        }
+    }
+
     // ---------- 经典像素风：纯白 + 近黑描边 + 直角（= 库默认值） ----------
     public function classic() {
         PixelTheme.scheme = "light";
@@ -92,4 +128,180 @@ export global PixelPresets {
         PixelTheme.primary-border-width = 2px;
         PixelTheme.radius = 0px;
     }
+
+    // ---------- 森林：薄荷雾绿底 + 墨绿描边 + 草绿主色 + 小圆角 ----------
+    // 清新自然系；绿家族贯穿 edge/text/accent，success 与主色同族， danger 跳红。
+    public function forest() {
+        PixelTheme.scheme = "light";
+        PixelTheme.bg = #f2faf5;
+        PixelTheme.panel = #ffffff;
+        PixelTheme.hover = #e3f2ea;
+        PixelTheme.edge = #1e3d2b;
+        PixelTheme.border-soft = #4a6b58;
+        PixelTheme.shadow = #1e3d2b;
+        PixelTheme.text = #16281e;
+        PixelTheme.dim = #577a66;
+        PixelTheme.accent = #2f9e5f;
+        PixelTheme.danger = #d43d4f;
+        PixelTheme.success = #2f9e5f;
+        PixelTheme.warning = #c47d0e;
+        PixelTheme.info = #2a7f9e;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #2f9e5f;
+        PixelTheme.primary-text = #ffffff;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 4px;
+    }
+
+    // ---------- 海洋：深海蓝底 + 冰蓝主色 + 直角（深色） ----------
+    // 深夜 IDE 气质；冷蓝家族，info 与 accent 同向但更深一档以免混淆。
+    public function ocean() {
+        PixelTheme.scheme = "dark";
+        PixelTheme.bg = #0e1c2b;
+        PixelTheme.panel = #16283c;
+        PixelTheme.hover = #1f3a57;
+        PixelTheme.edge = #40607f;
+        PixelTheme.border-soft = #64829e;
+        PixelTheme.shadow = #000000;
+        PixelTheme.text = #e8f1f8;
+        PixelTheme.dim = #8aa5bd;
+        PixelTheme.accent = #4cc3ff;
+        PixelTheme.danger = #ff6b7a;
+        PixelTheme.success = #4ade80;
+        PixelTheme.warning = #fbbf24;
+        PixelTheme.info = #38bdf8;
+        PixelTheme.on-accent = #06222f;
+        PixelTheme.primary-face = #4cc3ff;
+        PixelTheme.primary-text = #06222f;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 0px;
+    }
+
+    // ---------- 樱花：樱粉白底 + 酒红墨描边 + 樱粉主色 + 大圆角（甜系浅色） ----------
+    // 高饱和粉只给 accent/danger，文字与描边走酒红墨，甜而不腻、对比不丢。
+    public function sakura() {
+        PixelTheme.scheme = "light";
+        PixelTheme.bg = #fff6f8;
+        PixelTheme.panel = #ffffff;
+        PixelTheme.hover = #ffe9ef;
+        PixelTheme.edge = #57202e;
+        PixelTheme.border-soft = #8a5560;
+        PixelTheme.shadow = #57202e;
+        PixelTheme.text = #3d1620;
+        PixelTheme.dim = #97656f;
+        PixelTheme.accent = #ff5d8f;
+        PixelTheme.danger = #d6336c;
+        PixelTheme.success = #2f9e5f;
+        PixelTheme.warning = #d98e04;
+        PixelTheme.info = #4a7ddb;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #ff5d8f;
+        PixelTheme.primary-text = #ffffff;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 8px;
+    }
+
+    // ---------- 落日：蜜瓜橙底 + 焦墨描边 + 橘红主色 + 中大圆角（暖系浅色） ----------
+    // 活力暖橙；warning 与 accent 同族但压暗一档，避免警告淹没进主色。
+    public function sunset() {
+        PixelTheme.scheme = "light";
+        PixelTheme.bg = #fff4ea;
+        PixelTheme.panel = #ffffff;
+        PixelTheme.hover = #ffe5cf;
+        PixelTheme.edge = #4a2413;
+        PixelTheme.border-soft = #7d5140;
+        PixelTheme.shadow = #4a2413;
+        PixelTheme.text = #33180c;
+        PixelTheme.dim = #97685a;
+        PixelTheme.accent = #ff7a1a;
+        PixelTheme.danger = #d43d2f;
+        PixelTheme.success = #3d9954;
+        PixelTheme.warning = #c77800;
+        PixelTheme.info = #3d7fc4;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #ff7a1a;
+        PixelTheme.primary-text = #ffffff;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 6px;
+    }
+
+    // ---------- 葡萄：紫夜底 + 薰衣草紫主色 + 大圆角（深色） ----------
+    // 柔和暗紫；accent 提亮（薰衣草），文字保持近白避免紫底白字发灰。
+    public function grape() {
+        PixelTheme.scheme = "dark";
+        PixelTheme.bg = #171021;
+        PixelTheme.panel = #211732;
+        PixelTheme.hover = #2d2046;
+        PixelTheme.edge = #4d3a68;
+        PixelTheme.border-soft = #6b558c;
+        PixelTheme.shadow = #000000;
+        PixelTheme.text = #f1ecfa;
+        PixelTheme.dim = #9c8cb8;
+        PixelTheme.accent = #b98cff;
+        PixelTheme.danger = #ff6b9d;
+        PixelTheme.success = #5fd68a;
+        PixelTheme.warning = #f5c542;
+        PixelTheme.info = #8ab4ff;
+        PixelTheme.on-accent = #241533;
+        PixelTheme.primary-face = #b98cff;
+        PixelTheme.primary-text = #241533;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 8px;
+    }
+
+    // ---------- 北欧：冷灰蓝底 + 雾蓝主色 + 小圆角（低饱和浅色） ----------
+    // 参考 Nord 调色板：全部低饱和，长时间工作不刺眼；warning 用 Nord 橙系保证可见度。
+    public function nord() {
+        PixelTheme.scheme = "light";
+        PixelTheme.bg = #eceff4;
+        PixelTheme.panel = #e5e9f0;
+        PixelTheme.hover = #d8dee9;
+        PixelTheme.edge = #2e3440;
+        PixelTheme.border-soft = #5a6273;
+        PixelTheme.shadow = #2e3440;
+        PixelTheme.text = #2e3440;
+        PixelTheme.dim = #6b7486;
+        PixelTheme.accent = #5e81ac;
+        PixelTheme.danger = #bf616a;
+        PixelTheme.success = #a3be8c;
+        PixelTheme.warning = #d08770;
+        PixelTheme.info = #81a1c1;
+        PixelTheme.on-accent = #ffffff;
+        PixelTheme.primary-face = #5e81ac;
+        PixelTheme.primary-text = #ffffff;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 4px;
+    }
+
+    // ---------- 终端：纯黑底 + 磷光绿字/框 + 直角（CRT 复古） ----------
+    // 文字本身就是磷光绿（终端的字就是绿色的）；accent 再亮一档表示"激活"。
+    public function terminal() {
+        PixelTheme.scheme = "dark";
+        PixelTheme.bg = #060a06;
+        PixelTheme.panel = #0b120b;
+        PixelTheme.hover = #142114;
+        PixelTheme.edge = #2e8a46;
+        PixelTheme.border-soft = #1f5c30;
+        PixelTheme.shadow = #000000;
+        PixelTheme.text = #3fd16a;
+        PixelTheme.dim = #2f9a4d;
+        PixelTheme.accent = #66ff85;
+        PixelTheme.danger = #ff5555;
+        PixelTheme.success = #3fd16a;
+        PixelTheme.warning = #ffbb33;
+        PixelTheme.info = #33bbee;
+        PixelTheme.on-accent = #041404;
+        PixelTheme.primary-face = #3fd16a;
+        PixelTheme.primary-text = #041404;
+        PixelTheme.border-width = 2px;
+        PixelTheme.primary-border-width = 2px;
+        PixelTheme.radius = 0px;
+    }
+
 }

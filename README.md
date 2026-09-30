@@ -33,17 +33,21 @@
 - **描边只有一个值**：`PixelTheme.border-width`（默认 2px）——所有组件（容器/覆盖层、按钮、菜单、表格、
   树、列表、日历、看板、编辑器、图表、媒体，以及输入类与复选/开关/标签等小件）连同组件内部的线框全部读它，
   **改一处全库一起变**；单个组件仍可用自己的 `border-width` 属性覆盖。
-- **一行换整套观感**：`PixelPresets.classic()` / `soft()` / `dark()`——预设同时改语义色、圆角与描边：
+- **一行换整套观感（10 套内置预设）**：`PixelPresets.classic()` / `soft()` / `dark()` /
+  `forest()` / `ocean()` / `sakura()` / `sunset()` / `grape()` / `nord()` / `terminal()`——
+  预设同时改语义色、圆角与描边，普通用户选一个名字就够：
   ```slint
   import { PixelPresets } from "@slint_pixel";
   init => { PixelPresets.soft(); }   // 暖米底 + 墨黑描边 + 暖黄主色 + 8px 圆角
+  // 选择器 UI 直接遍历：for name[i] in PixelPresets.names : PixelButton { text: PixelPresets.labels[i]; ... }
   ```
+  每套预设的完整 token 配置与调优说明见 **[docs/themes.md](docs/themes.md)**（高级用户）。
 - **语义色扩展**：新增 `success` / `warning` / `info` / `on-accent`（`accent` 面上的前景色）
   与 `on-ink`（深墨面上的恒白前景）/ `scrim`（模态遮罩）。
   `PixelAlert` 现在按 `kind` 显示语义色（信息蓝 / 成功绿 / 警告琥珀 / 错误红）；
   选中行、勾选标记、开关滑块统一走 `on-accent`，顺带修掉深色主题下"白字压白底"的选中态。
 - **统一风格模版**：库内全部皮肤色（面 / 文字 / 描边 / 遮罩 / 选中态）只出自 `PixelTheme` token
-  与三预设，换预设或改 token 即全库换肤；唯一的硬编码色值豁免是内容数据
+  与十预设，换预设或改 token 即全库换肤；唯一的硬编码色值豁免是内容数据
   （二维码/条码符号色、取色器默认数据、画板 PICO-8 品牌色），由
   `no_hardcoded_colors_outside_theme_files` 守卫逐行登记防回潮。
 - **可复现的视觉验证**：`cargo test -p slint-pixel --test theme_radius` 用软件渲染器把同一场景渲染两次，
@@ -52,11 +56,13 @@
 
 ![圆角 + 柔彩](docs/gallery-soft.png)
 
-三种预设同一套组件、同一套 2px 描边（仅配色/圆角不同），`cargo run` 默认 soft：
+十套预设同一套组件、同一套 2px 描边（仅配色/圆角不同），`cargo run` 默认 soft：
 
-| classic（黑白直角） | soft（暖米圆角，默认） | dark（深色圆角） |
-| --- | --- | --- |
-| ![classic](docs/gallery-classic.png) | ![soft](docs/gallery-soft.png) | ![dark](docs/gallery-dark.png) |
+| classic 经典 | soft 柔彩（默认） | dark 深色 | forest 森林 | ocean 海洋 |
+| --- | --- | --- | --- | --- |
+| ![classic](docs/gallery-classic.png) | ![soft](docs/gallery-soft.png) | ![dark](docs/gallery-dark.png) | ![forest](docs/gallery-forest.png) | ![ocean](docs/gallery-ocean.png) |
+| **sakura 樱花** | **sunset 落日** | **grape 葡萄** | **nord 北欧** | **terminal 终端** |
+| ![sakura](docs/gallery-sakura.png) | ![sunset](docs/gallery-sunset.png) | ![grape](docs/gallery-grape.png) | ![nord](docs/gallery-nord.png) | ![terminal](docs/gallery-terminal.png) |
 
 ## 最新特性（v0.2.3）
 
@@ -129,7 +135,7 @@
 | `PixelStat` | 统计卡片（大数字 + 标签 + 变化） |
 | `PixelWindowResize` | 无边框窗口缩放热区（四边/四角，配合 `install_window_resize`） |
 | `PixelTheme` | 全局主题（`bg`/`panel`/`hover`/`edge`/`border-soft`/`shadow`/`text`/`dim`/`accent`/`danger` 语义色 + `success`/`warning`/`info` + `on-accent`/`on-ink`/`scrim` + `primary-face`/`primary-text` + `border-width`/`primary-border-width` + `radius`/`radius-sm`/`window-radius`，改一处全部组件实时换肤） |
-| `PixelPresets` | 内置整套预设：`classic()`（经典黑白像素）/ `soft()`（柔彩圆角）/ `dark()`（深色琥珀），一行切换颜色 + 圆角 |
+| `PixelPresets` | 内置 10 套预设：`classic()` 经典 / `soft()` 柔彩 / `dark()` 深色 / `forest()` 森林 / `ocean()` 海洋 / `sakura()` 樱花 / `sunset()` 落日 / `grape()` 葡萄 / `nord()` 北欧 / `terminal()` 终端；另有 `apply(name)` 按名调度与 `names`/`labels` 清单供选择器遍历，一行切换颜色 + 圆角 |
 | `PixelWindowBody` | 圆角窗身：透明边距 + 圆角 + 描边 + 内容按圆角裁切；`window-radius = 0` 时等价于旧的全出血观感 |
 | `Swatch` | 像素风色块（也可作图标按钮右上角数字角标） |
 
@@ -394,7 +400,7 @@ import { PixelPresets, PixelTheme } from "@slint_pixel";
 
 init => {
     // ① 一条命令切整套：颜色 + 圆角 + 描边
-    PixelPresets.soft();      // classic() / soft() / dark()
+    PixelPresets.soft();      // 10 套预设任选，或 PixelPresets.apply("sakura")
 
     // ② 或者只调圆角，颜色保持自己的主题
     PixelTheme.radius = 10px; // 卡片/面板/输入框/对话框等容器

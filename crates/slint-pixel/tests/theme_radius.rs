@@ -668,3 +668,135 @@ fn no_hardcoded_colors_outside_theme_files() {
         offenders.join("\n")
     );
 }
+
+/// 预设覆盖守卫：pixel_presets.slint 里 names 清单登记的每一套预设函数，都必须写全
+/// PixelTheme 的全部 token（常量 on-ink/scrim、派生 radius-sm、宿主窗口件 window-radius
+/// 除外——预设故意不覆写它们）。漏写会让 token 回落到 scheme 条件默认值（隐蔽翻车），
+/// 拼错名字则静默赋给一个不存在的属性，两类都是文本扫描能钉死的 bug。
+#[test]
+fn every_preset_writes_every_token() {
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let theme_src =
+        std::fs::read_to_string(ui_dir.join("pixel_theme.slint")).expect("读取 pixel_theme.slint");
+    let presets_src = std::fs::read_to_string(ui_dir.join("pixel_presets.slint"))
+        .expect("读取 pixel_presets.slint");
+
+    // 主题声明的全部 token 名
+    let mut theme_tokens: Vec<String> = Vec::new();
+    for line in theme_src.lines() {
+        let t = line.trim_start();
+        // scheme 是 in property，其余是 in-out property，两种都要
+        let rest = t
+            .strip_prefix("in-out property <")
+            .or_else(|| t.strip_prefix("in property <"));
+        if let Some(rest) = rest {
+            if let Some(gt) = rest.find('>') {
+                let after = rest[gt + 1..].trim_start();
+                let name: String = after
+                    .chars()
+                    .take_while(|c| c.is_alphanumeric() || *c == '-')
+                    .collect();
+                if !name.is_empty() {
+                    theme_tokens.push(name);
+                }
+            }
+        }
+    }
+    assert!(
+        !theme_tokens.is_empty(),
+        "没从 pixel_theme.slint 解析到任何 token"
+    );
+
+    // 预设故意不覆写的：两枚常量 token + 派生 radius-sm + 宿主窗口件 window-radius
+    const NOT_WRITTEN: &[&str] = &["on-ink", "scrim", "radius-sm", "window-radius"];
+    let required: Vec<&str> = theme_tokens
+        .iter()
+        .map(|s| s.as_str())
+        .filter(|t| !NOT_WRITTEN.contains(t))
+        .collect();
+
+    // 预设名单（names 与 labels 平行、顺序一致）
+    let names_line = presets_src
+        .lines()
+        .find(|l| l.contains("in property <[string]> names:"))
+        .expect("pixel_presets.slint 缺少 names 清单");
+    let names: Vec<String> = names_line
+        .split("names:")
+        .nth(1)
+        .and_then(|rest| rest.split('[').nth(1))
+        .map(|inner| {
+            inner
+                .split(']')
+                .next()
+                .unwrap()
+                .split(',')
+                .map(|s| s.trim().trim_matches('"').to_string())
+                .filter(|s| !s.is_empty())
+                .collect()
+        })
+        .expect("names 清单解析失败");
+    assert!(!names.is_empty(), "names 清单为空");
+
+    let mut offenders = Vec::new();
+    for name in &names {
+        // 取 public function <name>( 的完整块（花括号配平）
+        let mut lines = presets_src.lines();
+        let mut block = String::new();
+        let mut in_block = false;
+        let mut depth = 0i32;
+        for line in &mut lines {
+            if !in_block {
+                if line.starts_with("    public function ") && line.contains(&format!("{name}(")) {
+                    in_block = true;
+                    depth = line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                    block.push_str(line);
+                    block.push('\n');
+                }
+            } else {
+                depth += line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                block.push_str(line);
+                block.push('\n');
+                if depth <= 0 {
+                    break;
+                }
+            }
+        }
+        if !in_block {
+            offenders.push(format!("{name}: 找不到预设函数"));
+            continue;
+        }
+
+        // 收集块内 PixelTheme.X = 赋值
+        let mut assigned: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+        for line in block.lines() {
+            let t = line.trim_start();
+            if let Some(rest) = t.strip_prefix("PixelTheme.") {
+                let tok: String = rest
+                    .chars()
+                    .take_while(|c| c.is_alphanumeric() || *c == '-')
+                    .collect();
+                if rest[tok.len()..].trim_start().starts_with('=') {
+                    assigned.insert(tok);
+                }
+            }
+        }
+        for req in &required {
+            if !assigned.contains(*req) {
+                offenders.push(format!("{name}: 漏写 token {req}"));
+            }
+        }
+        for a in &assigned {
+            if !theme_tokens.contains(a) {
+                offenders.push(format!("{name}: 赋给不存在的 token {a}（拼写错误）"));
+            } else if NOT_WRITTEN.contains(&a.as_str()) {
+                offenders.push(format!("{name}: 不应覆写 {a}（常量/派生/窗口件）"));
+            }
+        }
+    }
+    assert!(
+        offenders.is_empty(),
+        "预设 token 覆盖问题 {} 处：\n{}",
+        offenders.len(),
+        offenders.join("\n")
+    );
+}
