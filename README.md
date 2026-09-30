@@ -64,7 +64,27 @@
 | **sakura 樱花** | **sunset 落日** | **grape 葡萄** | **nord 北欧** | **terminal 终端** |
 | ![sakura](docs/gallery-sakura.png) | ![sunset](docs/gallery-sunset.png) | ![grape](docs/gallery-grape.png) | ![nord](docs/gallery-nord.png) | ![terminal](docs/gallery-terminal.png) |
 
-## 最新特性（v0.2.3）
+## 最新特性（v0.3.0）
+
+- **10 套内置主题预设**：`classic()` 经典 / `soft()` 柔彩 / `dark()` 深色 / `forest()`
+  森林 / `ocean()` 海洋 / `sakura()` 樱花 / `sunset()` 落日 / `grape()` 葡萄 /
+  `nord()` 北欧 / `terminal()` 终端。普通用户 `PixelPresets.apply("sakura")` 一行换肤；
+  高级用户看 [docs/themes.md](docs/themes.md)——每套 20 个 token 的完整取值、
+  角色说明与调优指引（`names`/`labels` 平行清单供选择器 UI 遍历）。
+- **主题纯净化**：库内全部皮肤色只出自 `PixelTheme` token 与预设——46 处硬编码色值
+  收编为语义引用，新增 `on-ink`（深墨面恒白前景）/`scrim`（模态遮罩）两枚 token；
+  深色预设的灰蓝孤岛全部随主题变暗。守卫
+  `no_hardcoded_colors_outside_theme_files` 逐行登记仅有的内容数据豁免（QR/条码符号、
+  取色器数据、PICO-8 品牌色），改动即变红强制复审。
+- **统一 2px 线框**：全部可见线宽由 `PixelTheme.border-width`（默认 2px）一个值驱动；
+  出血阴影写法全库清除；Slint 默认 `border-color=transparent` 导致的"边框消失"类
+  回归由守卫 `every_border_has_explicit_color` 钉死。
+- **预设覆盖守卫**：`every_preset_writes_every_token` 钉死每套预设写全 20 个 token
+  （漏写回落 scheme 默认值、拼错被编译器拒、labels 平行与未登记函数也现形）。
+- **主题编辑器升级**：预设区换成 10 键选择网格（当前预设高亮），窗身圆角随主题圆角
+  自动开关；三个窗口（画廊/画板/编辑器）同一 apply 调度，不再各写各的。
+
+## v0.2.3
 
 - **可统一配置的控件描边**：`PixelTheme.border-width`（默认 2px）和
   `PixelTheme.primary-border-width`（默认 3px）。宿主统一设成 1px 可消除卡片、按钮、
