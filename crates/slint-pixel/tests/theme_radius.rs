@@ -342,3 +342,62 @@ fn enclosing_block(lines: &[&str]) -> Vec<usize> {
     }
     out
 }
+
+/// 分隔线守卫（文本级，简单可控）：`ui/*.slint` 里用矩形画的细线（1~3px 的宽/高 + 描边色背景）
+/// 必须读主题值，否则宿主把 `border-width` 调细时边框变细、分隔线仍是 2px —— owner 说的"容器类不一致"。
+#[test]
+fn divider_lines_follow_theme_border_width() {
+    /// 状态高亮条（不是分隔线）：PixelButton 的 active 指示条
+    const EXEMPT: [(&str, &str); 1] =
+        [("pixel_painter_widget.slint", "// 底部高亮条（active 标记）")];
+
+    let ui_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("ui");
+    let edge_colors = ["root.edge", "root.border", "root.line", "root.bubble-edge"];
+    let literals = [
+        "width: 1px",
+        "width: 2px",
+        "width: 3px",
+        "height: 1px",
+        "height: 2px",
+        "height: 3px",
+    ];
+    let mut offenders = Vec::new();
+    let mut checked = 0usize;
+
+    for entry in std::fs::read_dir(&ui_dir).expect("读取 ui 目录") {
+        let path = entry.expect("目录项").path();
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        if path.extension().and_then(|e| e.to_str()) != Some("slint") || name == "pixel_theme.slint"
+        {
+            continue;
+        }
+        let source = std::fs::read_to_string(&path).expect("读取 .slint 源文件");
+        for (i, line) in source.lines().enumerate() {
+            let t = line.trim();
+            let has_edge_bg = edge_colors.iter().any(|c| t.contains(c));
+            let has_literal_size = literals.iter().any(|l| t.contains(l));
+            if !(has_edge_bg && has_literal_size) {
+                continue;
+            }
+            // 同一行里已经用了主题值就不算（例如 `height: PixelTheme.border-width;`）
+            if t.contains("PixelTheme.") {
+                continue;
+            }
+            if EXEMPT
+                .iter()
+                .any(|(f, marker)| *f == name && t.contains(marker))
+            {
+                continue;
+            }
+            checked += 1;
+            offenders.push(format!("{name}:{} {}", i + 1, t));
+        }
+    }
+
+    assert!(
+        offenders.is_empty(),
+        "以下分隔线仍是硬编码宽度（应读 PixelTheme.border-width）：\n{}",
+        offenders.join("\n")
+    );
+    let _ = checked;
+}

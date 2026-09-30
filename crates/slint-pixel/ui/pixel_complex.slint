@@ -703,8 +703,8 @@ export component PixelSidebar inherits Rectangle {
             width: root.sidebar-width;
             background: root.sidebar-bg;
             Rectangle {
-                x: parent.width - 2px; y: 0px;
-                width: 2px; height: parent.height;
+                x: parent.width - PixelTheme.border-width; y: 0px;
+                width: PixelTheme.border-width; height: parent.height;
                 background: root.shadow;
                 border-radius: PixelTheme.radius;
             }
@@ -718,7 +718,7 @@ export component PixelSidebar inherits Rectangle {
                     letter-spacing: 1px;
                     font-size: 13px;
                 }
-                Rectangle { height: 2px; background: root.edge; }
+                Rectangle { height: PixelTheme.border-width; background: root.edge; }
                 for item[i] in root.items : Rectangle {
                     height: 32px;
                     background: root.active == i ? root.item-active
