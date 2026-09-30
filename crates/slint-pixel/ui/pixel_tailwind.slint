@@ -343,7 +343,7 @@ export component PixelPagination inherits Rectangle {
             width: 30px; height: 30px;
             background: root.page == p ? root.face-active
                 : (page-ta.has-hover ? root.face-hover : root.face);
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {
@@ -366,7 +366,7 @@ export component PixelPagination inherits Rectangle {
         Rectangle {
             width: 30px; height: 30px;
             background: next-ta.has-hover && root.page < root.total ? root.face-hover : root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {

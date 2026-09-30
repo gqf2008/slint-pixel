@@ -89,7 +89,6 @@ export component ThemeEditorWindow inherits Window {
     in-out property <length> t-window-radius: PixelTheme.window-radius;
     in-out property <length> t-border-width: PixelTheme.border-width;
     in-out property <length> t-primary-border-width: PixelTheme.primary-border-width;
-    in-out property <length> t-border-thin: PixelTheme.border-thin;
 
     // ---------- 主题预设 ----------
     function preset-white() {
@@ -209,7 +208,7 @@ export component ThemeEditorWindow inherits Window {
                     PixelButton { text: "圆角"; width: 56px; clicked => { PixelTheme.radius = 8px; } }
                     PixelButton { text: "大圆角"; width: 66px; clicked => { PixelTheme.radius = 14px; } }
                 }
-                // 描边：三档全库同宽（容器 / primary 按钮 / 输入类发丝档），避免“有粗有细”
+                // 描边：全库一个值（border-width），改这里所有组件一起变
                 HorizontalLayout {
                     spacing: 8px;
                     Text {
@@ -224,7 +223,6 @@ export component ThemeEditorWindow inherits Window {
                         clicked => {
                             PixelTheme.border-width = 1px;
                             PixelTheme.primary-border-width = 1px;
-                            PixelTheme.border-thin = 1px;
                         }
                     }
                     PixelButton {
@@ -232,7 +230,6 @@ export component ThemeEditorWindow inherits Window {
                         clicked => {
                             PixelTheme.border-width = 2px;
                             PixelTheme.primary-border-width = 2px;
-                            PixelTheme.border-thin = 2px;
                         }
                     }
                     PixelButton {
@@ -240,7 +237,6 @@ export component ThemeEditorWindow inherits Window {
                         clicked => {
                             PixelTheme.border-width = 3px;
                             PixelTheme.primary-border-width = 3px;
-                            PixelTheme.border-thin = 3px;
                         }
                     }
                 }

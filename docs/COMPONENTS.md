@@ -52,7 +52,7 @@ slint::global!::<slint_pixel::PixelTheme>(ui.window())
 | `accent` / `on-accent` | `#000000` / `#ffffff` | 强调、选中底色 / **accent 底之上的前景色**（选中行文字、勾选标记、开关滑块） |
 | `danger` / `success` / `warning` / `info` | 红 / 绿 / 琥珀 / 蓝 | 功能色；`PixelAlert` 按 `kind` 取用 |
 | `primary-face` / `primary-text` | `#ffffff` / `#000000` | `PixelButton variant="primary"` 的面与字 |
-| `border-width` / `primary-border-width` / `border-thin` | `2px` / `2px` / `1px` | **两级描边**：外框（容器/卡片/按钮/primary）2px；内框（输入类、小件控件、组件内部线框）1px |
+| `border-width` / `primary-border-width` | `2px` / `2px` | **全库唯一描边值**：所有组件与其内部线框都读 `border-width`；primary 按钮默认同宽 |
 | `radius` / `radius-sm` | `0px` / `radius / 2` | 容器圆角 / 小件圆角（默认直角像素风） |
 | `window-radius` | `0px` | 窗口自身圆角（默认直角窗口）；> 0 需配合 `PixelWindowBody` 与透明窗口，见下 |
 
@@ -125,17 +125,14 @@ export component App inherits Window {
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | **每个组件自己的外框**（含小件与日期/日历等面板型组件）：容器/覆盖层、按钮、菜单、表格、手风琴、折叠、树、列表、日历、看板、向导、编辑器、图表、地图、媒体，以及复选/开关/标签/徽章/评分/色块/分页/步骤等小件 |
+| `border-width` | `2px` | **全库唯一描边值**：所有组件（容器/覆盖层、按钮、菜单、表格、树、列表、日历、看板、编辑器、图表、地图、媒体、输入类、小件）的边框，以及组件内部的线框，全部读它 |
 | `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
-| `border-thin` | `1px` | **内联输入框自己的框 + 所有组件内部的嵌套线框**：`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect` / `PixelNumberInput` / `PixelAutoComplete` / `PixelTagInput` / `PixelSearchBox` / `PixelMention` / `PixelOTPInput`；以及任何「框里再套框」的内层 |
 
-一句话规则：**每个组件自己的外框都是 2px（小件也一样）；只有内联输入框的框，以及框里再套的框是 1px**。
+一句话规则：**描边只有一个值 `border-width`，所有组件（含输入框与内部线框）都读它，改一处全库一起变**。单个组件仍可用自己的 `border-width` 属性覆盖。
 
 ```slint
-PixelTheme.border-width = 1px;
-PixelTheme.primary-border-width = 1px;
-PixelTheme.border-thin = 1px;   // 全 1px：最轻
-// 或全 2px：保留像素分量感
+PixelTheme.border-width = 1px;          // 全库 1px（最轻）
+PixelTheme.primary-border-width = 1px;  // primary 按钮同宽
 ```
 
 `PixelPresets.classic()` / `soft()` / `dark()` 内置都是 2px / 2px / 1px（同一套两级体系）。

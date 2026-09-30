@@ -84,7 +84,7 @@ export component PixelTextArea inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
+            border-width: PixelTheme.border-width; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
             border-radius: PixelTheme.radius;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {
@@ -282,7 +282,7 @@ export component PixelBubble inherits Rectangle {
                 x: 3px; y: 3px;
                 width: parent.width - 6px;
                 background: root.bubble-bg;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
                 border-color: root.bubble-edge;
                 VerticalLayout {
@@ -386,7 +386,7 @@ export component PixelPopconfirm inherits Rectangle {
             width: 100%;
             height: 100%;
             background: root.bubble-bg;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.bubble-edge;
             VerticalLayout {

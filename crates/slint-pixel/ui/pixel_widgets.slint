@@ -102,7 +102,7 @@ export component PixelSwitch inherits Rectangle {
                 y: 2px; width: 18px; height: 18px;
                 // 滑块用 on-accent（默认主题=白，与旧版一致）；彩色/深色主题下换成深色，避免白压白
                 background: root.thumb;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.border;
                 animate x { duration: 120ms; easing: ease-out; }
@@ -146,7 +146,7 @@ export component PixelSlider inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: 4px;
             background: root.track;
-            border-width: 1px;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Rectangle {
@@ -225,7 +225,7 @@ export component PixelTextInput inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
+            border-width: PixelTheme.border-width; // 发丝档：输入/文本域用主题 token，避免宿主这里硬编码
             border-radius: PixelTheme.radius;
             border-color: input.has-focus ? root.border-focus : root.border;
             input := TextInput {

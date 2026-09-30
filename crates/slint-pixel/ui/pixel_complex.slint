@@ -226,7 +226,7 @@ export component PixelComboBox inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
+            border-width: PixelTheme.border-width; // 发丝档，与输入框一致
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -572,7 +572,7 @@ export component PixelCollapsible inherits VerticalLayout {
         width: 100%;
         height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
         background: root.body;
-        border-width: PixelTheme.border-thin;
+        border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius;
         border-color: root.edge;
         clip: true;
@@ -655,7 +655,7 @@ export component PixelAccordion inherits VerticalLayout {
             width: 100%;
             height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
             background: root.body;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.edge;
             clip: true;

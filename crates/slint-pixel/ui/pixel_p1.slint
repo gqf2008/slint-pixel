@@ -43,7 +43,7 @@ export component PixelRangeSlider inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: 4px;
             background: root.track;
-            border-width: 1px;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
             Rectangle {
@@ -100,7 +100,7 @@ export component PixelRangeSlider inherits Rectangle {
             y: upper-ta.pressed ? 1px : 0px;
             width: 18px; height: 26px;
             background: root.thumb;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
         }
@@ -333,7 +333,7 @@ export component PixelTransfer inherits Rectangle {
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
@@ -523,7 +523,7 @@ export component PixelCarousel inherits Rectangle {
                     Rectangle {
                         x: 1px; y: 1px; width: 8px; height: 8px;
                         background: root.index == i ? root.border : root.face;
-                        border-width: PixelTheme.border-thin; border-color: root.border;
+                        border-width: PixelTheme.border-width; border-color: root.border;
                         border-radius: PixelTheme.radius;
                     }
                 }
@@ -598,7 +598,7 @@ export component PixelSplitPane inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             Text {
                 y: 12px; width: 100%; height: 20px;

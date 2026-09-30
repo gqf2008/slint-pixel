@@ -164,7 +164,7 @@ export component PixelNumberInput inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
             HorizontalLayout {
@@ -231,7 +231,7 @@ export component PixelSelect inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
+            border-width: PixelTheme.border-width; // 发丝档，与输入框一致
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -273,7 +273,7 @@ export component PixelSelect inherits Rectangle {
                 x: 2px; y: 2px;
                 width: parent.width - 4px; height: parent.height - 4px;
                 background: root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
                 border-color: root.border;
                 VerticalLayout {
@@ -295,7 +295,7 @@ export component PixelSelect inherits Rectangle {
                                 Rectangle {
                                     x: 1px; y: 1px; width: 16px; height: 16px;
                                     background: root.value == opt || root.value == "*" ? root.border-focus : root.face;
-                                    border-width: PixelTheme.border-thin;
+                                    border-width: PixelTheme.border-width;
                                     border-radius: PixelTheme.radius;
                                     border-color: root.border;
                                     Rectangle {
