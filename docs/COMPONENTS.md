@@ -125,11 +125,11 @@ export component App inherits Window {
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | **容器/覆盖层 + 按钮/菜单/表格/手风琴/折叠**：`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / `PixelButton` / `PixelMenu` / `PixelTableView` / `PixelAccordion` / `PixelCollapsible` / 圆角窗身 |
+| `border-width` | `2px` | **每个组件自己的可见外框**：容器/覆盖层（`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / 圆角窗身），以及按钮、菜单、表格、手风琴、折叠、树、列表、日历、看板、向导、编辑器、图表、地图、媒体等所有组件的可见外框 |
 | `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
-| `border-thin` | `1px` | **其余组件与所有内部线框**：输入类（TextInput/TextArea/ComboBox/Select…）、小件（复选/开关/标签/徽章/评分/色块/分页/步骤…），以及扩展(ROUND 2)/高级(ROUND 3)组件——树 / 列表 / 日历 / 看板 / 向导 / 编辑器 / 图表 / 地图 / 媒体… |
+| `border-thin` | `1px` | **输入类与小件自己的框 + 所有组件内部的嵌套线框**：`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect` / `PixelNumberInput` / `PixelAutoComplete` / `PixelTagInput` / `PixelSearchBox` / `PixelMention` / `PixelCascader` / `PixelDatePicker` / `PixelTreeSelect` 等输入类；复选 / 开关 / 标签 / 徽章 / 评分 / 色块 / 分页 / 步骤等小件；以及任何「框里再套框」的内层 |
 
-分档依据是"它是不是页面骨架"：容器/覆盖层与按钮/菜单/表格/手风琴这类骨架件用 2px 定形；放进内容里的输入类、小件与扩展/高级组件（连同内部线框）用 1px，避免"组件比容器还抢眼"。要让全库完全同宽就设成同一个值：
+一句话规则：**组件的外框统一 2px，框里再套的框统一 1px；输入类与小件形体小，自己的框也用 1px**，这样同一屏不会再出现「有的组件比邻居粗/细」。
 
 ```slint
 PixelTheme.border-width = 1px;

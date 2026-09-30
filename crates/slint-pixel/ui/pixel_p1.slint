@@ -159,7 +159,7 @@ export component PixelTree inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             clip: true;
             VerticalLayout {
@@ -298,7 +298,7 @@ export component PixelTransfer inherits Rectangle {
             Rectangle {
                 x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
                 background: root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
@@ -433,7 +433,7 @@ export component PixelTimeline inherits Rectangle {
                 Rectangle {
                     x: 1px; y: 1px; width: 10px; height: 10px;
                     background: root.current == i ? root.dot : root.face;
-                    border-width: PixelTheme.border-thin;
+                    border-width: PixelTheme.border-width;
                     border-radius: PixelTheme.radius;
                 }
             }
@@ -484,7 +484,7 @@ export component PixelCarousel inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             Text {
                 x: 40px; y: 10px; width: parent.width - 80px; height: 60px;
@@ -557,7 +557,7 @@ export component PixelSplitPane inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             @children
         }
