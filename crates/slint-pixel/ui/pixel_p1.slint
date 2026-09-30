@@ -66,7 +66,7 @@ export component PixelRangeSlider inherits Rectangle {
             y: lower-ta.pressed ? 1px : 0px;
             width: 18px; height: 26px;
             background: root.thumb;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.border;
         }
@@ -222,7 +222,7 @@ export component PixelTreeSelect inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -378,7 +378,7 @@ export component PixelUpload inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: upload-ta.has-hover ? root.face-hover : root.face;
-            border-width: PixelTheme.border-thin; border-color: root.border;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             Text {
                 y: 20px; width: 100%; height: 20px;

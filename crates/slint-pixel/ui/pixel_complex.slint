@@ -37,7 +37,7 @@ component PixelPopupList inherits Rectangle {
             x: 2px; y: 2px;
             width: parent.width - 4px; height: parent.height - 4px;
             background: root.face;
-            border-width: PixelTheme.border-thin; // 发丝档，与输入框一致
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: root.edge;
             VerticalLayout {
@@ -103,7 +103,7 @@ export component PixelRadioButton inherits Rectangle {
                 y: ta.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.checked ? root.face-checked : root.border;
                 Rectangle {
@@ -159,7 +159,7 @@ export component PixelRadioGroup inherits Rectangle {
                         y: item-ta.pressed ? 1px : 0px;
                         width: 22px; height: 22px;
                         background: root.index == i ? root.face-checked : root.face;
-                        border-width: PixelTheme.border-thin;
+                        border-width: PixelTheme.border-width;
                         border-radius: PixelTheme.radius-sm;
                         border-color: root.index == i ? root.face-checked : root.border;
                         Rectangle {
@@ -572,7 +572,7 @@ export component PixelCollapsible inherits VerticalLayout {
         width: 100%;
         height: root.expanded ? max(body-content.preferred-height, 40px) : 0px;
         background: root.body;
-        border-width: PixelTheme.border-width;
+        border-width: PixelTheme.border-thin;
         border-radius: PixelTheme.radius;
         border-color: root.edge;
         clip: true;
@@ -655,7 +655,7 @@ export component PixelAccordion inherits VerticalLayout {
             width: 100%;
             height: root.active == i ? max(acc-body.preferred-height, 40px) : 0px;
             background: root.body;
-            border-width: PixelTheme.border-width;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             border-color: root.edge;
             clip: true;

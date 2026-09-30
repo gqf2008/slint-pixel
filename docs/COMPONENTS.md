@@ -125,11 +125,11 @@ export component App inherits Window {
 
 | token | 默认 | 用在哪 |
 | --- | --- | --- |
-| `border-width` | `2px` | **每个组件自己的可见外框**：容器/覆盖层（`PixelPanel` / `PixelCard` / `PixelDialog` / `PixelNavbar` / `PixelStat` / `PixelAlert` / `PixelToast` / `PixelTooltip` / `PixelBubble` / `PixelPopconfirm` / `PixelDrawer(Pro)` / `PixelScrollPanel` / 圆角窗身），以及按钮、菜单、表格、手风琴、折叠、树、列表、日历、看板、向导、编辑器、图表、地图、媒体等所有组件的可见外框 |
+| `border-width` | `2px` | **每个组件自己的外框**（含小件与日期/日历等面板型组件）：容器/覆盖层、按钮、菜单、表格、手风琴、折叠、树、列表、日历、看板、向导、编辑器、图表、地图、媒体，以及复选/开关/标签/徽章/评分/色块/分页/步骤等小件 |
 | `primary-border-width` | `2px` | `PixelButton variant="primary"`（0.2.4 起与普通按钮同宽，不再默认粗一档） |
-| `border-thin` | `1px` | **输入类与小件自己的框 + 所有组件内部的嵌套线框**：`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect` / `PixelNumberInput` / `PixelAutoComplete` / `PixelTagInput` / `PixelSearchBox` / `PixelMention` / `PixelCascader` / `PixelDatePicker` / `PixelTreeSelect` 等输入类；复选 / 开关 / 标签 / 徽章 / 评分 / 色块 / 分页 / 步骤等小件；以及任何「框里再套框」的内层 |
+| `border-thin` | `1px` | **内联输入框自己的框 + 所有组件内部的嵌套线框**：`PixelTextInput` / `PixelTextArea` / `PixelComboBox` / `PixelSelect` / `PixelNumberInput` / `PixelAutoComplete` / `PixelTagInput` / `PixelSearchBox` / `PixelMention` / `PixelOTPInput`；以及任何「框里再套框」的内层 |
 
-一句话规则：**组件的外框统一 2px，框里再套的框统一 1px；输入类与小件形体小，自己的框也用 1px**，这样同一屏不会再出现「有的组件比邻居粗/细」。
+一句话规则：**每个组件自己的外框都是 2px（小件也一样）；只有内联输入框的框，以及框里再套的框是 1px**。
 
 ```slint
 PixelTheme.border-width = 1px;

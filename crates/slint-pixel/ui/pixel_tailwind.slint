@@ -317,7 +317,7 @@ export component PixelPagination inherits Rectangle {
         Rectangle {
             width: 30px; height: 30px;
             background: prev-ta.has-hover && root.page > 1 ? root.face-hover : root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {
@@ -454,7 +454,7 @@ export component PixelAvatar inherits Rectangle {
     Rectangle {
         width: 100%; height: 100%;
         background: root.face;
-        border-width: PixelTheme.border-thin;
+        border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius-sm;
         border-color: root.border;
         Text {
@@ -481,7 +481,7 @@ export component PixelTag inherits Rectangle {
     Rectangle {
         width: root.width; height: root.height;
         background: root.face;
-        border-width: PixelTheme.border-thin;
+        border-width: PixelTheme.border-width;
         border-radius: PixelTheme.radius-sm;
         border-color: root.border;
         HorizontalLayout {

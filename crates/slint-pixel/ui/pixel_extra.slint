@@ -136,7 +136,7 @@ export component PixelIconButton inherits Rectangle {
             y: ta.pressed ? 1px : 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.active ? root.face-active : (ta.has-hover ? root.face-hover : root.face);
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.active ? root.face-active : root.border;
             Text {
@@ -282,7 +282,7 @@ export component PixelBubble inherits Rectangle {
                 x: 3px; y: 3px;
                 width: parent.width - 6px;
                 background: root.bubble-bg;
-                border-width: PixelTheme.border-width;
+                border-width: PixelTheme.border-thin;
                 border-radius: PixelTheme.radius;
                 border-color: root.bubble-edge;
                 VerticalLayout {
@@ -386,7 +386,7 @@ export component PixelPopconfirm inherits Rectangle {
             width: 100%;
             height: 100%;
             background: root.bubble-bg;
-            border-width: PixelTheme.border-width;
+            border-width: PixelTheme.border-thin;
             border-radius: PixelTheme.radius;
             border-color: root.bubble-edge;
             VerticalLayout {

@@ -44,7 +44,7 @@ export component PixelCheckBox inherits Rectangle {
                 y: box.pressed ? 1px : 0px;
                 width: 22px; height: 22px;
                 background: root.checked ? root.face-checked : root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.checked ? root.face-checked : root.border;
                 // 选中标记与单选框 PixelRadioButton 保持一致：白色实心方块
@@ -94,7 +94,7 @@ export component PixelSwitch inherits Rectangle {
             x: 0px; y: 0px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.checked ? root.track-on : root.track-off;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Rectangle {
@@ -170,7 +170,7 @@ export component PixelSlider inherits Rectangle {
             y: knob.pressed ? 1px : 0px;
             width: 18px; height: 24px;
             background: root.thumb;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
         }
@@ -275,7 +275,7 @@ export component PixelProgressBar inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.track;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Rectangle {
@@ -318,7 +318,7 @@ export component PixelBadge inherits Rectangle {
             x: 1px; y: 1px;
             width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius-sm;
             border-color: root.border;
             Text {

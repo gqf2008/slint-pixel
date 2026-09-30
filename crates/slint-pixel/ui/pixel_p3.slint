@@ -277,7 +277,7 @@ export component PixelCascader inherits Rectangle {
         Rectangle {
             x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
             background: root.face;
-            border-width: PixelTheme.border-thin;
+            border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;
             border-color: popup.is-open ? root.border-focus : root.border;
             Text {
@@ -435,7 +435,7 @@ export component PixelRating inherits Rectangle {
                 y: rate-ta.pressed ? 1px : 0px;
                 width: 24px; height: 24px;
                 background: root.value >= idx + 1 ? root.face-active : root.face;
-                border-width: PixelTheme.border-thin;
+                border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius-sm;
                 border-color: root.value >= idx + 1 ? root.face-active : root.border;
                 Text {
