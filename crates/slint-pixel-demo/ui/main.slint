@@ -26,16 +26,9 @@ export component MainWindow inherits Window {
     init => { root.apply-theme-preset(); }
 
     function apply-theme-preset() {
-        if (root.theme-preset == "soft") {
-            PixelPresets.soft();
-            PixelTheme.window-radius = 12px;
-        } else if (root.theme-preset == "dark") {
-            PixelPresets.dark();
-            PixelTheme.window-radius = 0px;
-        } else {
-            PixelPresets.classic();
-            PixelTheme.window-radius = 0px;
-        }
+        PixelPresets.apply(root.theme-preset);
+        // 窗身圆角跟随主题圆角（要求宿主开透明窗口）
+        PixelTheme.window-radius = PixelTheme.radius > 0px ? 12px : 0px;
     }
 
     // ---------- 转发回调（Rust 侧用 install_painter / install_title_bar_controls 接线） ----------

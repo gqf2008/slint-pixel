@@ -9,7 +9,8 @@
 - 每套预设**写全 20 个 token**（`scheme` 明暗开关 + 15 个颜色 + `border-width` /
   `primary-border-width` + `radius`），守卫 `every_preset_writes_every_token`
   逐套核对：漏写会让该 token 回落到 scheme 条件默认值（隐蔽翻车），拼错会被
-  Slint 编译器直接拒绝。
+  Slint 编译器直接拒绝；labels 与 names 数量平行、写了 token 却没登记进 names
+  的函数也会被钉出。
 - **故意不覆写**的 4 个：`on-ink`（深墨面恒白前景，常量）、`scrim`（模态遮罩，常量）、
   `radius-sm`（派生自 `radius / 2`，保持绑定不断开）、`window-radius`（窗身圆角是
   宿主窗口件——demo 的策略是"主题有圆角就开 12px 窗身圆角，直角就关"）。
@@ -17,6 +18,9 @@
   想统一变细，宿主一行 `PixelTheme.border-width = 1px` 即可。
 - 预设**只写 PixelTheme**：任何组件属性都能在预设之后单独覆盖；任何 token 也能在
   预设之后微调（如 `PixelPresets.grape(); PixelTheme.accent = #ff8fb3;`）。
+- 配色纪律（评审实证）：同族色必须**拉开档差**——accent 与 warning/success/info
+  同色或近色会让功能语义撞车；中调 accent（非纯黑）上的 on-accent 用**主题墨色**
+  而非白字（白字压 #ff7a1a 只有 2.61:1）；暗紫/暗蓝底的 text 保持近白不发灰。
 - 色值语义速查：`bg/panel/hover` 是面（底→板→悬停），`edge/border-soft` 是线
   （硬→软），`text/dim` 是字（主→次），`accent/danger/success/warning/info`
   是功能色，`on-accent/on-ink/scrim` 是前景与遮罩。
@@ -46,9 +50,9 @@
 | `success` | `#16a34a` | 成功状态 |
 | `warning` | `#d97706` | 警告状态 |
 | `info` | `#0284c7` | 信息状态 |
-| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#ffffff` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#000000` | primary 按钮文字 |
+| `primary-text` | `#000000` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `0px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
@@ -81,9 +85,9 @@
 | `success` | `#16a34a` | 成功状态 |
 | `warning` | `#d97706` | 警告状态 |
 | `info` | `#2aa9c4` | 信息状态 |
-| `on-accent` | `#1c1a17` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#1c1a17` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#ffc61a` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#1c1a17` | primary 按钮文字 |
+| `primary-text` | `#1c1a17` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `8px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
@@ -116,9 +120,9 @@
 | `success` | `#4ade80` | 成功状态 |
 | `warning` | `#fbbf24` | 警告状态 |
 | `info` | `#38bdf8` | 信息状态 |
-| `on-accent` | `#141414` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#141414` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#ffffff` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#000000` | primary 按钮文字 |
+| `primary-text` | `#000000` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `0px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
@@ -148,17 +152,17 @@
 | `dim` | `#577a66` | 次要文字/占位/说明文字 |
 | `accent` | `#2f9e5f` | 强调/激活/选中底/进度填充 |
 | `danger` | `#d43d4f` | 危险/错误状态 |
-| `success` | `#2f9e5f` | 成功状态 |
+| `success` | `#4ade80` | 成功状态 |
 | `warning` | `#c47d0e` | 警告状态 |
 | `info` | `#2a7f9e` | 信息状态 |
-| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#16281e` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#2f9e5f` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#ffffff` | primary 按钮文字 |
+| `primary-text` | `#16281e` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `4px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
 
-**调优提示**：success 与 accent 同族（#2f9e5f）是有意的：绿色主题里『成功』就该是主题绿；需要区分时可把 success 调浅到 #4ade80 系。
+**调优提示**：success(#4ade80) 比 accent(#2f9e5f) 浅一档：绿色主题里『成功』与『选中』必须可分辨，评审实证后已从恒等改开；on-accent 用深墨 #16281e（白字压绿底仅 3.40:1）。
 
 
 ---
@@ -185,15 +189,15 @@
 | `danger` | `#ff6b7a` | 危险/错误状态 |
 | `success` | `#4ade80` | 成功状态 |
 | `warning` | `#fbbf24` | 警告状态 |
-| `info` | `#38bdf8` | 信息状态 |
-| `on-accent` | `#06222f` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `info` | `#2dd4bf` | 信息状态 |
+| `on-accent` | `#06222f` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#4cc3ff` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#06222f` | primary 按钮文字 |
+| `primary-text` | `#06222f` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `0px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
 
-**调优提示**：info(#38bdf8) 与 accent(#4cc3ff) 同向——有信息提示和激活态同框的场景，可把 info 压深到 #0ea5e9。
+**调优提示**：info(#2dd4bf) 走青绿而非蓝族：旧值 #38bdf8 与 accent(#4cc3ff) 色距过近不可分辨，评审实证后改开。
 
 
 ---
@@ -221,14 +225,14 @@
 | `success` | `#2f9e5f` | 成功状态 |
 | `warning` | `#d98e04` | 警告状态 |
 | `info` | `#4a7ddb` | 信息状态 |
-| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#3d1620` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#ff5d8f` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#ffffff` | primary 按钮文字 |
+| `primary-text` | `#3d1620` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `8px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
 
-**调优提示**：高饱和粉只给 accent/danger，文字描边一律酒红墨——改 accent 时别把 text/edge 也染粉，甜腻且丢对比。
+**调优提示**：高饱和粉只给 accent/danger，文字描边一律酒红墨；on-accent 也是酒红墨 #3d1620（白字压粉底仅 2.91:1）——甜系不能丢对比。
 
 
 ---
@@ -256,14 +260,14 @@
 | `success` | `#3d9954` | 成功状态 |
 | `warning` | `#c77800` | 警告状态 |
 | `info` | `#3d7fc4` | 信息状态 |
-| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#33180c` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#ff7a1a` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#ffffff` | primary 按钮文字 |
+| `primary-text` | `#33180c` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `6px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
 
-**调优提示**：warning(#c77800) 故意比 accent(#ff7a1a) 暗一档：同族色里警告必须压过主色才分得清。
+**调优提示**：warning(#c77800) 故意比 accent(#ff7a1a) 暗一档：同族色里警告必须压过主色才分得清；on-accent 用焦墨 #33180c（白字压橘底仅 2.61:1，全库最差，已修）。
 
 
 ---
@@ -291,9 +295,9 @@
 | `success` | `#5fd68a` | 成功状态 |
 | `warning` | `#f5c542` | 警告状态 |
 | `info` | `#8ab4ff` | 信息状态 |
-| `on-accent` | `#241533` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#241533` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#b98cff` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#241533` | primary 按钮文字 |
+| `primary-text` | `#241533` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `8px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
@@ -326,9 +330,9 @@
 | `success` | `#a3be8c` | 成功状态 |
 | `warning` | `#d08770` | 警告状态 |
 | `info` | `#81a1c1` | 信息状态 |
-| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#ffffff` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#5e81ac` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#ffffff` | primary 按钮文字 |
+| `primary-text` | `#ffffff` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `4px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
@@ -358,17 +362,17 @@
 | `dim` | `#2f9a4d` | 次要文字/占位/说明文字 |
 | `accent` | `#66ff85` | 强调/激活/选中底/进度填充 |
 | `danger` | `#ff5555` | 危险/错误状态 |
-| `success` | `#3fd16a` | 成功状态 |
+| `success` | `#a3e635` | 成功状态 |
 | `warning` | `#ffbb33` | 警告状态 |
 | `info` | `#33bbee` | 信息状态 |
-| `on-accent` | `#041404` | accent 底上的前景色：选中行文字、勾选标记、开关滑块 |
+| `on-accent` | `#041404` | accent 底上的前景色：选中行文字、勾选标记、开关滑块。中调（非纯黑）accent 上必须用主题墨色，白字对比不足 |
 | `primary-face` | `#3fd16a` | primary 按钮面（variant "primary"） |
-| `primary-text` | `#041404` | primary 按钮文字 |
+| `primary-text` | `#041404` | primary 按钮文字，跟随 on-accent 的取值纪律 |
 | `border-width` | `2px` | 全库统一描边宽（所有容器/按钮/输入/小件连同内部线框） |
 | `primary-border-width` | `2px` | primary 按钮描边宽（与普通按钮同值，不再粗一档） |
 | `radius` | `0px` | 容器/卡片/输入/对话框圆角；小件自动用一半（radius-sm = radius/2） |
 
-**调优提示**：这是唯一 text 为彩色的预设；改它时 edge/text/accent 三档绿色（#2e8a46/#3fd16a/#66ff85）的层次是精心调的，别合并成一档。
+**调优提示**：这是唯一 text 为彩色的预设；success 用 lime #a3e635 与正文磷光绿分离（评审实证旧值恒等撞车）；edge/text/accent 三档绿色（#2e8a46/#3fd16a/#66ff85）的层次是精心调的，别合并成一档。
 
 
 ---

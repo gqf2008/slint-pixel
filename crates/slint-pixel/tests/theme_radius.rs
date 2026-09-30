@@ -737,6 +737,31 @@ fn every_preset_writes_every_token() {
         .expect("names 清单解析失败");
     assert!(!names.is_empty(), "names 清单为空");
 
+    // labels 与 names 平行且数量一致（选择器 UI 按下标取中文名，错位即静默翻车）
+    let labels: Vec<String> = presets_src
+        .lines()
+        .find(|l| l.contains("in property <[string]> labels:"))
+        .and_then(|l| l.split("labels:").nth(1))
+        .and_then(|rest| rest.split('[').nth(1))
+        .map(|inner| {
+            inner
+                .split(']')
+                .next()
+                .unwrap()
+                .split(',')
+                .map(|s| s.trim().trim_matches('"').to_string())
+                .filter(|s| !s.is_empty())
+                .collect()
+        })
+        .expect("labels 清单解析失败");
+    assert_eq!(
+        labels.len(),
+        names.len(),
+        "names({}) 与 labels({}) 数量不一致：\n{names:?}\n{labels:?}",
+        names.len(),
+        labels.len()
+    );
+
     let mut offenders = Vec::new();
     for name in &names {
         // 取 public function <name>( 的完整块（花括号配平）
@@ -793,6 +818,42 @@ fn every_preset_writes_every_token() {
             }
         }
     }
+    // 反向漏检：pixel_presets.slint 里写了 token 赋值的 public function 必须登记进 names，
+    // 否则新预设加了函数却忘了挂清单，守卫按 names 遍历会整体漏检它
+    for m in presets_src.match_indices("    public function ") {
+        let rest = &presets_src[m.0..];
+        let header_end = rest.find('{').expect("函数声明后应有 {");
+        let sig = &rest[..header_end];
+        let fname: String = sig["    public function ".len()..]
+            .chars()
+            .take_while(|c| c.is_alphanumeric() || *c == '_')
+            .collect();
+        // 取整块（花括号配平）
+        let mut depth = 0i32;
+        let mut block_end = rest.len();
+        let mut acc = String::new();
+        for (i, ch) in rest.char_indices() {
+            if ch == '{' {
+                depth += 1;
+            } else if ch == '}' {
+                depth -= 1;
+                if depth == 0 {
+                    block_end = i;
+                    break;
+                }
+            }
+            acc.push(ch);
+        }
+        let _ = acc;
+        let block = &rest[..=block_end];
+        let writes_tokens = block
+            .lines()
+            .any(|l| l.trim_start().starts_with("PixelTheme."));
+        if writes_tokens && !names.contains(&fname) {
+            offenders.push(format!("{fname}: 函数写了 token 但未登记进 names 清单"));
+        }
+    }
+
     assert!(
         offenders.is_empty(),
         "预设 token 覆盖问题 {} 处：\n{}",
