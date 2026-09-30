@@ -831,7 +831,6 @@ fn every_preset_writes_every_token() {
         // 取整块（花括号配平）
         let mut depth = 0i32;
         let mut block_end = rest.len();
-        let mut acc = String::new();
         for (i, ch) in rest.char_indices() {
             if ch == '{' {
                 depth += 1;
@@ -842,9 +841,7 @@ fn every_preset_writes_every_token() {
                     break;
                 }
             }
-            acc.push(ch);
         }
-        let _ = acc;
         let block = &rest[..=block_end];
         let writes_tokens = block
             .lines()
