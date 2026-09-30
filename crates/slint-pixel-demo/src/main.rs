@@ -118,7 +118,7 @@ fn setup_gallery() -> Result<GalleryWindow, Box<dyn Error>> {
     slint_pixel::install_title_bar_controls(&gallery);
     slint_pixel::install_window_resize(&gallery);
 
-    // 可选：命令行选初始预设 —— `cargo run -- soft` / `dark`（默认 classic 经典像素风）
+    // 可选：命令行选初始预设 —— `cargo run -- soft` / `dark`（默认 soft 经典像素风）
     if let Some(preset) = std::env::args().nth(1) {
         gallery.set_theme_preset(preset.as_str().into());
     }

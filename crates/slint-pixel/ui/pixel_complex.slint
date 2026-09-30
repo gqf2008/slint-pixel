@@ -31,11 +31,11 @@ component PixelPopupList inherits Rectangle {
 
     Rectangle {
         width: 100%; height: root.height;
-        background: root.shadow;
+        background: transparent;
         border-radius: PixelTheme.radius;
         Rectangle {
-            x: 2px; y: 2px;
-            width: parent.width - 4px; height: parent.height - 4px;
+            x: 0px; y: 0px;
+            width: parent.width; height: parent.height;
             background: root.face;
             border-width: PixelTheme.border-width;
             border-radius: PixelTheme.radius;

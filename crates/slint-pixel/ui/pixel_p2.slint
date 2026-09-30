@@ -290,10 +290,13 @@ export component PixelKanban inherits Rectangle {
                     }
                     for card[k] in root.cards[j] : Rectangle {
                         height: 28px;
-                        background: root.border;
+                        background: transparent;
                         Rectangle {
-                            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+                            x: 0px; y: 0px; width: parent.width; height: parent.height;
                             background: root.face;
+                            border-width: PixelTheme.border-width;
+                            border-radius: PixelTheme.radius-sm;
+                            border-color: root.border;
                             Text {
                                 text: card;
                                 color: root.text-color;

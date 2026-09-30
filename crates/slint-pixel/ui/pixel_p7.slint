@@ -215,13 +215,15 @@ export component PixelKanbanPro inherits Rectangle {
         for col[j] in root.columns : Rectangle {
             width: root.width / root.columns.length;
             height: 100%;
-            background: root.drop-column == j ? root.border : root.shadow;
+            background: transparent;
             border-radius: PixelTheme.radius-sm;
             Rectangle {
-                x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+                x: 0px; y: 0px; width: parent.width; height: parent.height;
                 background: root.face;
                 border-width: PixelTheme.border-width;
                 border-radius: PixelTheme.radius;
+                // 拖放高亮：常态描边用 shadow 色（看板列的淡化框），拖放目标列切 border 色
+                border-color: root.drop-column == j ? root.border : root.shadow;
                 VerticalLayout {
                     padding: 4px; spacing: 2px;
                     Rectangle {
@@ -231,10 +233,13 @@ export component PixelKanbanPro inherits Rectangle {
                     }
                     for card[k] in root.cards[j] : Rectangle {
                         height: 30px;
-                        background: root.border;
+                        background: transparent;
                         Rectangle {
-                            x: 1px; y: 1px; width: parent.width - 2px; height: parent.height - 2px;
+                            x: 0px; y: 0px; width: parent.width; height: parent.height;
                             background: root.face;
+                            border-width: PixelTheme.border-width;
+                            border-radius: PixelTheme.radius-sm;
+                            border-color: root.border;
                             Text { text: card; color: PixelTheme.text; font-size: 11px; vertical-alignment: center; }
                         }
                         card-ta := TouchArea {
