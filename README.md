@@ -1,9 +1,9 @@
 # slint-pixel
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Slint](https://img.shields.io/badge/Slint-1.18.1-blue.svg)](https://slint.dev)
+[![Slint](https://img.shields.io/badge/Slint-1.18.0-blue.svg)](https://slint.dev)
 
-基于 **Rust + Slint 1.18.1** 的像素风可复用组件库：16×16 像素画板 widget、
+基于 **Rust + Slint 1.18.0** 的像素风可复用组件库：16×16 像素画板 widget、
 自绘像素标题栏，以及一套常用像素风控件；附带组件画廊与画板演示程序。
 
 - **主仓**：自托管 walgit（本机 `http://127.0.0.1:8081/gqf2008/slint-pixel.git`，remote `origin`）
